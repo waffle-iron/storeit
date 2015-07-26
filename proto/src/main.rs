@@ -6,7 +6,6 @@ use std::sync::mpsc;
 
 fn new_client(stream: TcpStream, pool: &ThreadPool) {
 
-        println!("new client");
     let (tx, _) : (_, mpsc::Receiver<i32>) = mpsc::channel();
 
     let tx = tx.clone();
@@ -19,7 +18,7 @@ fn listen(port: &str) {
 
     let pool = ThreadPool::new(16);
 
-    let address : &str = &("localhost:".to_string() + port); // TODO: use as_str()
+    let address : &str = &("127.0.0.1:".to_string() + port); // TODO: use as_str()
     let tcp_l = TcpListener::bind(address).unwrap();
 
     for client in tcp_l.incoming() {
