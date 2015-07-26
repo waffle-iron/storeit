@@ -1,0 +1,4 @@
+[package]
+name = "proto"
+version = "0.1.0"
+authors = ["Adrien Morel <adrien.morel@me.com>"]
