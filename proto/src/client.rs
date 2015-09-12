@@ -5,11 +5,9 @@ use std::io::Read;
 use hyper::Client;
 use hyper::header::Connection;
 
-fn main() {
+fn request(client: &Client) {
 
-    let client = Client::new();
-
-    let mut res = client.get("http://localhost:3000")
+    let mut res = client.get("http://localhost:7641")
         .header(Connection::close())
         .send().unwrap();
 
@@ -17,4 +15,11 @@ fn main() {
     res.read_to_string(&mut body).unwrap();
 
     println!("Response: {}", body);
+}
+
+fn main() {
+
+    let client = Client::new();
+
+    request(&client);
 }
