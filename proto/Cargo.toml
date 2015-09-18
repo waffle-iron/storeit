@@ -3,6 +3,10 @@ name = "proto"
 version = "0.1.0"
 authors = ["Adrien Morel <adrien.morel@me.com>"]
 
+[lib]
+name = "common"
+path = "src/common/common.rs"
+
 [[bin]]
 name = "client"
 path = "src/client.rs"

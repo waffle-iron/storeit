@@ -1,25 +1,53 @@
 extern crate hyper;
+extern crate common;
 
 use std::io::Read;
 
-use hyper::Client;
-use hyper::header::Connection;
+fn send_login(client: &hyper::Client) -> Option<&'static str> {
 
-fn request(client: &Client) {
+    let json = "[ \
+    { \
+        \"File list\": [ \
+        { \
+            \"path\": \"sample path\", \
+            \"file metadata\": \"sample file metadata\", \
+            \"file content hash\": \"sample file content hash\", \
+            \"file type\": \"1\", \
+            \"hashes of the file content\": [ \
+                \"sample hashes of the file content\" \
+                ] \
+        } \
+        ] \
+    } \
+    ]";
 
-    let mut res = client.get("http://localhost:7641")
-        .header(Connection::close())
-        .send().unwrap();
+    let mut res = common::http_post(client, json)
+        .ok()
+        .expect("Cannot do http request");
 
-    let mut body = String::new();
-    res.read_to_string(&mut body).unwrap();
+    match res.status {
+        hyper::status::StatusCode::Ok => {
+            let mut body = String::new();
+            res.read_to_string(&mut body).unwrap();
+            println!("=> {};", body);
+        }
+        _ => println!("http response was not 200")
+    }
 
-    println!("Response: {}", body);
+    None
+}
+
+fn request(client: &hyper::Client) {
+
+    match send_login(client) {
+        Some(s) => println!("Error: {}", s),
+        None    => ()
+    }
 }
 
 fn main() {
 
-    let client = Client::new();
+    let client = hyper::Client::new();
 
     request(&client);
 }
