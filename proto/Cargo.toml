@@ -3,18 +3,7 @@ name = "proto"
 version = "0.1.0"
 authors = ["Adrien Morel <adrien.morel@me.com>"]
 
-[lib]
-name = "common"
-path = "src/common/common.rs"
-
-[[bin]]
-name = "client"
-path = "src/client.rs"
-
-[[bin]]
-name = "server"
-path = "src/server.rs"
-
 [dependencies]
 threadpool = "0.1"
 hyper = "0.6"
+rustc-serialize = "0.3"
