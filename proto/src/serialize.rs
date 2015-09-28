@@ -1,10 +1,14 @@
 use rustc_serialize::json;
+use http;
 
-#[derive(RustcDecodable, RustcEncodable)]
-pub struct LoginData  {
-    file_list: Vec<String>
-}
+pub fn decode_login(json: &str) -> Result<http::RequestData, &'static str> {
+    let data = match json::decode(json) {
+        Err(e) => {
+            println!("{:?}", e);
+            return Err("Json Decoder Error");
+        }
+        Ok(dat) => dat
+    };
 
-pub fn decode_login(json: &str) -> LoginData {
-    json::decode(json).unwrap()
+    Ok(http::RequestData::Tree(data))
 }

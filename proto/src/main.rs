@@ -13,14 +13,16 @@ use hyper::method::Method;
 use hyper::status::StatusCode;
 use std::io::Read;
 
-fn hello(mut request: Request, mut response: Response<Fresh>) {
+fn handle_request(mut request: Request, mut response: Response<Fresh>) {
     match request.method {
         Method::Get => response.send(b"Hello World!").unwrap(),
         Method::Post => {
             let mut body = String::new();
-            request.read_to_string(&mut body);
-            let LoginData = serialize::decode_login(&body);
-            println!("client sent {}", body);
+            let res = request.read_to_string(&mut body);
+            match res {
+                Ok(_) => http::parse_post(&body),
+                Err(_) => println!("oops ! error"),
+            }
         }
         _ => *response.status_mut() = StatusCode::MethodNotAllowed,
     }
@@ -31,7 +33,7 @@ fn listen(port: &str) {
 
     let addr : &str = &("127.0.0.1:".to_string() + port);
 
-    let code = Server::http(addr).unwrap().handle(hello);
+    let code = Server::http(addr).unwrap().handle(handle_request);
     println!("{:?}", code);
 }
 
