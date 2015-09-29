@@ -20,7 +20,7 @@ fn handle_request(mut request: Request, mut response: Response<Fresh>) {
             let mut body = String::new();
             let res = request.read_to_string(&mut body);
             match res {
-                Ok(_) => http::parse_post(&body),
+                Ok(_) => http::parse_post(&mut request),
                 Err(_) => println!("oops ! error"),
             }
         }

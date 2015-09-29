@@ -43,15 +43,23 @@ pub fn http_get(client: &hyper::Client) -> Result<Response, Error> {
 
 #[allow(dead_code)]
 pub fn http_post(client: &hyper::Client, body_content: &str)
-    -> Result<Response, Error> {
+-> Result<Response, Error> {
 
-        client.post(URL)
-            .body(body_content)
-            .send()
+    client.post(URL)
+        .body(body_content)
+        .send()
 }
 
 #[allow(unused)]
-pub fn parse_post(request: &str) {
+pub fn parse_post(mut request: &hyper::server::Request) {
+
+    let api_uri = match request.uri {
+        hyper::uri::RequestUri::AbsolutePath(ref s) => s,
+        _ => {
+            println!("bad enum for request.uri");
+            return;
+        }
+    };
 
     let request = "{ \
         \"file_list\": [ \
@@ -66,9 +74,13 @@ pub fn parse_post(request: &str) {
         } \
         ]}";
 
+    match api_uri.as_ref() {
+        "/login/join" => {
             match serialize::decode_login(request) {
-        Err(e) => println!("POST request is invalid: {}", e),
-        Ok(r) => println!("request succeeded : {:?}", r)
+                Err(e) => println!("POST request is invalid: {}", e),
+                Ok(r) => println!("request succeeded : {:?}", r)
+            }
+        }
+        other     => println!("Request has bad or unimplemented API url: {}", other),
     }
-
 }
