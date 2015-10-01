@@ -1,3 +1,5 @@
 Storeit Desktop Client
-
--- TODO
+======================
+Installation
+------------
+    npm install
