@@ -1,0 +1,5 @@
+{
+    "dev": true,
+    "src": "./src/**/*.js",
+    "dest": "./app.js"
+}

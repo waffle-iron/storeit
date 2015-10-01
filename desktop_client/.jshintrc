@@ -1,0 +1,19 @@
+{
+    "node": true,
+    "esnext": true,
+
+    "eqeqeq": true,
+    "eqnull": true,
+    "forin": true,
+    "freeze": true,
+    "futurehostile": true,
+    "latedef": true,
+    "maxparams": 4,
+    "maxstatements": 40,
+    "nonew": true,
+    "shadow": "inner",
+    "strict": true,
+    "undef": true,
+    "unused": true,
+    "varstmt": true
+}

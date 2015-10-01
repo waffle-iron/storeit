@@ -1,0 +1,49 @@
+{
+  "name": "desktop_client",
+  "version": "1.0.0",
+  "description": "StoreIt Desktop Client",
+  "keywords": [],
+  "homepage": "http://storeit.com",
+  "bugs": {
+    "url": "https://github.com/sevauk/storeit/issues",
+    "email": "storeit@gmail.com"
+  },
+  "license": "ISC",
+  "author": {
+    "name": "Alexandre Fulgoni",
+    "email": "a.fulgon@gmail.com",
+    "url": "https://github.com/kirly-af"
+  },
+  "contributors": [],
+  "bin": {
+    "storeit_client": "app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sevauk/storeit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-jscs": "^3.0.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-notify": "^2.2.0",
+    "gulp-uglify": "^1.4.1"
+  },
+  "engines": {},
+  "preferGlobal": true,
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "scripts": {
+    "preinstall": "npm i -g gulp",
+    "postinstall": "gulp && npm link",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

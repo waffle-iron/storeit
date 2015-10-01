@@ -1,0 +1,18 @@
+{
+    "disallowAnonymousFunctions": true,
+    "disallowEmptyBlocks": true,
+    "disallowImplicitTypeConversion": ["numeric", "boolean", "binary", "string"],
+    "disallowMixedSpacesAndTabs": true,
+    "disallowMultiLineTernary": true,
+    "disallowQuotedKeysInObjects": true,
+    "disallowSpaceAfterObjectKeys": {
+        "allExcept": ["aligned", "method"]
+    },
+    "maximumLineLength": 80,
+    "requireCamelCaseOrUpperCaseIdentifiers": true,
+    "requireCapitalizedConstructors": true,
+    "requireDotNotation": true,
+    "requireFunctionDeclarations": true,
+    "validateIndentation": 4,
+    "validateQuoteMarks": "'"
+}
