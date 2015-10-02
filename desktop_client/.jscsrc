@@ -5,9 +5,6 @@
     "disallowMixedSpacesAndTabs": true,
     "disallowMultiLineTernary": true,
     "disallowQuotedKeysInObjects": true,
-    "disallowSpaceAfterObjectKeys": {
-        "allExcept": ["aligned", "method"]
-    },
     "maximumLineLength": 80,
     "requireCamelCaseOrUpperCaseIdentifiers": true,
     "requireCapitalizedConstructors": true,
