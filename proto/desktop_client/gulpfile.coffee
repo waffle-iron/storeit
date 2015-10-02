@@ -10,7 +10,7 @@ jscs        = require 'gulp-jscs'
 sourcemaps  = require 'gulp-sourcemaps'
 transpile   = require 'gulp-babel'
 
-config      = require './config.json'
+config      = require './gulpconfig.json'
 config.srcs = "#{config.srcsPath}/#{config.srcsPattern}"
 
 gulp.task 'default',

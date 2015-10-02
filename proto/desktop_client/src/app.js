@@ -4,4 +4,4 @@ import Config from './config';
 
 GLOBAL.config = new Config();
 
-// configLoad();
+GLOBAL.config.save();

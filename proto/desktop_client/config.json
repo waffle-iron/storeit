@@ -1,7 +1,0 @@
-{
-    "dev": true,
-    "dist": "./dist",
-    "main": "app.js",
-    "srcsPath": "./src/",
-    "srcsPattern": "**/*.js"
-}
