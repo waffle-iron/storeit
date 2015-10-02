@@ -19,10 +19,8 @@ gulp.task 'default',
 
 gulp.task 'install', ['build', 'data-copy']
 
-gulp.task 'build', ->
+gulp.task 'build', ['lint'], ->
     gulp.src config.srcs
-        .pipe jshint()
-        .pipe jscs()
         .pipe sourcemaps.init()
             .pipe transpile()
             .pipe concat config.main
@@ -32,6 +30,13 @@ gulp.task 'build', ->
         .pipe notify
             onLast: true
             message: 'JavaScript files compiled'
+
+gulp.task 'lint', ->
+    gulp.src config.srcs
+        .pipe jshint('.jshintrc')
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe jscs()
+        .pipe jscs.reporter()
 
 gulp.task 'data-copy', ->
     gulp.src "#{config.srcsPath}/data/**"

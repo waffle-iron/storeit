@@ -8,6 +8,7 @@ const CONFIG_FILES = {
     user: 'data/config_usr.json'
 };
 
+tata = 3;
 GLOBAL.config = null;
 
 function   configLoad()
