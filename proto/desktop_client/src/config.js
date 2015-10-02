@@ -14,11 +14,12 @@ export default class Config
     constructor()
     {
         this.data = {};
-        this.file = CONFIG_FILES.default;
+        let file = CONFIG_FILES.default;
         try
         {
-            fs.accessSync(CONFIG_FILES.user, fs.R_OK | fs.W_OK);
-            this.file = CONFIG_FILES.user;
+            let path = `${__dirname}/${CONFIG_FILES.user}`;
+            fs.accessSync(path + file, fs.R_OK | fs.W_OK);
+            file = CONFIG_FILES.user;
         }
         catch (e)
         {
@@ -27,8 +28,8 @@ export default class Config
         }
         finally
         {
-            let path = `${__dirname}/${this.file}`;
-            Object.assign(this.data, JSON.parse(fs.readFileSync(path, 'utf8')));
+            let fd = fs.readFileSync(`${__dirname}/${file}`, 'utf8');
+            Object.assign(this.data, JSON.parse(fd));
             console.log(JSON.stringify(this.data));
         }
     }
