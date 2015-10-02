@@ -3,5 +3,20 @@
 
 import * as fs from 'fs';
 
-let fd = fs.openSync('./toto', 'w+');
-fs.writeSync(fd, 'hello world');
+GLOBAL.config = null;
+
+function   configLoad()
+{
+    let fileCheck = (path) => fs.accessSync(path, fs.R_OK | fs.W_OK);
+
+    try
+    {
+        fileCheck('data/config_usr');
+    }
+    catch (e)
+    {
+        console.log(e);
+    }
+}
+
+configLoad();

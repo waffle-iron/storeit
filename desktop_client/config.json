@@ -1,5 +1,7 @@
 {
     "dev": true,
-    "src": "./src/**/*.js",
-    "dest": "./app.js"
+    "dist": "./dist",
+    "main": "app.js",
+    "srcsPath": "./src/",
+    "srcsPattern": "**/*.js"
 }

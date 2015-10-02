@@ -16,7 +16,7 @@
   },
   "contributors": [],
   "bin": {
-    "storeit_client": "app.js"
+    "storeit_client": "dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
   ],
   "scripts": {
     "preinstall": "npm i -g gulp",
-    "postinstall": "gulp && npm link",
+    "postinstall": "gulp install",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
