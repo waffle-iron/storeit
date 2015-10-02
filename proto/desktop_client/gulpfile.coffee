@@ -35,6 +35,7 @@ gulp.task 'lint', ->
     gulp.src config.srcs
         .pipe jshint('.jshintrc')
         .pipe(jshint.reporter('jshint-stylish'))
+        # .pipe(jshint.reporter('fail'))
         .pipe jscs()
         .pipe jscs.reporter()
 
