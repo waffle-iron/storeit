@@ -26,6 +26,7 @@
     "jsonfile": "^2.2.2"
   },
   "devDependencies": {
+    "babel-runtime": "^5.8.25",
     "coffee-script": "^1.10.0",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
@@ -34,9 +35,11 @@
     "gulp-jscs": "^3.0.0",
     "gulp-jshint": "^1.11.2",
     "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.4.1",
-    "jshint-stylish": "^2.0.1"
+    "jshint-stylish": "^2.0.1",
+    "source-map-support": "^0.3.2"
   },
   "engines": {},
   "preferGlobal": true,

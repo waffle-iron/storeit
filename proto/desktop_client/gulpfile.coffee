@@ -1,11 +1,12 @@
 gulp        = require 'gulp'
-concat      = require 'gulp-concat'
+# concat      = require 'gulp-concat'
 notify      = require 'gulp-notify'
+# rename      = require 'gulp-rename'
 rm          = require 'del'
 
 jshint      = require 'gulp-jshint'
 jscs        = require 'gulp-jscs'
-minify      = require 'gulp-uglify'
+# minify      = require 'gulp-uglify'
 sourcemaps  = require 'gulp-sourcemaps'
 transpile   = require 'gulp-babel'
 
@@ -22,8 +23,7 @@ gulp.task 'install', ['build', 'data-copy']
 gulp.task 'build', ['lint'], ->
     gulp.src config.srcs
         .pipe sourcemaps.init()
-            .pipe transpile()
-            .pipe concat config.main
+            .pipe transpile optional: ['runtime']
             # .pipe minify()
         .pipe sourcemaps.write '.'
         .pipe gulp.dest config.dist
