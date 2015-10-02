@@ -3,6 +3,7 @@ extern crate rustc_serialize;
 
 mod http;
 mod serialize;
+mod user;
 
 use std::env;
 use hyper::Server;
@@ -11,20 +12,18 @@ use hyper::server::Response;
 use hyper::net::Fresh;
 use hyper::method::Method;
 use hyper::status::StatusCode;
-use std::io::Read;
 
 fn handle_request(mut request: Request, mut response: Response<Fresh>) {
+
+    let user = match user::authenticate(&request) {
+        None => { return; }
+        Some(u) => u
+    };
+
     match request.method {
-        Method::Get => response.send(b"Hello World!").unwrap(),
-        Method::Post => {
-            let mut body = String::new();
-            let res = request.read_to_string(&mut body);
-            match res {
-                Ok(_) => http::parse_post(&mut request),
-                Err(_) => println!("oops ! error"),
-            }
-        }
-        _ => *response.status_mut() = StatusCode::MethodNotAllowed,
+        Method::Get  => response.send(b"Hello World!").unwrap(),
+        Method::Post => http::parse_post(request, user),
+        _            => *response.status_mut() = StatusCode::MethodNotAllowed,
     }
 }
 

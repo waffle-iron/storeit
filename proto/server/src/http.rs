@@ -4,7 +4,9 @@ use hyper::client::Response;
 use hyper::header::Connection;
 use hyper::error::Error;
 
+use std::io::Read;
 use serialize;
+use user;
 
 static URL : &'static str = "http://localhost:7641";
 
@@ -51,32 +53,29 @@ pub fn http_post(client: &hyper::Client, body_content: &str)
 }
 
 #[allow(unused)]
-pub fn parse_post(mut request: &hyper::server::Request) {
+pub fn parse_post(mut request: hyper::server::Request, user: user::User) {
 
-    let api_uri = match request.uri {
-        hyper::uri::RequestUri::AbsolutePath(ref s) => s,
+    let api_uri : String = match request.uri {
+        hyper::uri::RequestUri::AbsolutePath(ref s) => String::from(s.as_ref()),
         _ => {
             println!("bad enum for request.uri");
             return;
         }
     };
 
-    let request = "{ \
-        \"file_list\": [ \
-        { \
-            \"path\": \"sample path\", \
-            \"metadata\": \"sample metadata\", \
-            \"full_hash\": \"sample full_hash\", \
-            \"kind\": \"1\", \
-            \"chunks_hashes\": [ \
-                \"sample chunks_hashes\" \
-                ] \
-        } \
-        ]}";
+    let mut request_body = String::new();
+
+    match request.read_to_string(&mut request_body) {
+        Ok(_) => (),
+        Err(_) => {
+            println!("oops, cannot read http request");
+            return;
+        }
+    }
 
     match api_uri.as_ref() {
         "/login/join" => {
-            match serialize::decode_login(request) {
+            match serialize::decode_login(&request_body) {
                 Err(e) => println!("POST request is invalid: {}", e),
                 Ok(r) => println!("request succeeded : {:?}", r)
             }
