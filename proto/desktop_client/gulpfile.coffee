@@ -26,9 +26,12 @@ gulp.task 'build', ->
         .pipe sourcemaps.init()
             .pipe transpile()
             .pipe concat config.main
+            # .pipe minify()
         .pipe sourcemaps.write '.'
         .pipe gulp.dest config.dist
-        .pipe notify 'JavaScript files compiled'
+        .pipe notify
+            onLast: true
+            message: 'JavaScript files compiled'
 
 gulp.task 'data-copy', ->
     gulp.src "#{config.srcsPath}/data/**"
