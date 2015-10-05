@@ -105,5 +105,4 @@ const CMDS = new Map([
     ['reset', Client.prototype.configReset],
 ]);
 
-
 Client.prototype.CMDS = CMDS;
