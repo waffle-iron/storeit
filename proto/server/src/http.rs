@@ -1,14 +1,21 @@
 extern crate hyper;
+extern crate std;
 
 use hyper::client::Response;
 use hyper::header::Connection;
 use hyper::error::Error;
+use std::thread;
+use std::sync::Arc;
 
 use std::io::Read;
 use serialize;
 use user;
+use api;
 
 static URL : &'static str = "http://localhost:7641";
+
+// time between each ping sent to a user in seconds
+static PING_TIME : i8 = 1;
 
 /*
  * The json datastructures involved in the requests
@@ -53,7 +60,9 @@ pub fn http_post(client: &hyper::Client, body_content: &str)
 }
 
 #[allow(unused)]
-pub fn parse_post(mut request: hyper::server::Request, user: user::User) {
+pub fn parse_post(mut request: hyper::server::Request,
+                  user: user::User,
+                  users: &user::Users) {
 
     let api_uri : String = match request.uri {
         hyper::uri::RequestUri::AbsolutePath(ref s) => String::from(s.as_ref()),
@@ -77,7 +86,11 @@ pub fn parse_post(mut request: hyper::server::Request, user: user::User) {
         "/login/join" => {
             match serialize::decode_login(&request_body) {
                 Err(e) => println!("POST request is invalid: {}", e),
-                Ok(r) => println!("request succeeded : {:?}", r)
+                Ok(r) => {
+                    api::connect_user(user, &users);
+                    println!("request succeeded : {:?}", r);
+                }
+
             }
         }
         other     => println!("Request has bad or unimplemented API url: {}", other),

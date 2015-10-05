@@ -4,6 +4,7 @@ extern crate rustc_serialize;
 mod http;
 mod serialize;
 mod user;
+mod api;
 
 use std::env;
 use hyper::Server;
@@ -12,28 +13,50 @@ use hyper::server::Response;
 use hyper::net::Fresh;
 use hyper::method::Method;
 use hyper::status::StatusCode;
+use std::sync::Arc;
 
-fn handle_request(mut request: Request, mut response: Response<Fresh>) {
-
-    let user = match user::authenticate(&request) {
-        None => { return; }
-        Some(u) => u
-    };
-
-    match request.method {
-        Method::Get  => response.send(b"Hello World!").unwrap(),
-        Method::Post => http::parse_post(request, user),
-        _            => *response.status_mut() = StatusCode::MethodNotAllowed,
-    }
+struct RequestHandler {
+    users : Arc<user::Users>,
 }
 
+impl hyper::server::Handler for RequestHandler {
+
+    fn handle(&self, mut request: Request, mut response: Response<Fresh>) {
+
+        let user = match user::authenticate(&request) {
+            None => { return; }
+            Some(u) => u
+        };
+
+
+        match request.method {
+            Method::Get  => response.send(b"Hello World!").unwrap(),
+            Method::Post => http::parse_post(request, user, &*self.users),
+            _            =>
+                *response.status_mut() = StatusCode::MethodNotAllowed,
+        }
+
+    }
+}
 
 fn listen(port: &str) {
 
     let addr : &str = &("127.0.0.1:".to_string() + port);
 
-    let code = Server::http(addr).unwrap().handle(handle_request);
+    let users = Arc::new(user::Users::new());
+
+    let ping_thread = api::handle_ping(&users);
+
+    let http_handler = RequestHandler {
+        users: users.clone(),
+    };
+
+    let code = Server::http(addr).unwrap().handle(http_handler);
+
     println!("{:?}", code);
+
+    let res = ping_thread.join();
+    println!("child ended with {:?}", res);
 }
 
 fn main() {
