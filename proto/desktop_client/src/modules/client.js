@@ -48,7 +48,7 @@ export class Client
         {
             cb.call(this);
         }
-        else
+        else if (input.trim().length)
         {
             console.error(`${input}: invalid command`);
         }
