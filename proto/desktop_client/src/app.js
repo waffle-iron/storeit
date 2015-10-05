@@ -2,8 +2,8 @@
 
 'use strict';
 import 'source-map-support/register';
-import Config from './config';
+import * as storeit from './storeit';
 
-GLOBAL.config = new Config();
+let client = new storeit.Client();
 
-GLOBAL.config.save();
+client.readUserInput();

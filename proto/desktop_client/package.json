@@ -23,7 +23,7 @@
     "url": "https://github.com/sevauk/storeit"
   },
   "dependencies": {
-    "jsonfile": "^2.2.2"
+    "readline-sync": "^1.2.21"
   },
   "devDependencies": {
     "babel-runtime": "^5.8.25",

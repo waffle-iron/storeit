@@ -1,3 +1,7 @@
 {
-    "username": "storeit"
+    "server":"",
+    "port":"",
+    "username":"storeit",
+    "password":"storeit",
+    "root":""
 }
