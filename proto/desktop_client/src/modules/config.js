@@ -41,7 +41,7 @@ export default class Config
                 let question = `${text}: `;
                 if (this.showDefault(key))
                     question += `[${this[key]}]`;
-                this[key] = readlineSync.question(question);
+                this[key] = readlineSync.question(question).trime();
             }
         }
     }
