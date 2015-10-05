@@ -1,5 +1,6 @@
 'use strict';
 import Config from './config';
+import Filetree from './filetree';
 import * as readline from 'readline';
 
 export class Client
@@ -10,20 +11,26 @@ export class Client
     {
         // process.stdin.setEncoding('utf8');
         this.config = new Config();
+        this.filetree = new Filetree(this.config, new Map([
+            ['created', Client.prototype.fileCreated.bind(this)],
+            ['changed', Client.prototype.fileChanged.bind(this)],
+            ['removed', Client.prototype.fileRemoved.bind(this)],
+        ]));
+        // this.session = new Session(this.config);
+        // this.listener = new RequestListener(this.config);
+
 
         this.readInterface = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
-
-        // this.connection = new Connection(this.config);
-        // this.filetree = new Filetree(this.config);
     }
 
     run()
     {
-        // this.filetree.watch();
-        // this.connection.open();
+        this.filetree.watch();
+        // this.session.start();
+        // this.listener.open();
     }
 
     shutdown()
@@ -31,8 +38,9 @@ export class Client
         this.exit = true;
         console.log('Shutting down StoreIt client...');
         this.config.save();
-        // this.connection.close();
-        // this.filetree.unwatch();
+        this.filetree.unwatch();
+        // this.session.destroy();
+        // this.listener.close();
         this.readInterface.close();
     }
 
@@ -57,10 +65,45 @@ export class Client
             this.readUserInput();
         }
     }
+
+    fileCreated(filename, stat)
+    {
+        console.log(filename, 'created', stat);
+    }
+
+    fileChanged(filename, currStat, oldStat)
+    {
+        console.log(filename, 'changed', currStat, oldStat);
+    }
+
+    fileRemoved(filename, stat)
+    {
+        console.log(filename, 'removed', stat);
+    }
+
+    postpone(task, ...args)
+    {
+        this.readInterface.pause();
+        task.call(...args);
+        this.readInterface.resume();
+    }
+
+    configInit()
+    {
+        this.postpone(Config.prototype.init, this.config);
+    }
+
+    configReset()
+    {
+        this.postpone(Config.prototype.reset, this.config);
+    }
 }
 
 const CMDS = new Map([
-    ['exit', Client.prototype.shutdown]
+    ['config', Client.prototype.configInit],
+    ['exit', Client.prototype.shutdown],
+    ['reset', Client.prototype.configReset],
 ]);
+
 
 Client.prototype.CMDS = CMDS;

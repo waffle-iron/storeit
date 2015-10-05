@@ -1,5 +1,6 @@
 {
     "dev": true,
+    "notify": true,
     "dist": "./dist",
     "main": "app.js",
     "srcsPath": "./src/",

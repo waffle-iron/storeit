@@ -13,10 +13,8 @@ export default class Config
 
     constructor()
     {
-        this.data = {};
-        let file = Config.exists() ? CONFIG_FILES.usr : CONFIG_FILES.dfl;
-        let fd = fs.readFileSync(`${__dirname}/${file}`, 'utf8');
-        Object.assign(this.data, JSON.parse(fd));
+        let file = this.fileExists() ? CONFIG_FILES.usr : CONFIG_FILES.dfl;
+        this.loadFromFile(file);
         this.valid = true;
 
         if (file === CONFIG_FILES.dfl)
@@ -31,27 +29,49 @@ export default class Config
         fs.writeFileSync(path, JSON.stringify(this.data));
     }
 
+    loadFromFile(file)
+    {
+        let fd = fs.readFileSync(`${__dirname}/${file}`, 'utf8');
+        this.data = {};
+        Object.assign(this.data, JSON.parse(fd));
+    }
+
+    reset()
+    {
+        let resp = '';
+        while (resp !== 'yes' && resp !== 'no')
+        {
+            let question = 'Do you really want to reset configuration' +
+                'to its default ?\n[Yes/No]: ';
+            resp = readlineSync.question(question).trim().toLowerCase();
+        }
+        if (resp === 'yes')
+        {
+            this.loadFromFile(CONFIG_FILES.dfl);
+        }
+    }
+
     init()
     {
+        let showDefault = (key) =>
+        {
+            return key !== 'password' && this.data[key] != null;
+        };
+
         for (let [key, text] of this.STEPS)
         {
             this.valid = false;
             while (!this.valid)
             {
                 let question = `${text}: `;
-                if (this.showDefault(key))
+                if (showDefault(key))
                     question += `[${this[key]}]`;
-                this[key] = readlineSync.question(question).trime();
+                this[key] = readlineSync.question(question).trim();
             }
         }
     }
 
-    showDefault(key)
-    {
-        return key !== 'password' && this.data[key] != null;
-    }
-
-    static exists()
+    fileExists()
     {
         try
         {
@@ -66,15 +86,15 @@ export default class Config
         return true;
     }
 
-    set server(ip)
+    set host(ip)
     {
-        this.data.server = ip;
+        this.data.host = ip;
         this.valid = true;
     }
 
-    get server()
+    get host()
     {
-        return this.data.server;
+        return this.data.host;
     }
 
     set port(num)
@@ -123,7 +143,7 @@ export default class Config
 }
 
 const STEPS = new Map([
-    ['server', 'Server IP address'],
+    ['host', 'Server IP address'],
     ['port', 'Server port'],
     ['username', 'Username'],
     ['password', 'Password'],
