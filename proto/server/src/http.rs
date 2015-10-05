@@ -4,15 +4,13 @@ extern crate std;
 use hyper::client::Response;
 use hyper::header::Connection;
 use hyper::error::Error;
-use std::thread;
-use std::sync::Arc;
 
 use std::io::Read;
 use serialize;
 use user;
 use api;
 
-static URL : &'static str = "http://localhost:7641";
+static URL : &'static str = "http://localhost:7642";
 
 // time between each ping sent to a user in seconds
 static PING_TIME : i8 = 1;
@@ -43,15 +41,18 @@ pub enum RequestData {
     Tree(FileTree),
 }
 
-#[allow(dead_code)]
-pub fn http_get(client: &hyper::Client) -> Result<Response, Error> {
-    client.get(URL)
-        .header(Connection::close())
-        .send()
+pub fn get(client: &hyper::Client, path: &str)
+    -> Result<Response, Error> {
+
+    let url = URL.to_string() + path;
+
+    client.get(&url)
+          .header(Connection::close())
+          .send()
 }
 
 #[allow(dead_code)]
-pub fn http_post(client: &hyper::Client, body_content: &str)
+pub fn post(client: &hyper::Client, body_content: &str)
 -> Result<Response, Error> {
 
     client.post(URL)
