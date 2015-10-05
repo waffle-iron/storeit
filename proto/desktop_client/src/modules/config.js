@@ -19,6 +19,7 @@ export default class Config
 
         if (file === CONFIG_FILES.dfl)
         {
+            this.data.root = Config.userHome() + '/storeit';
             this.init();
         }
     }
@@ -84,6 +85,11 @@ export default class Config
             return false;
         }
         return true;
+    }
+
+    static userHome()
+    {
+        return process.env.HOME || process.env.USERPROFILE;
     }
 
     set host(ip)
