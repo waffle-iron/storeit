@@ -21,7 +21,7 @@ struct RequestHandler {
 
 impl hyper::server::Handler for RequestHandler {
 
-    fn handle(&self, mut request: Request, mut response: Response<Fresh>) {
+    fn handle(&self, request: Request, mut response: Response<Fresh>) {
 
         let user = match user::authenticate(&request) {
             None => { return; }
@@ -45,7 +45,7 @@ fn listen(port: &str) {
 
     let users = Arc::new(user::Users::new());
 
-    let ping_thread = api::handle_ping(&users);
+    let ping_thread = api::handle_ping(users.clone());
 
     let http_handler = RequestHandler {
         users: users.clone(),
