@@ -40,7 +40,8 @@ class HttpSessionRequest
     send(cb)
     {
         let req = https.request(this, cb);
-        req.write(this.data);
+        if (this.data != null)
+            req.write(this.data);
         req.end();
     }
 
