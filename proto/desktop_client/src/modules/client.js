@@ -1,7 +1,8 @@
 'use strict';
+import * as readline from 'readline';
 import Config from './config';
 import Filetree from './filetree';
-import * as readline from 'readline';
+import HttpSession from './httpSession';
 
 export class Client
 {
@@ -11,14 +12,13 @@ export class Client
     {
         // process.stdin.setEncoding('utf8');
         this.config = new Config();
+        this.session = new HttpSession(this.config);
         this.filetree = new Filetree(this.config, new Map([
-            ['created', Client.prototype.fileCreated.bind(this)],
-            ['changed', Client.prototype.fileChanged.bind(this)],
-            ['removed', Client.prototype.fileRemoved.bind(this)],
+            ['created', HttpSession.prototype.fileCreated.bind(this.session)],
+            ['changed', HttpSession.prototype.fileChanged.bind(this.session)],
+            ['removed', HttpSession.prototype.fileRemoved.bind(this.session)]
         ]));
-        // this.session = new Session(this.config);
-        // this.listener = new RequestListener(this.config);
-
+        // this.listener = new HttptListener(this.config);
 
         this.readInterface = readline.createInterface({
             input: process.stdin,
@@ -29,8 +29,8 @@ export class Client
     run()
     {
         this.filetree.watch();
-        // this.session.start();
-        // this.listener.open();
+        // this.listener.start();
+        this.session.join(this.filetree.list);
     }
 
     shutdown()
@@ -39,7 +39,7 @@ export class Client
         console.log('Shutting down StoreIt client...');
         this.config.save();
         this.filetree.unwatch();
-        // this.session.destroy();
+        this.session.leave();
         // this.listener.close();
         this.readInterface.close();
     }
@@ -66,21 +66,6 @@ export class Client
         }
     }
 
-    fileCreated(filename, stat)
-    {
-        console.log(filename, 'created', stat);
-    }
-
-    fileChanged(filename, currStat, oldStat)
-    {
-        console.log(filename, 'changed', currStat, oldStat);
-    }
-
-    fileRemoved(filename, stat)
-    {
-        console.log(filename, 'removed', stat);
-    }
-
     postpone(task, ...args)
     {
         this.readInterface.pause();
@@ -103,6 +88,7 @@ const CMDS = new Map([
     ['config', Client.prototype.configInit],
     ['exit', Client.prototype.shutdown],
     ['reset', Client.prototype.configReset],
+    ['run', Client.prototype.run],
 ]);
 
 Client.prototype.CMDS = CMDS;
