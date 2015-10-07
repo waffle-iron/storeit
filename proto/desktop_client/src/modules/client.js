@@ -1,8 +1,8 @@
 'use strict';
 import * as readline from 'readline';
 import Config from './config';
-import Filetree from './filetree';
-import HttpSession from './httpSession';
+import FileTree from './file-tree';
+import HttpSession from './http-session';
 
 export class Client
 {
@@ -13,7 +13,7 @@ export class Client
         // process.stdin.setEncoding('utf8');
         this.config = new Config();
         this.session = new HttpSession(this.config);
-        this.filetree = new Filetree(this.config, new Map([
+        this.fileTree = new FileTree(this.config, new Map([
             ['created', HttpSession.prototype.fileCreated.bind(this.session)],
             ['changed', HttpSession.prototype.fileChanged.bind(this.session)],
             ['removed', HttpSession.prototype.fileRemoved.bind(this.session)]
@@ -28,7 +28,7 @@ export class Client
 
     run()
     {
-        this.filetree.watch();
+        this.fileTree.watch();
         // this.listener.start();
         this.session.join(this.filetree.list);
     }
@@ -38,15 +38,32 @@ export class Client
         this.exit = true;
         console.log('Shutting down StoreIt client...');
         this.config.save();
-        this.filetree.unwatch();
+        this.fileTree.unwatch();
         this.session.leave();
         // this.listener.close();
         this.readInterface.close();
     }
 
+    configInit()
+    {
+        this.postpone(Config.prototype.init, this.config, true);
+    }
+
+    configReset()
+    {
+        this.postpone(Config.prototype.reset, this.config);
+    }
+
     readUserInput(promptedText='storeIt> ', cb=this.matchCommand.bind(this))
     {
         this.readInterface.question(promptedText, cb);
+    }
+
+    postpone(task, ...args)
+    {
+        this.readInterface.pause();
+        task.call(...args);
+        this.readInterface.resume();
     }
 
     matchCommand(input)
@@ -64,23 +81,6 @@ export class Client
         {
             this.readUserInput();
         }
-    }
-
-    postpone(task, ...args)
-    {
-        this.readInterface.pause();
-        task.call(...args);
-        this.readInterface.resume();
-    }
-
-    configInit()
-    {
-        this.postpone(Config.prototype.init, this.config, true);
-    }
-
-    configReset()
-    {
-        this.postpone(Config.prototype.reset, this.config);
     }
 }
 

@@ -1,32 +1,30 @@
 'use strict';
 import * as watch from 'watch';
 
-export default class Filetree
+export default class FileWatcher
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(config, callbacks)
+    constructor(root, callbacks)
     {
-        this.config = config;
+        this.rootDir = root;
         this.callbacks = callbacks;
         this.monitor = null;
     }
 
-    watch()
+    start()
     {
-        let watcher = (monitor) =>
-        {
+        watch.createMonitor(this.rootDir, (monitor) => {
             console.log('watching test:', this.config);
             this.monitor = monitor;
             for (let [ev, func] of this.callbacks)
             {
                 this.monitor.on(ev, func);
             }
-        };
-        watch.createMonitor(this.config.root, watcher);
+        });
     }
 
-    unwatch()
+    stop()
     {
         if (this.monitor)
         {
