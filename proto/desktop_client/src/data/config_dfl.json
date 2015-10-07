@@ -1,7 +1,7 @@
 {
-    "host":"",
-    "port":"",
+    "host":"127.0.0.1",
+    "port":"8042",
     "username":"storeit",
-    "password":"storeit",
-    "root":""
+    "password":"",
+    "root":"storeit"
 }

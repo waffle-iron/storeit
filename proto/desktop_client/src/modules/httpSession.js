@@ -7,12 +7,12 @@ class HttpSessionRequest
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(method, path)
+    constructor(method, path, config)
     {
         this.options = {
-            hostname: this.config.host,
-            port: this.config.port,
-            auth: `${this.config.username}:${this.config.password}`,
+            hostname: config.host,
+            port: config.port,
+            auth: `${config.username}:${config.password}`,
             method: method,
             path: path
         };
@@ -112,8 +112,7 @@ export default class HttpSession
 
     fileRemoved(filename)
     {
-        let reqParams = {
-            // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        let reqParams = {// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
             file_path: filename
         };
         this.request('DELETE', '/data/tree', reqParams, (res) => {
@@ -123,7 +122,7 @@ export default class HttpSession
 
     request(method, path, data, cb)
     {
-        let req = new HttpSessionRequest(method, path);
+        let req = new HttpSessionRequest(method, path, this.config);
         req.dataSet(data);
         req.send(cb);
     }

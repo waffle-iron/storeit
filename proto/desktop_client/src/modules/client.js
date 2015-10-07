@@ -75,7 +75,7 @@ export class Client
 
     configInit()
     {
-        this.postpone(Config.prototype.init, this.config);
+        this.postpone(Config.prototype.init, this.config, true);
     }
 
     configReset()

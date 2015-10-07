@@ -19,7 +19,6 @@ export default class Config
 
         if (file === CONFIG_FILES.dfl)
         {
-            this.data.root = Config.userHome() + '/storeit';
             this.init();
         }
     }
@@ -52,24 +51,32 @@ export default class Config
         }
     }
 
-    init()
+    init(nl=false)
     {
-        let showDefault = (key) =>
-        {
-            return key !== 'password' && this.data[key] != null;
-        };
-
-        for (let [key, text] of this.STEPS)
+        for (let [field, text] of this.STEPS)
         {
             this.valid = false;
             while (!this.valid)
             {
-                let question = `${text}: `;
-                if (showDefault(key))
-                    question += `[${this[key]}]`;
-                this[key] = readlineSync.question(question).trim();
+                this.question(field, text, nl);
             }
         }
+    }
+
+    question(field, text, nl)
+    {
+        let showDefault = (field) => {
+            return field !== 'password' && this.data[field] != null;
+        };
+
+        let questStr = text;
+        if (field !== 'root')
+            questStr += ': ';
+        if (showDefault(field))
+            questStr += `[${this.data[field]}]`;
+        this[field] = readlineSync.question(questStr).trim();
+
+        if (nl) console.log('');
     }
 
     fileExists()
@@ -94,7 +101,8 @@ export default class Config
 
     set host(ip)
     {
-        this.data.host = ip;
+        if (ip && ip.length)
+            this.data.host = ip;
         this.valid = true;
     }
 
@@ -105,7 +113,8 @@ export default class Config
 
     set port(num)
     {
-        this.data.port = num;
+        if (num && num.length)
+            this.data.port = num;
         this.valid = true;
     }
 
@@ -116,7 +125,8 @@ export default class Config
 
     set username(name)
     {
-        this.data.username = name;
+        if (name && name.length)
+            this.data.username = name;
         this.valid = true;
     }
 
@@ -127,7 +137,8 @@ export default class Config
 
     set password(pass)
     {
-        this.data.password = pass;
+        if (pass && pass.length)
+            this.data.password = pass;
         this.valid = true;
     }
 
@@ -138,13 +149,14 @@ export default class Config
 
     set root(path)
     {
-        this.data.root = path;
+        if (path && path.length)
+            this.data.root = path;
         this.valid = true;
     }
 
     get root()
     {
-        return this.data.root;
+        return Config.userHome() + this.data.root;
     }
 }
 
@@ -153,7 +165,7 @@ const STEPS = new Map([
     ['port', 'Server port'],
     ['username', 'Username'],
     ['password', 'Password'],
-    ['root', 'Folder path'],
+    ['root', 'Folder name: ' + Config.userHome() + '/'],
 ]);
 
 Config.prototype.STEPS = STEPS;
