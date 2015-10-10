@@ -5,6 +5,7 @@ mod http;
 mod serialize;
 mod user;
 mod api;
+mod database;
 
 use std::env;
 use hyper::Server;
@@ -60,6 +61,7 @@ fn listen(port: &str) {
 }
 
 fn main() {
+
 
     let mut arg = env::args();
     match arg.nth(1) {

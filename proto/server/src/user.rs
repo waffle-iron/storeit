@@ -6,6 +6,8 @@ use std::sync::{Arc, RwLock};
 use std::collections::HashMap;
 use self::time::Tm;
 
+use database;
+
 pub struct User {
     pub ip : std::net::SocketAddr,
     pub database_id : i32,
@@ -74,6 +76,13 @@ pub fn authenticate(request: &hyper::server::Request) -> Option<User> {
 
     println!("{}, {}", username, password);
     // TODO: check if the credentials are correct, and get user from database
+    
+    let user = match database::get_user(username) {
+        Some(u) => u,
+        None => return None
+    };
+
+    println!("user has tree {}", user.file_tree);
  
     Some(User {
         ip: request.remote_addr,
