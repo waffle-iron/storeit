@@ -17,10 +17,10 @@ export default class Config
         this.loadFromFile(file);
         this.valid = true;
 
-        if (file === CONFIG_FILES.dfl)
-        {
-            this.init();
-        }
+        // if (file === CONFIG_FILES.dfl)
+        // {
+        //     this.init();
+        // }
     }
 
     save()

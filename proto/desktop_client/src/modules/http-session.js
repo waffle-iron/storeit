@@ -1,7 +1,7 @@
 'use strict';
 import * as https from 'https';
 import * as queryString from 'querystring';
-import Filetree from './filetree';
+import Filetree from './file-tree';
 
 class HttpSessionRequest
 {
