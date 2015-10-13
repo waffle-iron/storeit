@@ -1,6 +1,7 @@
 'use strict';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
+
 import FileWatcher from './file-watcher';
 
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB
@@ -58,11 +59,15 @@ export default class FileTree
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(config, watchCallbacks)
+    constructor(watchCallbacks)
     {
-        this.config = config;
+        this.init();
         this.list = [];
-        this.watcher = new FileWatcher(config.root, watchCallbacks);
+        this.watcher = new FileWatcher(watchCallbacks);
+    }
+
+    init()
+    {
     }
 
     watch()
@@ -73,5 +78,18 @@ export default class FileTree
     unwatch()
     {
         this.watcher.stop();
+    }
+
+    static fileExists(path)
+    {
+        try
+        {
+            fs.accessSync(path, fs.R_OK | fs.W_OK);
+        }
+        catch (e)
+        {
+            return false;
+        }
+        return true;
     }
 }

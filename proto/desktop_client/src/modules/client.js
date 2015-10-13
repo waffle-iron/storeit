@@ -1,8 +1,8 @@
 'use strict';
 import * as readline from 'readline';
-import Config from './config';
 import FileTree from './file-tree';
 import HttpSession from './http-session';
+import {Config} from './config';
 
 export class Client
 {
@@ -11,14 +11,13 @@ export class Client
     constructor()
     {
         // process.stdin.setEncoding('utf8');
-        this.config = new Config();
-        this.session = new HttpSession(this.config);
-        this.fileTree = new FileTree(this.config, new Map([
+        this.session = new HttpSession();
+        this.fileTree = new FileTree(new Map([
             ['created', HttpSession.prototype.fileCreated.bind(this.session)],
             ['changed', HttpSession.prototype.fileChanged.bind(this.session)],
             ['removed', HttpSession.prototype.fileRemoved.bind(this.session)]
         ]));
-        // this.listener = new HttptListener(this.config);
+        // this.listener = new HttptListener();
 
         this.readInterface = readline.createInterface({
             input: process.stdin,
@@ -37,7 +36,6 @@ export class Client
     {
         this.exit = true;
         console.log('Shutting down StoreIt client...');
-        this.config.save();
         this.fileTree.unwatch();
         this.session.leave();
         // this.listener.close();
@@ -46,12 +44,12 @@ export class Client
 
     configInit()
     {
-        this.postpone(Config.prototype.init, this.config, true);
+        this.postpone(Config.prototype.init, global.config, true);
     }
 
     configReset()
     {
-        this.postpone(Config.prototype.reset, this.config);
+        this.postpone(Config.prototype.reset, global.config);
     }
 
     readUserInput(promptedText='storeIt> ', cb=this.matchCommand.bind(this))

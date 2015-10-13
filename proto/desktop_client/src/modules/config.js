@@ -2,25 +2,34 @@
 import * as fs from 'fs';
 import * as readlineSync from 'readline-sync';
 
+import FileTree from './file-tree';
+
 const CONFIG_FILES = {
     dfl: '../data/config_dfl.json',
     usr: '../data/config_usr.json'
 };
 
-export default class Config
+export class Config
 {
     // jscs:disable disallowAnonymousFunctions
 
     constructor()
     {
-        let file = this.fileExists() ? CONFIG_FILES.usr : CONFIG_FILES.dfl;
+        let path = `${__dirname}/${CONFIG_FILES.usr}`;
+        let file = CONFIG_FILES[FileTree.fileExists(path) ? 'usr' : 'dfl'];
         this.loadFromFile(file);
         this.valid = true;
 
-        // if (file === CONFIG_FILES.dfl)
-        // {
-        //     this.init();
-        // }
+        if (file === CONFIG_FILES.dfl)
+        {
+            console.info('StoreIt configuration not set.');
+            this.init();
+        }
+
+        if (!FileTree.fileExists(this.root))
+        {
+            fs.mkdirSync(this.root);
+        }
     }
 
     save()
@@ -77,21 +86,6 @@ export default class Config
         this[field] = readlineSync.question(questStr).trim();
 
         if (nl) console.log('');
-    }
-
-    fileExists()
-    {
-        try
-        {
-            let path = `${__dirname}/${CONFIG_FILES.usr}`;
-            fs.accessSync(path, fs.R_OK | fs.W_OK);
-        }
-        catch (e)
-        {
-            console.info('StoreIt configuration not set.');
-            return false;
-        }
-        return true;
     }
 
     static userHome()
@@ -156,7 +150,7 @@ export default class Config
 
     get root()
     {
-        return Config.userHome() + this.data.root;
+        return Config.userHome() + '/' + this.data.root;
     }
 }
 

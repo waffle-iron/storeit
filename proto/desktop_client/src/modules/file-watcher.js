@@ -5,9 +5,9 @@ export default class FileWatcher
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(root, callbacks)
+    constructor(callbacks)
     {
-        this.rootDir = root;
+        this.rootDir = global.config.root;
         this.callbacks = callbacks;
         this.monitor = null;
     }
@@ -15,7 +15,7 @@ export default class FileWatcher
     start()
     {
         watch.createMonitor(this.rootDir, (monitor) => {
-            console.log('watching test:', this.config);
+            console.log('watching test:', global.config);
             this.monitor = monitor;
             for (let [ev, func] of this.callbacks)
             {

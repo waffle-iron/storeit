@@ -7,12 +7,12 @@ class HttpSessionRequest
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(method, path, config)
+    constructor(method, path)
     {
         this.options = {
-            hostname: config.host,
-            port: config.port,
-            auth: `${config.username}:${config.password}`,
+            hostname: global.config.host,
+            port: global.config.port,
+            auth: `${global.config.username}:${global.config.password}`,
             method: method,
             path: path
         };
@@ -56,9 +56,8 @@ export default class HttpSession
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(config)
+    constructor()
     {
-        this.config = config;
     }
 
     join(filelist)
@@ -122,7 +121,7 @@ export default class HttpSession
 
     request(method, path, data, cb)
     {
-        let req = new HttpSessionRequest(method, path, this.config);
+        let req = new HttpSessionRequest(method, path);
         req.dataSet(data);
         req.send(cb);
     }
