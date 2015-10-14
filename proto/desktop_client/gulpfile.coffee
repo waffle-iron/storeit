@@ -40,8 +40,8 @@ gulp.task 'lint', ->
         .pipe jshint('.jshintrc')
         .pipe(jshint.reporter('jshint-stylish'))
         # .pipe(jshint.reporter('fail'))
-        .pipe jscs()
-        .pipe jscs.reporter()
+        # .pipe jscs()
+        # .pipe jscs.reporter()
 
 gulp.task 'data-copy', ->
     gulp.src "#{config.srcsPath}/data/**"

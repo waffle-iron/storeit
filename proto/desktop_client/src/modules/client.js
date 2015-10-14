@@ -10,7 +10,6 @@ export class Client
 
     constructor()
     {
-        // process.stdin.setEncoding('utf8');
         this.session = new HttpSession();
         this.fileTree = new FileTree(new Map([
             ['created', HttpSession.prototype.fileCreated.bind(this.session)],
@@ -38,7 +37,7 @@ export class Client
         console.log('Shutting down StoreIt client...');
         this.fileTree.unwatch();
         this.session.leave();
-        // this.listener.close();
+        // this.listener.stop();
         this.readInterface.close();
     }
 
