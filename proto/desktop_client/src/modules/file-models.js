@@ -75,7 +75,7 @@ export class FileModel extends AFileModel
                 this.hashDigest(hash);
                 this.parentHashUpdate();
                 console.log('file parsed:', this.absPath);
-                resolve(this);
+                resolve();
             });
 
             fd.on('readable', () => {
