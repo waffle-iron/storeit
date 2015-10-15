@@ -19,62 +19,76 @@ class AFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(filePath, parentDir, cb)
+    constructor(filePath, parentDir=null)
+    {
+        this.data = {
+            // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+            path: filePath, // TODO change to relative
+            type: null,
+            file_medata: {
+
+            },
+            file_content_hash: null,
+            chunks_hashes: []
+        };
+        this.parentDir = parentDir;
+    }
+
+
+    hashDigest(hash)
     {
         // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-        this.path = filePath;
-        this.type = null;
-        this.file_medata = {};
-
-        this.file_content_hash = crypto.createHash(HASH_FMT.type);
-        this.chunks_hashes = [];
-        this.hashCalculate(parentDir, cb); // pure virtual
+        this.data.file_content_hash = hash.digest(HASH_FMT.enc);
     }
 
-    hashUpdate(data)
+    printLast()
+    {
+        console.log('chunk hash:', this.data.chunks_hashes.slice(-1)[0]);
+    }
+
+    parentHashUpdate()
     {
         // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-        this.file_content_hash.update(data);
+        if (this.parentDir) this.parentDir.hashUpdate(this.file_content_hash);
     }
-
-    hashDigest()
-    {
-        this.file_content_hash = this.file_content_hash.digest(HASH_FMT.enc);
-    }
-
-    // pure virtual hashCalculate(parentDir);
 }
 
 export class FileModel extends AFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(filePath, parentDir, cb)
+    constructor(filePath)
     {
-        super(filePath, parentDir, cb);
-        this.type = FILE_TYPES.regular;
+        super(filePath);
+        this.data.type = FILE_TYPES.regular;
     }
 
-    hashCalculate(parentDir, cb)
+    hashCalculate(fullPath)
     {
-        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-        let fd = fs.createReadStream(this.path);
+        return new Promise((resolve) =>
+        {
+            // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+            let fd = fs.createReadStream(fullPath);
+            let hash = crypto.createHash(HASH_FMT.type);
 
-        fd.on('end', () => {
-            this.hashDigest();
-            if (parentDir) parentDir.hashUpdate(this.file_content_hash);
-            cb(this);
-        });
+            fd.on('end', () => {
+                this.hashDigest(hash);
+                this.parentHashUpdate();
+                console.log('file parsed:', fullPath);
+                resolve(this);
+            });
 
-        fd.on('readable', () => {
-            let chunk = null;
-            while ((chunk = fd.read(CHUNK_SIZE)) !== null)
-            {
-                this.chunks_hashes.push(crypto.createHash(HASH_FMT.type)
-                    .update(chunk).digest(HASH_FMT.enc));
-                // console.log('chunk hash:', this.chunks_hashes.slice(-1)[0]);
-                this.hashUpdate(chunk);
-            }
+            fd.on('readable', () => {
+                let chunk = null;
+                while ((chunk = fd.read(CHUNK_SIZE)) !== null)
+                {
+                    let chunkHash = crypto.createHash(HASH_FMT.type)
+                        .update(chunk).digest(HASH_FMT.enc);
+                    this.data.chunks_hashes.push(chunkHash);
+                    hash.update(chunk);
+                    // this.printLast();
+                }
+            });
         });
     }
 }
@@ -83,14 +97,52 @@ export class DirModel extends AFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(filePath, parentDir, cb)
+    constructor(filePath)
     {
-        super(filePath, parentDir, cb);
-        this.type = FILE_TYPES.directory;
+        super(filePath);
+        this.data.type = FILE_TYPES.directory;
+        this.hash = crypto.createHash(HASH_FMT.type);
     }
 
-    hashCalculate(parentDir)
+    hashCalculate(dirPath)
     {
+        return new Promise((resolve) =>
+        {
+            let files = fs.readdirSync(dirPath);
+            const nbFiles = files.length;
+            let count = 0;
 
+            for (let filename of files)
+            {
+                let fullPath = path.join(dirPath, filename);
+                this.entryParse(fullPath)
+                .then(() =>
+                {
+                    if (++count === nbFiles)
+                    {
+                        this.parentHashUpdate();
+                        resolve();
+                    }
+                })
+                .catch((err) => { console.log(err); } );
+            }
+        });
+    }
+
+    entryParse(fullPath)
+    {
+        console.log('entry:', fullPath);
+        let stats = fs.lstatSync(fullPath);
+        let entry = null;
+        if (stats.isDirectory())
+            entry = new DirModel(fullPath, this);
+        else
+            entry = new FileModel(fullPath, this);
+        return entry.hashCalculate(fullPath);
+    }
+
+    hashUpdate(data)
+    {
+        this.hash.update(data);
     }
 }

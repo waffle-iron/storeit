@@ -7,5 +7,5 @@ import * as storeit from './storeit';
 global.config = new storeit.Config();
 
 new storeit.Client()
-    .readUserInput();
+    .init();
 global.config.save();
