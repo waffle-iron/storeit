@@ -20,7 +20,8 @@ pub struct User {
 
 impl User {
 
-    pub fn compute_tree(&self) {
+    pub fn process_tree(&self, user_vision: &serialize::File) {
+        println!("we have : {:?} vs {:?}", self.root, user_vision);
     }
 
     pub fn refresh_timestamp(&mut self) {

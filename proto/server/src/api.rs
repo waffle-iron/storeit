@@ -4,6 +4,7 @@ extern crate time;
 
 use user;
 use http;
+use serialize;
 
 use hyper::Client;
 use std::thread;
@@ -12,9 +13,11 @@ use std::vec::Vec;
 
 /* user opening a session */
 pub fn connect_user(username: &str, users: &user::Users,
-                    request: &hyper::server::Request) {
+                    request: &hyper::server::Request,
+                    user_vision: &serialize::File) {
 
     let user = user::make_new_user_from_db(request, username).unwrap();
+    user.process_tree(user_vision);
     users.add(user);
 }
 
