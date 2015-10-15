@@ -11,15 +11,19 @@ use std::sync::Arc;
 use std::vec::Vec;
 
 /* user opening a session */
-pub fn connect_user(user: user::User, users: &user::Users) {
-    user.compute_tree();
+pub fn connect_user(username: &str, users: &user::Users,
+                    request: &hyper::server::Request) {
+
+    let user = user::make_new_user_from_db(request, username).unwrap();
     users.add(user);
 }
 
-fn ping_failure(user: &user::User, dead: &mut Vec<Arc<String>> ) {
+fn ping_failure(user: &user::User, dead: &mut Vec<String> ) {
 
     println!("{} failed the ping test", user.username);
-    dead.push(user.username.clone());
+
+    // later, do not allocate
+    dead.push(String::from(user.username.as_ref()));
 }
 
 fn send_ping(users: &user::Users) {

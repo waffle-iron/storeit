@@ -6,40 +6,14 @@ use hyper::header::Connection;
 use hyper::error::Error;
 
 use std::io::Read;
-use serialize;
 use user;
 use api;
+use serialize;
 
 static URL : &'static str = "http://localhost:7642";
 
 // time between each ping sent to a user in seconds
 static PING_TIME : i8 = 1;
-
-/*
- * The json datastructures involved in the requests
- */
-
-#[derive(RustcDecodable, RustcEncodable)]
-#[derive(Debug)]
-pub struct File {
-    path : String,
-    metadata : String,
-    full_hash : String,
-    kind : String,
-    chunks_hashes : Vec<String>,
-    tree : Option<FileTree>,
-}
-
-#[derive(RustcDecodable, RustcEncodable)]
-#[derive(Debug)]
-pub struct FileTree {
-    file_list : Vec<File>,
-}
-
-#[derive(Debug)]
-pub enum RequestData {
-    Tree(FileTree),
-}
 
 pub fn get(client: &hyper::Client, path: &str)
     -> Result<Response, Error> {
@@ -62,7 +36,7 @@ pub fn post(client: &hyper::Client, body_content: &str)
 
 #[allow(unused)]
 pub fn parse_post(mut request: hyper::server::Request,
-                  user: user::User,
+                  username: &str,
                   users: &user::Users) {
 
     let api_uri : String = match request.uri {
@@ -88,7 +62,7 @@ pub fn parse_post(mut request: hyper::server::Request,
             match serialize::decode_login(&request_body) {
                 Err(e) => println!("POST request is invalid: {}", e),
                 Ok(r) => {
-                    api::connect_user(user, &users);
+                    api::connect_user(username, &users, &request);
                     println!("request succeeded : {:?}", r);
                 }
 

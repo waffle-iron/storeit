@@ -1,14 +1,30 @@
 use rustc_serialize::json;
-use http;
 
-pub fn decode_login(json: &str) -> Result<http::RequestData, &'static str> {
-    let data = match json::decode(json) {
-        Err(e) => {
-            println!("{:?}", e);
-            return Err("Json Decoder Error");
-        }
-        Ok(dat) => dat
-    };
+/*
+ * The json datastructures involved in the requests
+ */
+#[derive(RustcDecodable, RustcEncodable)]
+#[derive(Debug)]
+pub struct File {
+    path : String,
+    metadata : String,
+    unique_hash : String,
+    kind : String,
+    chunks_hashes : Vec<String>,
+    files : Option<Vec<File>>,
+}
 
-    Ok(http::RequestData::Tree(data))
+#[derive(Debug)]
+pub enum RequestData {
+    Tree(File),
+}
+
+pub fn decode_tree(json: &str) -> Result<File, json::DecoderError> {
+    json::decode(json)
+}
+
+pub fn decode_login(json: &str) -> Result<RequestData, json::DecoderError> {
+
+    let tree = try!(decode_tree(json));
+    Ok(RequestData::Tree(tree))
 }

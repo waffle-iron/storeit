@@ -24,15 +24,17 @@ impl hyper::server::Handler for RequestHandler {
 
     fn handle(&self, request: Request, mut response: Response<Fresh>) {
 
-        let user = match user::authenticate(&request) {
-            None => { return; }
-            Some(u) => u
-        };
+        let username =
+            match user::credentials(&request, &*self.users) {
+                Some(username) => username,
+                None    => return,
+            };
 
+        println!("credentials ok for {}", username);
 
         match request.method {
             Method::Get  => response.send(b"Hello World!").unwrap(),
-            Method::Post => http::parse_post(request, user, &*self.users),
+            Method::Post => http::parse_post(request, &username, &*self.users),
             _            =>
                 *response.status_mut() = StatusCode::MethodNotAllowed,
         }
