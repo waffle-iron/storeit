@@ -17,7 +17,7 @@ export default class FileTree
     init()
     {
         return new DirModel(global.config.root)
-            .hashCalculate(global.config.root);
+            .hashCalculate();
     }
 
 

@@ -23,14 +23,15 @@ class AFileModel
     {
         this.data = {
             // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-            path: filePath, // TODO change to relative
-            type: null,
-            file_medata: {
+            path: path.relative(global.config.root, filePath),
+            metadata: {
 
             },
-            file_content_hash: null,
+            unique_hash: null,
+            type: null,
             chunks_hashes: []
         };
+        this.absPath = filePath;
         this.parentDir = parentDir;
     }
 
@@ -38,7 +39,7 @@ class AFileModel
     hashDigest(hash)
     {
         // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-        this.data.file_content_hash = hash.digest(HASH_FMT.enc);
+        this.data.unique_hash = hash.digest(HASH_FMT.enc);
     }
 
     printLast()
@@ -49,7 +50,7 @@ class AFileModel
     parentHashUpdate()
     {
         // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-        if (this.parentDir) this.parentDir.hashUpdate(this.file_content_hash);
+        if (this.parentDir) this.parentDir.hashUpdate(this.unique_hash);
     }
 }
 
@@ -63,18 +64,17 @@ export class FileModel extends AFileModel
         this.data.type = FILE_TYPES.regular;
     }
 
-    hashCalculate(fullPath)
+    hashCalculate()
     {
         return new Promise((resolve) =>
         {
-            // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-            let fd = fs.createReadStream(fullPath);
+            let fd = fs.createReadStream(this.absPath);
             let hash = crypto.createHash(HASH_FMT.type);
 
             fd.on('end', () => {
                 this.hashDigest(hash);
                 this.parentHashUpdate();
-                console.log('file parsed:', fullPath);
+                console.log('file parsed:', this.absPath);
                 resolve(this);
             });
 
@@ -82,14 +82,20 @@ export class FileModel extends AFileModel
                 let chunk = null;
                 while ((chunk = fd.read(CHUNK_SIZE)) !== null)
                 {
-                    let chunkHash = crypto.createHash(HASH_FMT.type)
-                        .update(chunk).digest(HASH_FMT.enc);
-                    this.data.chunks_hashes.push(chunkHash);
+                    this.chunkAdd(chunk);
                     hash.update(chunk);
                     // this.printLast();
                 }
             });
         });
+    }
+
+    chunkAdd(chunk)
+    {
+        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        let chunkHash = crypto.createHash(HASH_FMT.type)
+            .update(chunk).digest(HASH_FMT.enc);
+        this.data.chunks_hashes.push(chunkHash);
     }
 }
 
@@ -104,41 +110,40 @@ export class DirModel extends AFileModel
         this.hash = crypto.createHash(HASH_FMT.type);
     }
 
-    hashCalculate(dirPath)
+    hashCalculate()
     {
         return new Promise((resolve) =>
         {
-            let files = fs.readdirSync(dirPath);
+            let files = fs.readdirSync(this.absPath);
             const nbFiles = files.length;
             let count = 0;
 
             for (let filename of files)
             {
-                let fullPath = path.join(dirPath, filename);
-                this.entryParse(fullPath)
-                .then(() =>
+                this.entryParse(filename).then(() =>
                 {
                     if (++count === nbFiles)
                     {
                         this.parentHashUpdate();
                         resolve();
                     }
-                })
-                .catch((err) => { console.log(err); } );
+                });
             }
         });
     }
 
-    entryParse(fullPath)
+    entryParse(filename)
     {
-        console.log('entry:', fullPath);
-        let stats = fs.lstatSync(fullPath);
+        let absPath = path.join(this.absPath, filename);
+        console.log('entry:', absPath);
+
+        let stats = fs.lstatSync(absPath);
         let entry = null;
         if (stats.isDirectory())
-            entry = new DirModel(fullPath, this);
+            entry = new DirModel(absPath, this);
         else
-            entry = new FileModel(fullPath, this);
-        return entry.hashCalculate(fullPath);
+            entry = new FileModel(absPath, this);
+        return entry.hashCalculate();
     }
 
     hashUpdate(data)
