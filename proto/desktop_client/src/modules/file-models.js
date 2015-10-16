@@ -74,7 +74,8 @@ export class FileModel extends AFileModel
             fd.on('end', () => {
                 this.hashDigest(hash);
                 this.parentHashUpdate();
-                console.log('file parsed:', this.absPath);
+                console.log('file parsed:', this.data.path,
+                '[', this.data.unique_hash, ']');
                 resolve();
             });
 
@@ -84,7 +85,7 @@ export class FileModel extends AFileModel
                 {
                     this.chunkAdd(chunk);
                     hash.update(chunk);
-                    // this.printLast();
+                    this.printLast();
                 }
             });
         });
