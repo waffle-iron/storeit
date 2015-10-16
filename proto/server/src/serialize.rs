@@ -6,12 +6,12 @@ use rustc_serialize::json;
 #[derive(RustcDecodable, RustcEncodable)]
 #[derive(Debug)]
 pub struct File {
-    path : String,
-    metadata : String,
-    unique_hash : String,
-    kind : String,
-    chunks_hashes : Vec<String>,
-    files : Option<Vec<File>>,
+    pub path : String,
+    pub unique_hash : String,
+    pub kind : String,
+    pub chunks_hashes : Vec<String>,
+    pub files : Option<Vec<File>>,
+    pub id_indir : u32,
 }
 
 #[derive(Debug)]

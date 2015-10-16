@@ -6,6 +6,7 @@ mod serialize;
 mod user;
 mod api;
 mod database;
+mod file;
 
 use std::env;
 use hyper::Server;

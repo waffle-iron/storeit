@@ -2,6 +2,7 @@ extern crate time;
 extern crate hyper;
 
 use std;
+use std::rc::Rc;
 use std::sync::{RwLock, RwLockReadGuard};
 use std::collections::HashMap;
 use self::time::Tm;
@@ -9,6 +10,8 @@ use self::time::Tm;
 use database;
 use serialize;
 use user;
+use api;
+use file;
 
 pub struct User {
     pub ip : std::net::SocketAddr,
@@ -21,7 +24,27 @@ pub struct User {
 impl User {
 
     pub fn process_tree(&self, user_vision: &serialize::File) {
-        println!("we have : {:?} vs {:?}", self.root, user_vision);
+        self.process_subtree(user_vision, &self.root);
+    }
+
+    fn process_subtree(&self, user_vision: &serialize::File,
+                            server_vision: &serialize::File)  {
+
+        //let (user_dir_len, server_dir_len) =
+        //    (user_vision.files.len(), server_vision.files.len());
+
+        let rc_user_vision = Rc::new(user_vision);
+        let rc_server_vision = Rc::new(server_vision);
+
+        match file::diff(rc_user_vision.clone(), rc_server_vision.clone()) {
+            file::FileDiff::FileAdded(who, f) =>
+                api::add_file(self, who, &*f),
+            file::FileDiff::FileRemoved(who, f) =>
+                api::remove_file(self, who, &*f),
+            file::FileDiff::FileDataUpdated(who, f) =>
+                api::update_file(self, who, &*f),
+            _ => (),
+        }
     }
 
     pub fn refresh_timestamp(&mut self) {

@@ -5,6 +5,7 @@ extern crate time;
 use user;
 use http;
 use serialize;
+use file;
 
 use hyper::Client;
 use std::thread;
@@ -74,5 +75,18 @@ pub fn handle_ping(users: Arc<user::Users>) -> thread::JoinHandle<()> {
     });
 
     return child;
+}
+
+pub fn add_file(user: &user::User, who: file::Who,
+                file: &serialize::File) {
+    println!("let's tell {} to add file {}", user.username, file.path);
+}
+
+pub fn remove_file(user: &user::User, who: file::Who,
+                   file: &serialize::File) {
+}
+
+pub fn update_file(user: &user::User, who: file::Who,
+                   file: &serialize::File) {
 }
 
