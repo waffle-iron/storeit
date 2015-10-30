@@ -31,4 +31,11 @@ impl Chunks {
     		None => None
     	}
     }
+
+    pub fn add_chunk_for_user(& mut self, username : String, chunk : String) {
+        if (!self.chunk_map.contains_key(&chunk)){
+            self.chunk_map.insert(chunk.clone(), Vec::new());
+        }
+        self.chunk_map.get_mut(&chunk).unwrap().push(username.clone());
+    }
 }

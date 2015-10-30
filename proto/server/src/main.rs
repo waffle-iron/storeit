@@ -96,6 +96,19 @@ fn main() {
         }        
     }
 
+    chunks_manager.add_chunk_for_user("louis".to_string(), "trololol".to_string());
+
+    match chunks_manager.get_chunk_owners("trololol".to_string()) {
+        Some(chunks) => {
+            for c in chunks {
+                println!("{}", c);
+            }
+        },
+        None => {
+            println!("No chunks...");
+        }        
+    }    
+
     let mut arg = env::args();
     match arg.nth(1) {
         Some(ref s)           => listen(s),
