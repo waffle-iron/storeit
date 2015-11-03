@@ -19,32 +19,41 @@ Prérequis
 
 Configurer npm
 ---------------
-Il est important que le dossier d'installation de npm soit un dossier sur lequel l'utilisateur à les droits en écriture. Cela a fin d'éviter de lancer npm avec des droits privilégiés (souvent npm vous engueulera si vous le lancez avec sudo).
+Il est important que le dossier d'installation de npm soit un dossier sur lequel l'utilisateur à les droits en écriture. Cela a fin d'éviter de lancer npm avec des droits privilégiés (souvent npm vous engueulera si vous le lancez avec *sudo*).
 Bref, pour connaître le dossier d'installation courant :
 
     npm config get prefix
 
-Sous Windows, la configuartion par défaut est suffisante. En revanche sous Linux/OS X, le chemin par défaut est /usr/local. Pour le changer utilisez : 
+Sous Windows, la configuartion par défaut est suffisante. En revanche sous Linux/OS X, le chemin par défaut est */usr/local*. Pour le changer utilisez : 
 
     npm config set prefix <new_path>
 
-Sans oublier d'ajouter de modifier votre PATH. Typiquement, disons que je voulez utilisez le dossier ~/.npm, il suffit de rajouter cette ligne à votre .bashrc :
+Sans oublier de modifier votre PATH. Par exemple: vous souhaiter utiliser le dossier *~/.npm*. Il suffit d'ajouter cette ligne à votre *.bashrc* :
 
     PATH=$PATH:$HOME/.npm/bin
 
+Notez le */bin* (nécessaire sous Linux/OS X).
+
 Installation
 ------------
-1. Après avoir cloné le dépôt
+1. Clonez le dépôt et configurez npm
 2. Depuis un terminal, rendez-vous dans le dossier "*desktop_client*"
-3. Lancez l'installation
+3. Lancez l'installation :
+
 
     npm link
 
-3. Pour vérifier que l'installation c'est bien effectuée, dans votre terminal tapez
+4. Pour vérifier que l'installation c'est bien effectuée, dans votre terminal tapez :
+
 
     storeit_client
 
-4. Si la commande est introuvable, ajoutez *C:\Users\\**nom_utilisateur**\AppData\Roaming\npm* à votre PATH
+5. Si la commande est introuvable, le problème vient de votre PATH. Encore une fois :
+
+
+    npm config get prefix 
+
+Vérifiez que ce chemin est bien présent dans le PATH (ajouter */bin* sous Linux/OS X)
 
 Liens utiles
 ------------
