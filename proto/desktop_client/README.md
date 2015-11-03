@@ -17,6 +17,21 @@ Prérequis
 * node.js & npm
 * git
 
+Configurer npm
+---------------
+Il est important que le dossier d'installation de npm soit un dossier sur lequel l'utilisateur à les droits en écriture. Cela a fin d'éviter de lancer npm avec des droits privilégiés (souvent npm vous engueulera si vous le lancez avec sudo).
+Bref, pour connaître le dossier d'installation courant :
+
+    npm config get prefix
+
+Sous Windows, la configuartion par défaut est suffisante. En revanche sous Linux/OS X, le chemin par défaut est /usr/local. Pour le changer utilisez : 
+
+    npm config set prefix <new_path>
+
+Sans oublier d'ajouter de modifier votre PATH. Typiquement, disons que je voulez utilisez le dossier ~/.npm, il suffit de rajouter cette ligne à votre .bashrc :
+
+    PATH=$PATH:$HOME/.npm/bin
+
 Installation
 ------------
 1. Après avoir cloné le dépôt
