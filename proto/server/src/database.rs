@@ -12,7 +12,7 @@ pub struct User {
 pub fn get_user(name: &str) -> Option<User> {
 
     // TODO: don't open the connection each time
-    let conn = Connection::connect("postgres://Sevauk@localhost/storeit", &SslMode::None)
+    let conn = Connection::connect("postgres://sevauk@localhost/storeit", &SslMode::None)
         .unwrap();
 
     let stmt = conn.prepare("SELECT * FROM client WHERE username = $1").unwrap();
