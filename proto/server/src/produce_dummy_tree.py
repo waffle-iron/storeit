@@ -1,29 +1,41 @@
 #! /usr/bin/env python3
 
-import os, sys
+import os, sys, random
 
-path = './' if len(sys.argv) == 1 else sys.argv[1] + '/'
+path = '.' if len(sys.argv) == 1 else sys.argv[1]
 
-def walk(indent, path):
+def walk_entry(indent, entry, path):
+    walk(indent, entry.name, entry.stat().st_mtime_ns, entry.is_dir(), path)
+
+def walk(indent, name, st_mtime_ns, is_dir, path):
     
-    def printind(msg):
+    def printind(indent, msg):
         print('{}{}'.format(' ' * indent, msg))
 
-    for entry in os.scandir(path):
-        printind('{')
+    def print_entry(indent, st_mtime_ns, is_dir, path):
+        printind(indent, '{')
         indent += 2
-        printind('"path: {}{}",'.format(path, entry.name))
-        printind('"metadata": "{}",'.format(entry.stat().st_mtime_ns))
-        printind('"unique_hash": "TODO",')
-        printind('"kind": "' + ('0' if entry.is_dir() else '1') + '",')
-        printind('"files": [')
-        if entry.is_dir():
-            walk(indent + 2, path + entry.name + '/')
-        printind(']')
+        printind(indent, '"path": "{}",'.format(path))
+        printind(indent, '"metadata": "{}",'.format(st_mtime_ns))
+        printind(indent, '"unique_hash": "{}",'.format(random.randrange(0, 10000000)))
+        printind(indent, '"kind": ' + ('0' if is_dir else '1') + ',')
+        printind(indent, '"files": [')
+
+        if is_dir:
+
+            passed = False
+            for entry in os.scandir(path):
+                if passed:
+                    printind(indent, ',')
+                walk_entry(indent + 2, entry, path)
+                passed = True
+                
+        printind(indent, ']')
         indent -= 2
-        printind('},')
+        printind(indent, '}')
 
+    path += name + '/'
 
-print('{')
-walk(2, path)
-print('}')
+    print_entry(indent, st_mtime_ns, is_dir, path)
+
+walk(0, '', 0, True, path)

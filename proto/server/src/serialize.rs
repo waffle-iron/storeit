@@ -7,11 +7,11 @@ use rustc_serialize::json;
 #[derive(Debug)]
 pub struct File {
     pub path : String,
+    pub metadata : String,
     pub unique_hash : String,
-    pub kind : String,
-    pub chunks_hashes : Vec<String>,
+    pub kind : i16,
+    pub chunks_hashes : Option<Vec<String>>,
     pub files : Option<Vec<File>>,
-    pub id_indir : u32,
 }
 
 #[derive(Debug)]

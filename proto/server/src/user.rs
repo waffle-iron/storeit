@@ -27,23 +27,56 @@ impl User {
         self.process_subtree(user_vision, &self.root);
     }
 
+    fn diff_two_folders(&self, fa: &serialize::File, fb: &serialize::File) {
+    }
+
+    fn find_in_dir(&self, dir: &serialize::File, hash: &str) {
+    }
+
     fn process_subtree(&self, user_vision: &serialize::File,
                             server_vision: &serialize::File)  {
 
-        //let (user_dir_len, server_dir_len) =
-        //    (user_vision.files.len(), server_vision.files.len());
+        // TODO: use some hashmaps for files
+        for ref fileU in user_vision.files.as_ref().unwrap() {
 
-        let rc_user_vision = Rc::new(user_vision);
-        let rc_server_vision = Rc::new(server_vision);
+            let mut found = false;
 
-        match file::diff(rc_user_vision.clone(), rc_server_vision.clone()) {
-            file::FileDiff::FileAdded(who, f) =>
-                api::add_file(self, who, &*f),
-            file::FileDiff::FileRemoved(who, f) =>
-                api::remove_file(self, who, &*f),
-            file::FileDiff::FileDataUpdated(who, f) =>
-                api::update_file(self, who, &*f),
-            _ => (),
+            for ref fileS in server_vision.files.as_ref().unwrap() {
+                if fileS.path == fileU.path {
+                    println!("{} == {}", fileS.path, fileU.path);
+                    if fileU.unique_hash != fileS.unique_hash {
+                        println!("{} has totally been modified", fileU.path);
+
+                        // TODO: handle the case where a directory
+                        // has been transformed into a file
+                        if fileU.kind == 0 && fileS.kind == 0 {
+                            self.process_subtree(fileU, fileS);
+                        }
+                    }
+                    found = true;
+                    break;
+                }
+            }
+
+            if !found {
+                println!("we should definitely add {} to the server", fileU.path);
+            }
+        }
+
+        for ref fileS in server_vision.files.as_ref().unwrap() {
+
+            let mut found = false;
+
+            for ref fileU in user_vision.files.as_ref().unwrap() {
+                if fileS.path == fileU.path {
+                    found = true;
+                    break;
+                }
+            }
+
+            if !found {
+                println!("we should definetely add {} to the client", fileS.path);
+            }
         }
     }
 

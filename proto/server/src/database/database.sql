@@ -8,11 +8,10 @@ CREATE TABLE client (
 );
 
 INSERT INTO client VALUES(0, 'sevauk', 'zulu', '{
-    "path": "/",
-    "unique_hash": "sample full_hash",
-    "kind": "1", 
-    "chunks_hashes": [
-        "sample chunks_hashes"
-    ],
-    "id_indir": "0"
+        "path": "./",
+        "metadata": "0",
+        "unique_hash": "unique_hash",
+        "kind": 0, 
+        "files": [
+        ]
     }');
