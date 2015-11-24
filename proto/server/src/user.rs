@@ -2,7 +2,6 @@ extern crate time;
 extern crate hyper;
 
 use std;
-use std::rc::Rc;
 use std::sync::{RwLock, RwLockReadGuard};
 use std::collections::HashMap;
 use self::time::Tm;
@@ -10,8 +9,8 @@ use self::time::Tm;
 use database;
 use serialize;
 use user;
-use api;
 use file;
+use api;
 
 pub struct User {
     pub ip : std::net::SocketAddr,
@@ -27,31 +26,32 @@ impl User {
         self.process_subtree(user_vision, &self.root);
     }
 
-    fn diff_two_folders(&self, fa: &serialize::File, fb: &serialize::File) {
-    }
-
-    fn find_in_dir(&self, dir: &serialize::File, hash: &str) {
-    }
-
     fn process_subtree(&self, user_vision: &serialize::File,
                             server_vision: &serialize::File)  {
 
         // TODO: use some hashmaps for files
-        for ref fileU in user_vision.files.as_ref().unwrap() {
+        for ref file_u in user_vision.files.as_ref().unwrap() {
 
             let mut found = false;
 
-            for ref fileS in server_vision.files.as_ref().unwrap() {
-                if fileS.path == fileU.path {
-                    println!("{} == {}", fileS.path, fileU.path);
-                    if fileU.unique_hash != fileS.unique_hash {
-                        println!("{} has totally been modified", fileU.path);
+            for ref file_s in server_vision.files.as_ref().unwrap() {
+                if file_s.path == file_u.path {
+
+                    if file_u.unique_hash != file_s.unique_hash {
 
                         // TODO: handle the case where a directory
                         // has been transformed into a file
-                        if fileU.kind == 0 && fileS.kind == 0 {
-                            self.process_subtree(fileU, fileS);
+                        if file_u.kind == 0 && file_s.kind == 0 {
+                            self.process_subtree(file_u, file_s);
                         }
+
+                        let (who_is_most_recent, file_most_recent) =
+                            file::get_most_recent(file_u, file_s);
+
+                        api::update_file(&self,
+                                         who_is_most_recent,
+                                         file_most_recent);
+                        
                     }
                     found = true;
                     break;
@@ -59,23 +59,23 @@ impl User {
             }
 
             if !found {
-                println!("we should definitely add {} to the server", fileU.path);
+                api::add_file(&self, file::Who::Server, file_u);
             }
         }
 
-        for ref fileS in server_vision.files.as_ref().unwrap() {
+        for ref file_s in server_vision.files.as_ref().unwrap() {
 
             let mut found = false;
 
-            for ref fileU in user_vision.files.as_ref().unwrap() {
-                if fileS.path == fileU.path {
+            for ref file_u in user_vision.files.as_ref().unwrap() {
+                if file_s.path == file_u.path {
                     found = true;
                     break;
                 }
             }
 
             if !found {
-                println!("we should definetely add {} to the client", fileS.path);
+                api::add_file(&self, file::Who::Client, file_s);
             }
         }
     }

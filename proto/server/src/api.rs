@@ -79,14 +79,16 @@ pub fn handle_ping(users: Arc<user::Users>) -> thread::JoinHandle<()> {
 
 pub fn add_file(user: &user::User, who: file::Who,
                 file: &serialize::File) {
-    println!("let's tell {} to add file {}", user.username, file.path);
+    println!("{} ADD", file.path);
 }
 
 pub fn remove_file(user: &user::User, who: file::Who,
                    file: &serialize::File) {
+    println!("{} REMOVE", file.path);
 }
 
 pub fn update_file(user: &user::User, who: file::Who,
                    file: &serialize::File) {
+    println!("{} UPDATE", file.path);
 }
 

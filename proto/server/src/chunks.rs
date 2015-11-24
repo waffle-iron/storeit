@@ -1,6 +1,4 @@
-use std::collections::{HashMap, LinkedList};
-
-use user;
+use std::collections::HashMap;
 
 pub struct Chunks {
     chunk_map : HashMap<String, Vec<String>>,
@@ -16,7 +14,7 @@ impl Chunks {
     pub fn add_user(& mut self, username : String, hash_vec : Vec<String>) {
 
         for hash in hash_vec{
-            if (!self.chunk_map.contains_key(&hash)){
+            if !self.chunk_map.contains_key(&hash) {
                 self.chunk_map.insert(hash, Vec::new());
             }
             else {
@@ -33,7 +31,7 @@ impl Chunks {
     }
 
     pub fn add_chunk_for_user(& mut self, username : String, chunk : String) {
-        if (!self.chunk_map.contains_key(&chunk)){
+        if !self.chunk_map.contains_key(&chunk) {
             self.chunk_map.insert(chunk.clone(), Vec::new());
         }
         self.chunk_map.get_mut(&chunk).unwrap().push(username.clone());
