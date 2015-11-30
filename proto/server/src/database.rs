@@ -1,5 +1,7 @@
 extern crate postgres;
 
+use serialize;
+
 use self::postgres::{Connection, SslMode};
 
 pub struct User {
@@ -26,4 +28,14 @@ pub fn get_user(name: &str) -> Option<User> {
         });
     }
     None
+}
+
+pub fn save_tree_for_user(username: &str, tree: &serialize::File) {
+
+    // TODO: don't open the connection each time
+    let conn = Connection::connect("postgres://sevauk@localhost/storeit", &SslMode::None).unwrap();
+
+    conn.execute("UPDATE client SET file_tree = $1 WHERE username = $2",
+                 &[&serialize::tree_to_json(tree).unwrap(), &username])
+        .unwrap();
 }

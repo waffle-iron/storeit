@@ -61,9 +61,9 @@ pub fn parse_post(mut request: hyper::server::Request,
         "/session/join" => {
             match serialize::decode_tree(&request_body) {
                 Err(e) => println!("POST request is invalid: {}", e),
-                Ok(r) => {
+                Ok(ref r) => {
                     api::connect_user(username, &users,
-                                      &request, &r);
+                                      &request, r);
                 }
 
             }

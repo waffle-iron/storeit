@@ -22,19 +22,23 @@ pub struct User {
 
 impl User {
 
-    pub fn process_tree(&self, user_vision: &serialize::File) {
-        self.process_subtree(user_vision, &self.root);
+    pub fn process_tree(&mut self, user_vision: &serialize::File) {
+
+        let mut new_tree = self.root.clone();
+
+        self.process_subtree(user_vision, &mut new_tree);
+        self.root = new_tree;
     }
 
     fn process_subtree(&self, user_vision: &serialize::File,
-                            server_vision: &serialize::File)  {
+                            server_vision: &mut serialize::File) {
 
         // TODO: use some hashmaps for files
-        for ref file_u in user_vision.files.as_ref().unwrap() {
+        for file_u in user_vision.files.as_ref().unwrap() {
 
             let mut found = false;
 
-            for ref file_s in server_vision.files.as_ref().unwrap() {
+            for file_s in server_vision.files.as_mut().unwrap().iter_mut() {
                 if file_s.path == file_u.path {
 
                     if file_u.unique_hash != file_s.unique_hash {
@@ -59,7 +63,8 @@ impl User {
             }
 
             if !found {
-                api::add_file(&self, file::Who::Server, file_u);
+                api::add_file(self, file::Who::Server, file_u);
+                server_vision.files.as_mut().unwrap().push(file_u.clone());
             }
         }
 
@@ -75,9 +80,10 @@ impl User {
             }
 
             if !found {
-                api::add_file(&self, file::Who::Client, file_s);
+                api::add_file(self, file::Who::Client, file_s);
             }
         }
+
     }
 
     pub fn refresh_timestamp(&mut self) {
@@ -147,6 +153,8 @@ pub fn make_new_user_from_db(request: &hyper::server::Request,
         Some(u) => u,
         None => return None
     };
+
+    println!("on server, user has tree: {}", user.file_tree);
 
     Some(User {
         ip: request.remote_addr,

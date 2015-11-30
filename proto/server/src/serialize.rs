@@ -3,7 +3,7 @@ use rustc_serialize::json;
 /*
  * The json datastructures involved in the requests
  */
-#[derive(RustcDecodable, RustcEncodable)]
+#[derive(RustcDecodable, RustcEncodable, Clone)]
 #[derive(Debug)]
 pub struct File {
     pub path : String,
@@ -17,3 +17,8 @@ pub struct File {
 pub fn decode_tree(json: &str) -> Result<File, json::DecoderError> {
     json::decode(json)
 }
+
+pub fn tree_to_json(tree: &File) -> Result<String, json::EncoderError> {
+    json::encode(tree)
+}
+

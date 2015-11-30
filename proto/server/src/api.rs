@@ -6,6 +6,7 @@ use user;
 use http;
 use serialize;
 use file;
+use database;
 
 use hyper::Client;
 use std::thread;
@@ -17,8 +18,11 @@ pub fn connect_user(username: &str, users: &user::Users,
                     request: &hyper::server::Request,
                     user_vision: &serialize::File) {
 
-    let user = user::make_new_user_from_db(request, username).unwrap();
+    let mut user = user::make_new_user_from_db(request, username).unwrap();
     user.process_tree(user_vision);
+    println!("at end of sync, user has tree on server: {:?}", user.root);
+    database::save_tree_for_user(&user.username, &user.root);
+    println!("user {} has synced and been added", &user.username);
     users.add(user);
 }
 
@@ -79,7 +83,14 @@ pub fn handle_ping(users: Arc<user::Users>) -> thread::JoinHandle<()> {
 
 pub fn add_file(user: &user::User, who: file::Who,
                 file: &serialize::File) {
-    println!("{} ADD", file.path);
+
+    match who {
+        file::Who::Server => {
+           println!("server has registered a new file"); 
+        }
+        file::Who::Client => {
+        }
+    }
 }
 
 pub fn remove_file(user: &user::User, who: file::Who,
