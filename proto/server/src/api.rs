@@ -46,7 +46,9 @@ fn send_ping(users: &user::Users) {
 
         for user_tuple in &mut *guard {
             println!("sending ping to user: {}", user_tuple.0);
-            match http::get(&Client::new(), "/session/ping") {
+
+            // TODO: use IpAddr when not nightly anymore
+            match http::get(&user_tuple.1.ip, "/session/ping") {
                 Err(_)      =>
                     ping_failure(&user_tuple.1, &mut dead_users),
                 Ok(res) =>
@@ -78,7 +80,7 @@ pub fn handle_ping(users: Arc<user::Users>) -> thread::JoinHandle<()> {
         }
     });
 
-    return child;
+    child
 }
 
 pub fn add_file(user: &user::User, who: file::Who,
@@ -89,6 +91,11 @@ pub fn add_file(user: &user::User, who: file::Who,
            println!("server has registered a new file"); 
         }
         file::Who::Client => {
+            // TODO: if it fails, we should try it again until it succeeds
+            http::post(&user.ip,
+                       &serialize::tree_to_json(file).unwrap(),
+                       "/data/tree",
+                      ).unwrap();
         }
     }
 }
