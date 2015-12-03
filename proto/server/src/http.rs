@@ -12,7 +12,7 @@ use serialize;
 
 // time between each ping sent to a user in seconds
 static PING_TIME : i8 = 1;
-static CLIENT_PORT : &'static str = ":7641";
+static CLIENT_PORT : &'static str = ":7642";
 
 fn build_url(ip: &str, path: &str) -> String {
     "http://".to_string() + &ip + CLIENT_PORT + path
@@ -30,7 +30,6 @@ pub fn get(ip: &std::net::SocketAddr, path: &str) -> Result<Response, Error> {
     let client = hyper::Client::new();
 
     client.get(&url)
-        .header(Connection::close())
         .send()
 }
 

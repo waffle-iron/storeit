@@ -174,7 +174,7 @@ pub fn credentials(request: &hyper::server::Request, users: &user::Users)
 
     let (username, password) = match auth_option {
         None => {
-            println!("User has not authentication in http header");
+            println!("User has no authentication in http header");
             return None;
         }
         Some(ref header) => {
