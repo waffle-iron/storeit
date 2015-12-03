@@ -15,6 +15,7 @@ static PING_TIME : i8 = 1;
 static CLIENT_PORT : &'static str = ":7642";
 
 fn build_url(ip: &str, path: &str) -> String {
+
     "http://".to_string() + &ip + CLIENT_PORT + path
 }
 
@@ -23,7 +24,7 @@ pub fn get(ip: &std::net::SocketAddr, path: &str) -> Result<Response, Error> {
     let mut ip = ip.to_string();
     ip.truncate(9);
 
-    let url = build_url(&ip.to_string(), path);
+    let url = build_url(&ip, path);
 
     println!("url is {}", url);
 
@@ -36,7 +37,11 @@ pub fn get(ip: &std::net::SocketAddr, path: &str) -> Result<Response, Error> {
 pub fn post(ip: &std::net::SocketAddr, path: &str, body_content: &str)
 -> Result<Response, Error> {
 
-    let url = build_url(&ip.to_string(), path);
+
+    let mut ip = ip.to_string();
+    ip.truncate(9);
+
+    let url = build_url(&ip, path);
 
     let client = hyper::Client::new();
 

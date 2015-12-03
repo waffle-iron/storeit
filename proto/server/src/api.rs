@@ -93,8 +93,8 @@ pub fn add_file(user: &user::User, who: file::Who,
         file::Who::Client => {
             // TODO: if it fails, we should try it again until it succeeds
             http::post(&user.ip,
-                       &serialize::tree_to_json(file).unwrap(),
                        "/data/tree",
+                       &serialize::tree_to_json(file).unwrap(),
                       ).unwrap();
         }
     }

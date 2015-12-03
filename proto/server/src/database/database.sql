@@ -1,3 +1,5 @@
+CREATE USER server LOGIN;
+
 DROP TABLE client;
 
 CREATE TABLE client (
@@ -15,3 +17,5 @@ INSERT INTO client VALUES(0, 'sevauk', 'zulu', '{
         "files": [
         ]
     }');
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO server;
