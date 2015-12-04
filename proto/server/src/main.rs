@@ -8,7 +8,6 @@ mod api;
 mod database;
 mod file;
 mod chunks;
-
 use std::env;
 use hyper::Server;
 use hyper::server::Request;
@@ -65,50 +64,6 @@ fn listen(port: &str) {
 }
 
 fn main() {
-
-    let mut chunks_manager = chunks::Chunks::new();
-
-
-    chunks_manager.add_user("louis".to_string(), vec!["123456789".to_string(), "1234a56".to_string()].clone());
-    chunks_manager.add_user("adrien".to_string(), vec!["123456789".to_string(), "789ez0".to_string()].clone());
-    chunks_manager.add_user("romain".to_string(), vec!["123456789".to_string(), "787dsd851".to_string()].clone());
-    chunks_manager.add_user("alex".to_string(), vec!["123456789".to_string(), "5641azesd2".to_string()].clone());    
-
-    match chunks_manager.get_chunk_owners("123456789".to_string()) {
-        Some(chunks) => {
-            for c in chunks {
-                println!("{}", c);
-            }
-        },
-        None => {
-            println!("No chunks...");
-        }
-    }
-
-    match chunks_manager.get_chunk_owners("trololol".to_string()) {
-        Some(chunks) => {
-            for c in chunks {
-                println!("{}", c);
-            }
-        },
-        None => {
-            println!("No chunks...");
-        }        
-    }
-
-    chunks_manager.add_chunk_for_user("louis".to_string(), "trololol".to_string());
-
-    match chunks_manager.get_chunk_owners("trololol".to_string()) {
-        Some(chunks) => {
-            for c in chunks {
-                println!("{}", c);
-            }
-        },
-        None => {
-            println!("No chunks...");
-        }        
-    }    
-
     let mut arg = env::args();
     match arg.nth(1) {
         Some(ref s)           => listen(s),
