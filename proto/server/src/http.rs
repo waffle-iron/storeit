@@ -10,26 +10,44 @@ use user;
 use api;
 use serialize;
 
-static URL : &'static str = "http://localhost:7642";
-
 // time between each ping sent to a user in seconds
 static PING_TIME : i8 = 1;
+static CLIENT_PORT : &'static str = ":7642";
 
-pub fn get(client: &hyper::Client, path: &str)
-    -> Result<Response, Error> {
+fn build_url(ip: &str, path: &str) -> String {
 
-    let url = URL.to_string() + path;
-
-    client.get(&url)
-          .header(Connection::close())
-          .send()
+    "http://".to_string() + &ip + CLIENT_PORT + path
 }
 
-#[allow(dead_code)]
-pub fn post(client: &hyper::Client, body_content: &str)
+pub fn get(ip: &std::net::SocketAddr, path: &str) -> Result<Response, Error> {
+
+    let mut ip = ip.to_string();
+    ip.truncate(9);
+
+    let url = build_url(&ip, path);
+
+    println!("url is {}", url);
+
+    let client = hyper::Client::new();
+
+    client.get(&url)
+        .send()
+}
+
+pub fn post(ip: &std::net::SocketAddr, path: &str, body_content: &str)
 -> Result<Response, Error> {
 
-    client.post(URL)
+
+    let mut ip = ip.to_string();
+    ip.truncate(9);
+
+    let url = build_url(&ip, path);
+
+    let client = hyper::Client::new();
+
+    println!("posting at {}", url);
+
+    client.post(&url)
         .body(body_content)
         .send()
 }
@@ -61,9 +79,9 @@ pub fn parse_post(mut request: hyper::server::Request,
         "/session/join" => {
             match serialize::decode_tree(&request_body) {
                 Err(e) => println!("POST request is invalid: {}", e),
-                Ok(r) => {
+                Ok(ref r) => {
                     api::connect_user(username, &users,
-                                      &request, &r);
+                                      &request, r);
                 }
 
             }
