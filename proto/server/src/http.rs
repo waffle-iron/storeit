@@ -34,6 +34,21 @@ pub fn get(ip: &std::net::SocketAddr, path: &str) -> Result<Response, Error> {
         .send()
 }
 
+// TODO: merge this with the post function
+pub fn put(ip: &std::net::SocketAddr, path: &str, body_content: &str)
+-> Result<Response, Error> {
+
+    let mut ip = ip.to_string();
+    ip.truncate(9);
+
+    let url = build_url(&ip, path);
+    let client = hyper::Client::new();
+
+    client.put(&url)
+        .body(body_content)
+        .send()
+}
+
 pub fn post(ip: &std::net::SocketAddr, path: &str, body_content: &str)
 -> Result<Response, Error> {
 

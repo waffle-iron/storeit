@@ -1,5 +1,6 @@
 use serialize;
 
+#[derive(PartialEq)]
 pub enum Who {
     Server,
     Client,

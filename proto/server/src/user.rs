@@ -49,13 +49,21 @@ impl User {
                             self.process_subtree(file_u, file_s);
                         }
 
-                        let (who_is_most_recent, file_most_recent) =
+                        if {
+                            let (who_is_most_recent, file_most_recent) =
                             file::get_most_recent(file_u, file_s);
 
-                        api::update_file(&self,
-                                         who_is_most_recent,
+                            api::update_file(&self,
+                                         &who_is_most_recent,
                                          file_most_recent);
-                        
+
+                            who_is_most_recent
+                        } == file::Who::Server {
+
+                            // TODO: do this only if the client responds OK
+                            file_s.unique_hash = file_u.unique_hash.clone();
+                        }
+
                     }
                     found = true;
                     break;
@@ -63,7 +71,7 @@ impl User {
             }
 
             if !found {
-                api::add_file(self, file::Who::Server, file_u);
+                api::add_file(self, &file::Who::Server, file_u);
                 server_vision.files.as_mut().unwrap().push(file_u.clone());
             }
         }
@@ -80,7 +88,7 @@ impl User {
             }
 
             if !found {
-                api::add_file(self, file::Who::Client, file_s);
+                api::add_file(self, &file::Who::Client, file_s);
             }
         }
 
@@ -136,14 +144,14 @@ impl Users {
         }
 
     /* TODO: succeed this someday 
-    pub fn get(&self, name: &str) -> Option<&'a User> {
+       pub fn get(&self, name: &str) -> Option<&'a User> {
 
-        let mut guard : RwLockReadGuard<'a, _> = self.get_read_guard();
+       let mut guard : RwLockReadGuard<'a, _> = self.get_read_guard();
 
-        let gotten = (*guard).get(name);
-        gotten
-    }
-    */
+       let gotten = (*guard).get(name);
+       gotten
+       }
+       */
 }
 
 pub fn make_new_user_from_db(request: &hyper::server::Request,
@@ -166,7 +174,7 @@ pub fn make_new_user_from_db(request: &hyper::server::Request,
 }
 
 pub fn credentials(request: &hyper::server::Request, users: &user::Users)
-    -> Option<String> {
+-> Option<String> {
 
     let auth_option
         : Option<&hyper::header::Authorization<hyper::header::Basic>>

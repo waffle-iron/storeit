@@ -83,14 +83,14 @@ pub fn handle_ping(users: Arc<user::Users>) -> thread::JoinHandle<()> {
     child
 }
 
-pub fn add_file(user: &user::User, who: file::Who,
+pub fn add_file(user: &user::User, who: &file::Who,
                 file: &serialize::File) {
 
     match who {
-        file::Who::Server => {
+        &file::Who::Server => {
            println!("server has registered a new file"); 
         }
-        file::Who::Client => {
+        &file::Who::Client => {
             // TODO: if it fails, we should try it again until it succeeds
             http::post(&user.ip,
                        "/data/tree",
@@ -100,13 +100,31 @@ pub fn add_file(user: &user::User, who: file::Who,
     }
 }
 
-pub fn remove_file(user: &user::User, who: file::Who,
+pub fn remove_file(user: &user::User, who: &file::Who,
                    file: &serialize::File) {
-    println!("{} REMOVE", file.path);
+    match who {
+        &file::Who::Server => {
+            println!("server has deleted a file");
+        }
+        &file::Who::Client => {
+            // TODO
+        }
+    }
 }
 
-pub fn update_file(user: &user::User, who: file::Who,
+pub fn update_file(user: &user::User, who: &file::Who,
                    file: &serialize::File) {
-    println!("{} UPDATE", file.path);
+
+    match who {
+        &file::Who::Server => {
+            println!("server noticed file update")
+        }
+        &file::Who::Client => {
+            http::put(&user.ip,
+                      "/data/tree",
+                      &serialize::tree_to_json(file).unwrap(),
+                      ).unwrap();
+        }
+    }
 }
 
