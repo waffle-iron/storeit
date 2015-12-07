@@ -26,7 +26,7 @@ pub fn get(ip: &std::net::SocketAddr, path: &str) -> Result<Response, Error> {
 
     let url = build_url(&ip, path);
 
-    println!("url is {}", url);
+    debug!("url is {}", url);
 
     let client = hyper::Client::new();
 
@@ -60,7 +60,7 @@ pub fn post(ip: &std::net::SocketAddr, path: &str, body_content: &str)
 
     let client = hyper::Client::new();
 
-    println!("posting at {}", url);
+    debug!("posting at {}", url);
 
     client.post(&url)
         .body(body_content)
@@ -75,7 +75,7 @@ pub fn parse_post(mut request: hyper::server::Request,
     let api_uri : String = match request.uri {
         hyper::uri::RequestUri::AbsolutePath(ref s) => String::from(s.as_ref()),
         _ => {
-            println!("bad enum for request.uri");
+            error!("bad enum for request.uri");
             return;
         }
     };
@@ -85,7 +85,7 @@ pub fn parse_post(mut request: hyper::server::Request,
     match request.read_to_string(&mut request_body) {
         Ok(_) => (),
         Err(_) => {
-            println!("oops, cannot read http request");
+            error!("oops, cannot read http request");
             return;
         }
     }
@@ -93,7 +93,7 @@ pub fn parse_post(mut request: hyper::server::Request,
     match api_uri.as_ref() {
         "/session/join" => {
             match serialize::decode_tree(&request_body) {
-                Err(e) => println!("POST request is invalid: {}", e),
+                Err(e) => error!("POST request is invalid: {}", e),
                 Ok(ref r) => {
                     api::connect_user(username, &users,
                                       &request, r);
@@ -101,6 +101,6 @@ pub fn parse_post(mut request: hyper::server::Request,
 
             }
         }
-        other     => println!("Request has bad or unimplemented API url: {}", other),
+        other     => error!("Request has bad or unimplemented API url: {}", other),
     }
 }

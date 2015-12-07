@@ -1,6 +1,10 @@
 extern crate hyper;
 extern crate rustc_serialize;
 
+#[macro_use]
+extern crate log;
+extern crate env_logger; 
+
 mod http;
 mod serialize;
 mod user;
@@ -8,6 +12,7 @@ mod api;
 mod database;
 mod file;
 mod chunks;
+
 use std::env;
 use hyper::Server;
 use hyper::server::Request;
@@ -31,7 +36,7 @@ impl hyper::server::Handler for RequestHandler {
                 None    => return,
             };
 
-        println!("credentials ok for {}", username);
+        info!("credentials are ok for {}", username);
 
         match request.method {
             Method::Get  => response.send(b"Hello World!").unwrap(),
@@ -55,19 +60,23 @@ fn listen(port: &str) {
         users: users.clone(),
     };
 
-    let code = Server::http(addr).unwrap().handle(http_handler);
-
-    println!("{:?}", code);
+    match Server::http(addr).unwrap().handle(http_handler) {
+        Ok(l) => info!("server runs on port"), // {}", l.socket.port());
+        Err(_) => error!("server could not start")
+    }
 
     let res = ping_thread.join();
-    println!("child ended with {:?}", res);
+    debug!("child ended with {:?}", res);
 }
 
 fn main() {
+
+    env_logger::init().unwrap();
+
     let mut arg = env::args();
     match arg.nth(1) {
         Some(ref s)           => listen(s),
-        None if arg.len() > 2 => println!("Usage: ./prototype [port]"),
+        None if arg.len() > 2 => error!("Usage: ./prototype [port]"),
         None                  => listen("7641"),
     }
 }

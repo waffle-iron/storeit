@@ -20,15 +20,15 @@ pub fn connect_user(username: &str, users: &user::Users,
 
     let mut user = user::make_new_user_from_db(request, username).unwrap();
     user.process_tree(user_vision);
-    println!("at end of sync, user has tree on server: {:?}", user.root);
+    debug!("at end of sync, user has tree on server: {:?}", user.root);
     database::save_tree_for_user(&user.username, &user.root);
-    println!("user {} has synced and been added", &user.username);
+    debug!("user {} has synced and been added", &user.username);
     users.add(user);
 }
 
 fn ping_failure(user: &user::User, dead: &mut Vec<String> ) {
 
-    println!("{} failed the ping test", user.username);
+    error!("{} failed the ping test", user.username);
 
     // later, do not allocate
     dead.push(String::from(user.username.as_ref()));
@@ -45,7 +45,7 @@ fn send_ping(users: &user::Users) {
         let mut guard = users.users_map.write().unwrap();
 
         for user_tuple in &mut *guard {
-            println!("sending ping to user: {}", user_tuple.0);
+            debug!("sending ping to user: {}", user_tuple.0);
 
             // TODO: use IpAddr when not nightly anymore
             match http::get(&user_tuple.1.ip, "/session/ping") {
@@ -64,7 +64,7 @@ fn send_ping(users: &user::Users) {
 
     for name in dead_users {
         users.remove(&name);
-        println!("{} was disconnected", name);
+        debug!("{} was disconnected", name);
     }
 }
 
@@ -88,7 +88,7 @@ pub fn add_file(user: &user::User, who: &file::Who,
 
     match who {
         &file::Who::Server => {
-           println!("server has registered a new file"); 
+           debug!("server has registered a new file"); 
         }
         &file::Who::Client => {
             // TODO: if it fails, we should try it again until it succeeds
@@ -104,7 +104,7 @@ pub fn remove_file(user: &user::User, who: &file::Who,
                    file: &serialize::File) {
     match who {
         &file::Who::Server => {
-            println!("server has deleted a file");
+            debug!("server has deleted a file");
         }
         &file::Who::Client => {
             // TODO
@@ -117,7 +117,7 @@ pub fn update_file(user: &user::User, who: &file::Who,
 
     match who {
         &file::Who::Server => {
-            println!("server noticed file update")
+            debug!("server noticed file update")
         }
         &file::Who::Client => {
             http::put(&user.ip,

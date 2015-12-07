@@ -95,7 +95,7 @@ impl User {
     }
 
     pub fn refresh_timestamp(&mut self) {
-        println!("updating user {}'s timestamp", self.username);
+        debug!("updating user {}'s timestamp", self.username);
         self.last_ping = time::now();
     }
 }
@@ -162,7 +162,7 @@ pub fn make_new_user_from_db(request: &hyper::server::Request,
         None => return None
     };
 
-    println!("on server, user has tree: {}", user.file_tree);
+    debug!("on server, user has tree: {}", user.file_tree);
 
     Some(User {
         ip: request.remote_addr,
@@ -182,13 +182,13 @@ pub fn credentials(request: &hyper::server::Request, users: &user::Users)
 
     let (username, password) = match auth_option {
         None => {
-            println!("User has no authentication in http header");
+            error!("User has no authentication in http header");
             return None;
         }
         Some(ref header) => {
             let password : &str = match header.password {
                 None => {
-                    println!("User {} has not entered a password", header.username);
+                    error!("User {} has not entered a password", header.username);
                     return None;
                 }
                 Some(ref pass) => pass
@@ -205,7 +205,7 @@ pub fn credentials(request: &hyper::server::Request, users: &user::Users)
         // TODO: check for password
         Some(_) => Some(String::from(username)),
         None => {
-            println!("user {} doesn't exists in database", username);
+            error!("user {} doesn't exists in database", username);
             None
         }
     }

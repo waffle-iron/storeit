@@ -112,11 +112,11 @@ fn test_chunk_manager() {
         Some(chunks) => {
             print!("owners of [123456789] : ");
             for c in chunks {
-                println!("{}", c);
+                debug!("{}", c);
             }
         },
         None => {
-            println!("No chunks...");
+            debug!("No chunks...");
         }
     }
 
@@ -125,11 +125,11 @@ fn test_chunk_manager() {
         Some(chunks) => {
 
             for c in chunks {
-                println!("{}", c);
+                debug!("{}", c);
             }
         },
         None => {
-            println!("No chunks...");
+            debug!("No chunks...");
         }        
     }
 
@@ -137,24 +137,24 @@ fn test_chunk_manager() {
     match chunks_manager.get_chunk_owners("trololol".to_string()) {
         Some(chunks) => {
             for c in chunks {
-                println!("ici {}", c);
+                debug!("ici {}", c);
             }
         },
         None => {
-            println!("No chunks...");
+            debug!("No chunks...");
         }        
     }  
   
     chunks_manager.remove_chunk("123456789".to_string());
     match chunks_manager.get_chunk_owners("123456789".to_string()) {
         Some(chunks) => {
-            println!("la");
+            debug!("la");
             for c in chunks {
-                println!("ici {}", c);
+                debug!("ici {}", c);
             }
         },
         None => {
-            println!("No chunks...");
+            debug!("No chunks...");
         }        
     }
 }
