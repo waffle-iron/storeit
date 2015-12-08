@@ -41,14 +41,17 @@ class HttpSessionRequest
     {
         let req = https.request(this, cb);
         if (this.data != null)
+        {
+            console.log(this.data);
             req.write(this.data);
+        }
         req.end();
     }
 
     hasBody()
     {
-        return this.options.method !== 'DELETE';
-        // && this.options.method !== 'GET';
+        return this.options.method !== 'DELETE' &&
+            this.options.method !== 'GET';
     }
 }
 
@@ -58,13 +61,17 @@ export default class HttpSession
 
     constructor()
     {
+        this.connected = false;
     }
 
     join(filelist)
     {
         this.request('POST', '/session/join', filelist, (res) => {
             if (res.statusCode === 200)
+            {
                 console.log('join success.');
+                this.connected = true;
+            }
             else
                 console.log('join fail');
         });
@@ -72,12 +79,16 @@ export default class HttpSession
 
     leave()
     {
+        if (!this.connected)
+            return;
         this.request('POST', '/session/leave', (res) => {
-            console.log('Session closed with status', res);
-            // if (res.statusCode === 200)
-            //     console.log('leave success.');
-            // else
-            //     console.log('leave fail');
+            if (res.statusCode === 200)
+            {
+                console.log('Session closed with status');
+                this.connected = false;
+            }
+            else
+                console.log('leave fail');
         });
     }
 
@@ -111,7 +122,8 @@ export default class HttpSession
 
     fileRemoved(filename)
     {
-        let reqParams = {// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        let reqParams = {
+            // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
             file_path: filename
         };
         this.request('DELETE', '/data/tree', reqParams, (res) => {

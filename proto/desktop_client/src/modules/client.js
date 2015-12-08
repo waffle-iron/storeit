@@ -36,7 +36,7 @@ export class Client
     {
         this.fileTree.watch();
         this.listener.start();
-        // this.session.join(this.filetree.list);
+        this.session.join(this.fileTree.list);
     }
 
     shutdown()
@@ -44,7 +44,7 @@ export class Client
         this.exit = true;
         console.log('Shutting down StoreIt client...');
         this.fileTree.unwatch();
-        // this.session.leave();
+        this.session.leave();
         this.listener.stop();
         this.readInterface.close();
     }
