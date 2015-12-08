@@ -20,7 +20,8 @@ export default class HttpSession
 
     join(filelist)
     {
-        this.post('/session/join', filelist, (err, res) => {
+        let url = `/session/join?port=${global.config.clientPort}`;
+        this.post(url, filelist, (err, res) => {
             if (!err && res.statusCode === 200)
             {
                 console.log('join success.');
