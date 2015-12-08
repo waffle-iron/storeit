@@ -16,10 +16,10 @@ export default class FileTree
 
     init()
     {
-        return new DirModel(global.config.root)
-            .hashCalculate();
+        let root = new DirModel(global.config.root);
+        this.list = root.get();
+        return root.hashCalculate();
     }
-
 
     watch()
     {

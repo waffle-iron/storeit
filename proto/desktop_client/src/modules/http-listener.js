@@ -10,17 +10,24 @@ export default class HttpListener
         this.router = express();
         this.routesDefine();
         this.listening = false;
+        this.port = global.config.clientPort;
     }
 
     start()
     {
-        this.server = this.router.listen(7642, () => {
+        this.server = this.router.listen(this.port);
+        this.server.on('listening', () => {
             this.listening = true;
             this.host = this.server.address().address;
             this.port = this.server.address().port;
 
             console.log('storeit client listening at http://%s/%s',
                 this.host, this.port);
+        });
+        this.server.on('error', () => {
+            ++this.port;
+            console.log('port %s busy, trying %s', this.port - 1, this.port);
+            this.start();
         });
     }
 

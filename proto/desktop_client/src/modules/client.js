@@ -28,6 +28,7 @@ export class Client
     init()
     {
         this.fileTree.init().then(() => {
+            global.dump(this.fileTree.list);
             this.readUserInput();
         });
     }

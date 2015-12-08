@@ -117,6 +117,18 @@ export class Config
         return this.data.port;
     }
 
+    set clientPort(num)
+    {
+        if (num && num.length)
+            this.data.clientPort = num;
+        this.valid = true;
+    }
+
+    get clientPort()
+    {
+        return this.data.clientPort;
+    }
+
     set username(name)
     {
         if (name && name.length)
@@ -157,6 +169,7 @@ export class Config
 const STEPS = new Map([
     ['host', 'Server IP address'],
     ['port', 'Server port'],
+    ['clientPort', 'Client port'],
     ['username', 'Username'],
     ['password', 'Password'],
     ['root', 'Folder name: ' + Config.userHome() + '/'],

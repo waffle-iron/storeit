@@ -21,15 +21,15 @@ class AFileModel
 
     constructor(filePath, parentDir=null)
     {
+        let relPath = path.relative(global.config.root, filePath);
         this.data = {
             // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-            path: path.relative(global.config.root, filePath),
-            metadata: {
-
-            },
+            path: './' + relPath.replace(/\\/g, '/'),
+            metadata: '',
             unique_hash: null,
-            type: null,
-            chunks_hashes: []
+            kind: null,
+            chunks_hashes: [],
+            files: []
         };
         this.absPath = filePath;
         this.parentDir = parentDir;
@@ -50,7 +50,12 @@ class AFileModel
     parentHashUpdate()
     {
         // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-        if (this.parentDir) this.parentDir.hashUpdate(this.unique_hash);
+        if (this.parentDir) this.parentDir.hashUpdate(this.data.unique_hash);
+    }
+
+    get()
+    {
+        return this.data;
     }
 }
 
@@ -58,10 +63,10 @@ export class FileModel extends AFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(filePath)
+    constructor(filePath, parentDir)
     {
-        super(filePath);
-        this.data.type = FILE_TYPES.regular;
+        super(filePath, parentDir);
+        this.data.kind = FILE_TYPES.regular;
     }
 
     hashCalculate()
@@ -74,8 +79,6 @@ export class FileModel extends AFileModel
             fd.on('end', () => {
                 this.hashDigest(hash);
                 this.parentHashUpdate();
-                console.log('file parsed:', this.data.path,
-                '[', this.data.unique_hash, ']');
                 resolve();
             });
 
@@ -85,7 +88,6 @@ export class FileModel extends AFileModel
                 {
                     this.chunkAdd(chunk);
                     hash.update(chunk);
-                    this.printLast();
                 }
             });
         });
@@ -104,10 +106,10 @@ export class DirModel extends AFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
-    constructor(filePath)
+    constructor(filePath, parentDir)
     {
-        super(filePath);
-        this.data.type = FILE_TYPES.directory;
+        super(filePath, parentDir);
+        this.data.kind = FILE_TYPES.directory;
         this.hash = crypto.createHash(HASH_FMT.type);
     }
 
@@ -127,6 +129,7 @@ export class DirModel extends AFileModel
                 {
                     if (++count === nbFiles)
                     {
+                        this.hashDigest(this.hash);
                         this.parentHashUpdate();
                         resolve();
                     }
@@ -138,7 +141,6 @@ export class DirModel extends AFileModel
     entryParse(filename)
     {
         let absPath = path.join(this.absPath, filename);
-        console.log('entry:', absPath);
 
         let stats = fs.lstatSync(absPath);
         let entry = null;
@@ -146,11 +148,13 @@ export class DirModel extends AFileModel
             entry = new DirModel(absPath, this);
         else
             entry = new FileModel(absPath, this);
+        this.data.files.push(entry.get());
         return entry.hashCalculate();
     }
 
     hashUpdate(data)
     {
+        // console.log('data', data);
         this.hash.update(data);
     }
 }
