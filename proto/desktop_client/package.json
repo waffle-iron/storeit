@@ -25,6 +25,7 @@
   "dependencies": {
     "express": "^4.13.3",
     "readline-sync": "^1.2.21",
+    "request": "^2.67.0",
     "watch": "^0.16.0"
   },
   "devDependencies": {

@@ -1,59 +1,6 @@
 'use strict';
-import * as https from 'https';
-import * as queryString from 'querystring';
+import request from 'request';
 import Filetree from './file-tree';
-
-class HttpSessionRequest
-{
-    // jscs:disable disallowAnonymousFunctions
-
-    constructor(method, path)
-    {
-        this.options = {
-            hostname: global.config.host,
-            port: global.config.port,
-            auth: `${global.config.username}:${global.config.password}`,
-            method: method,
-            path: path
-        };
-        this.data = null;
-    }
-
-    dataSet(data)
-    {
-        if (this.hasBody())
-        {
-            let reqData = JSON.stringify(data);
-            this.options.headers = {
-                'Content-Type': 'application/json',
-                'Content-Length': reqData.length
-            };
-            this.data = data;
-        }
-        else
-        {
-            let reqParams = queryString.stringify(data);
-            this.path += '?' + reqParams;
-        }
-    }
-
-    send(cb)
-    {
-        let req = https.request(this, cb);
-        if (this.data != null)
-        {
-            console.log(this.data);
-            req.write(this.data);
-        }
-        req.end();
-    }
-
-    hasBody()
-    {
-        return this.options.method !== 'DELETE' &&
-            this.options.method !== 'GET';
-    }
-}
 
 export default class HttpSession
 {
@@ -62,12 +9,19 @@ export default class HttpSession
     constructor()
     {
         this.connected = false;
+        request.defaults({
+            baseUrl: `${global.config.host}:${global.config.port}`,
+            auth: {
+                user: global.config.username,
+                pass: global.config.password
+            },
+        });
     }
 
     join(filelist)
     {
-        this.request('POST', '/session/join', filelist, (res) => {
-            if (res.statusCode === 200)
+        this.post('/session/join', filelist, (err, res) => {
+            if (!err && res.statusCode === 200)
             {
                 console.log('join success.');
                 this.connected = true;
@@ -81,8 +35,9 @@ export default class HttpSession
     {
         if (!this.connected)
             return;
-        this.request('POST', '/session/leave', (res) => {
-            if (res.statusCode === 200)
+
+        this.post('/session/leave', (err, res) => {
+            if (!err && res.statusCode === 200)
             {
                 console.log('Session closed with status');
                 this.connected = false;
@@ -106,8 +61,8 @@ export default class HttpSession
     {
         let file = Filetree.makeFileInfo(filename, stat);
         let action = method === 'PUT' ? 'added' : 'updated';
-        this.request(method, '/data/tree', file, (res) => {
-            if (res.statusCode === 200)
+        this.req(method, '/data/tree', file, (err, res) => {
+            if (!err && res.statusCode === 200)
                 console.log('file', filename, 'successfully', action);
             else // if error
             {
@@ -122,19 +77,48 @@ export default class HttpSession
 
     fileRemoved(filename)
     {
-        let reqParams = {
+        let data = {
             // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
             file_path: filename
         };
-        this.request('DELETE', '/data/tree', reqParams, (res) => {
+        this.del('/data/tree', data, (res) => {
             console.log('file', filename, 'removed with code', res.statusCode);
         });
     }
 
-    request(method, path, data, cb)
+    post(uri, data, cb)
     {
-        let req = new HttpSessionRequest(method, path);
-        req.dataSet(data);
-        req.send(cb);
+        this.req('POST', uri, data, cb);
+    }
+
+    put(uri, data, cb)
+    {
+        this.req('PUT', uri, data, cb);
+    }
+
+    del(uri, data, cb)
+    {
+        this.req('DELETE', uri, data, cb);
+    }
+
+    req(method, uri, data, cb)
+    {
+        let options = {
+            method,
+            uri
+        };
+        if (method === 'GET')
+            return;
+        else if (method === 'DELETE')
+        {
+            options.useQuerystring = true;
+            options.qs = data;
+        }
+        else
+        {
+            options.json = true;
+            options.body = data;
+        }
+        request(options, cb);
     }
 }
