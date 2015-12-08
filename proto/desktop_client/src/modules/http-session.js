@@ -9,8 +9,9 @@ export default class HttpSession
     constructor()
     {
         this.connected = false;
+        this.baseUrl = `http://${global.config.host}:${global.config.port}`;
         request.defaults({
-            baseUrl: `${global.config.host}:${global.config.port}`,
+            // baseUrl: `${global.config.host}:${global.config.port}`,
             auth: {
                 user: global.config.username,
                 pass: global.config.password
@@ -28,7 +29,9 @@ export default class HttpSession
                 this.connected = true;
             }
             else
-                console.log('join fail');
+            {
+                console.log('join fail:', err);
+            }
         });
     }
 
@@ -105,6 +108,7 @@ export default class HttpSession
     req(method, uri, data, cb)
     {
         let options = {
+            baseUrl: this.baseUrl,
             method,
             uri
         };

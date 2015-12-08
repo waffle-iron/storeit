@@ -15,7 +15,7 @@ export default class FileWatcher
     start()
     {
         watch.createMonitor(this.rootDir, (monitor) => {
-            console.log('watching test:', global.config);
+            // console.log('watching test:', global.config);
             this.monitor = monitor;
             for (let [ev, func] of this.callbacks)
             {
