@@ -9,9 +9,8 @@ export default class HttpSession
     constructor()
     {
         this.connected = false;
-        this.baseUrl = `http://${global.config.host}:${global.config.port}`;
-        request.defaults({
-            // baseUrl: `${global.config.host}:${global.config.port}`,
+        this.request = request.defaults({
+            baseUrl: `http://${global.config.host}:${global.config.port}`,
             auth: {
                 user: global.config.username,
                 pass: global.config.password
@@ -108,7 +107,6 @@ export default class HttpSession
     req(method, uri, data, cb)
     {
         let options = {
-            baseUrl: this.baseUrl,
             method,
             uri
         };
@@ -124,6 +122,6 @@ export default class HttpSession
             options.json = true;
             options.body = data;
         }
-        request(options, cb);
+        this.request(options, cb);
     }
 }
