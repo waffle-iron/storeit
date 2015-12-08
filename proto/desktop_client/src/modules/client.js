@@ -2,6 +2,7 @@
 import * as readline from 'readline';
 import FileTree from './file-tree';
 import HttpSession from './http-session';
+import HttpListener from './http-listener';
 import {Config} from './config';
 
 export class Client
@@ -16,7 +17,7 @@ export class Client
             ['changed', HttpSession.prototype.fileChanged.bind(this.session)],
             ['removed', HttpSession.prototype.fileRemoved.bind(this.session)]
         ]));
-        // this.listener = new HttptListener();
+        this.listener = new HttpListener();
 
         this.readInterface = readline.createInterface({
             input: process.stdin,
@@ -34,7 +35,7 @@ export class Client
     run()
     {
         this.fileTree.watch();
-        // this.listener.start();
+        this.listener.start();
         // this.session.join(this.filetree.list);
     }
 
@@ -44,7 +45,7 @@ export class Client
         console.log('Shutting down StoreIt client...');
         this.fileTree.unwatch();
         // this.session.leave();
-        // this.listener.stop();
+        this.listener.stop();
         this.readInterface.close();
     }
 

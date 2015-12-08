@@ -23,6 +23,7 @@
     "url": "https://github.com/sevauk/storeit"
   },
   "dependencies": {
+    "express": "^4.13.3",
     "readline-sync": "^1.2.21",
     "watch": "^0.16.0"
   },

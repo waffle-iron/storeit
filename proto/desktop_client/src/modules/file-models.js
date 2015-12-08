@@ -117,8 +117,8 @@ export class DirModel extends AFileModel
         {
             let files = fs.readdirSync(this.absPath);
             const nbFiles = files.length;
-	    if (nbFiles === 0)
-		resolve();
+            if (nbFiles === 0)
+                resolve();
 
             let count = 0;
             for (let filename of files)
