@@ -14,7 +14,7 @@ export default class HttpListener
 
     start()
     {
-        this.server = this.router.listen(3000, () => {
+        this.server = this.router.listen(7642, () => {
             this.listening = true;
             this.host = this.server.address().address;
             this.port = this.server.address().port;
