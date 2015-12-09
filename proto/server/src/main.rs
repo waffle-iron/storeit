@@ -1,5 +1,6 @@
 extern crate hyper;
 extern crate rustc_serialize;
+extern crate regex;
 
 #[macro_use]
 extern crate log;
@@ -23,7 +24,7 @@ use hyper::status::StatusCode;
 use std::sync::Arc;
 
 struct RequestHandler {
-    users : Arc<user::Users>,
+    sdata : serialize::ServerData,
 }
 
 impl hyper::server::Handler for RequestHandler {
@@ -31,7 +32,7 @@ impl hyper::server::Handler for RequestHandler {
     fn handle(&self, request: Request, mut response: Response<Fresh>) {
 
         let username =
-            match user::credentials(&request, &*self.users) {
+            match user::credentials(&request, &*self.sdata.users) {
                 Some(username) => username,
                 None    => return,
             };
@@ -40,7 +41,8 @@ impl hyper::server::Handler for RequestHandler {
 
         match request.method {
             Method::Get  => response.send(b"Hello World!").unwrap(),
-            Method::Post => http::parse_post(request, &username, &*self.users),
+            Method::Post =>
+                http::parse_post(request, &username, &self.sdata),
             _            =>
                 *response.status_mut() = StatusCode::MethodNotAllowed,
         }
@@ -57,11 +59,14 @@ fn listen(port: &str) {
     let ping_thread = api::handle_ping(users.clone());
 
     let http_handler = RequestHandler {
-        users: users.clone(),
+        sdata: serialize::ServerData {
+            users: users.clone(),
+            chunks: chunks::Chunks::new(),
+        }
     };
 
     match Server::http(addr).unwrap().handle(http_handler) {
-        Ok(l) => info!("server runs on port"), // {}", l.socket.port());
+        Ok(l) => info!("server runs on port {}", l.socket.port()),
         Err(_) => error!("server could not start")
     }
 

@@ -16,9 +16,10 @@ use std::vec::Vec;
 /* user opening a session */
 pub fn connect_user(username: &str, users: &user::Users,
                     request: &hyper::server::Request,
-                    user_vision: &serialize::File) {
+                    user_vision: &serialize::File, client_port: &str) {
 
     let mut user = user::make_new_user_from_db(request, username).unwrap();
+    user.http_port = client_port.to_string();
     user.process_tree(user_vision);
     debug!("at end of sync, user has tree on server: {:?}", user.root);
     database::save_tree_for_user(&user.username, &user.root);
@@ -30,8 +31,10 @@ fn ping_failure(user: &user::User, dead: &mut Vec<String> ) {
 
     error!("{} failed the ping test", user.username);
 
+    warn!("ping test temporarily removed");
+
     // later, do not allocate
-    dead.push(String::from(user.username.as_ref()));
+    // dead.push(String::from(user.username.as_ref()));
 }
 
 fn send_ping(users: &user::Users) {
@@ -48,7 +51,7 @@ fn send_ping(users: &user::Users) {
             debug!("sending ping to user: {}", user_tuple.0);
 
             // TODO: use IpAddr when not nightly anymore
-            match http::get(&user_tuple.1.ip, "/session/ping") {
+            match http::get(&user_tuple.1.ip, "/session/ping", &user_tuple.1.http_port) {
                 Err(_)      =>
                     ping_failure(&user_tuple.1, &mut dead_users),
                 Ok(res) =>
@@ -95,6 +98,7 @@ pub fn add_file(user: &user::User, who: &file::Who,
             http::post(&user.ip,
                        "/data/tree",
                        &serialize::tree_to_json(file).unwrap(),
+                       &user.http_port,
                       ).unwrap();
         }
     }
@@ -123,6 +127,7 @@ pub fn update_file(user: &user::User, who: &file::Who,
             http::put(&user.ip,
                       "/data/tree",
                       &serialize::tree_to_json(file).unwrap(),
+                      &user.http_port,
                       ).unwrap();
         }
     }

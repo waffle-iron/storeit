@@ -18,4 +18,13 @@ INSERT INTO client VALUES(0, 'sevauk', 'zulu', '{
         ]
     }');
 
+INSERT INTO client VALUES(0, 'matt', 'zulu', '{
+        "path": "./",
+        "metadata": "0",
+        "unique_hash": "unique_hash",
+        "kind": 0, 
+        "files": [
+        ]
+    }');
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO server;

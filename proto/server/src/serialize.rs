@@ -1,4 +1,7 @@
 use rustc_serialize::json;
+use std::sync::Arc;
+use user;
+use chunks;
 
 /*
  * The json datastructures involved in the requests
@@ -12,6 +15,12 @@ pub struct File {
     pub kind : i16,
     pub chunks_hashes : Option<Vec<String>>,
     pub files : Option<Vec<File>>,
+}
+
+// TODO: put in main
+pub struct ServerData {
+    pub users : Arc<user::Users>,
+    pub chunks : chunks::Chunks,
 }
 
 pub fn decode_tree(json: &str) -> Result<File, json::DecoderError> {

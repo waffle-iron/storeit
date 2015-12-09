@@ -18,6 +18,7 @@ pub struct User {
     pub username : String,
     pub last_ping : Tm,
     pub root: serialize::File,
+    pub http_port: String,
 }
 
 impl User {
@@ -170,6 +171,7 @@ pub fn make_new_user_from_db(request: &hyper::server::Request,
         username: username.to_string(),
         last_ping: self::time::now(),
         root: serialize::decode_tree(user.file_tree.as_ref()).unwrap(),
+        http_port: "0".to_string(),
     })
 }
 
