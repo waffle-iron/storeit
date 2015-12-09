@@ -16,11 +16,13 @@ use std::vec::Vec;
 /* user opening a session */
 pub fn connect_user(username: &str, users: &user::Users,
                     request: &hyper::server::Request,
-                    user_vision: &serialize::File, client_port: &str) {
+                    user_vision: &serialize::File,
+                    client_port: &str,
+                    sdata: &serialize::ServerData) {
 
     let mut user = user::make_new_user_from_db(request, username).unwrap();
     user.http_port = client_port.to_string();
-    user.process_tree(user_vision);
+    user.process_tree(sdata, user_vision);
     debug!("at end of sync, user has tree on server: {:?}", user.root);
     database::save_tree_for_user(&user.username, &user.root);
     debug!("user {} has synced and been added", &user.username);
@@ -86,12 +88,16 @@ pub fn handle_ping(users: Arc<user::Users>) -> thread::JoinHandle<()> {
     child
 }
 
-pub fn add_file(user: &user::User, who: &file::Who,
+pub fn add_file(user: &user::User,
+                sdata: &serialize::ServerData,
+                who: &file::Who,
                 file: &serialize::File) {
 
     match who {
         &file::Who::Server => {
            debug!("server has registered a new file"); 
+
+            //sdata.chunks.add_chunk_for_user(&user.username,
         }
         &file::Who::Client => {
             // TODO: if it fails, we should try it again until it succeeds
@@ -104,7 +110,9 @@ pub fn add_file(user: &user::User, who: &file::Who,
     }
 }
 
-pub fn remove_file(user: &user::User, who: &file::Who,
+pub fn remove_file(user: &user::User,
+                   sdata: &serialize::ServerData,
+                   who: &file::Who,
                    file: &serialize::File) {
     match who {
         &file::Who::Server => {
@@ -116,7 +124,9 @@ pub fn remove_file(user: &user::User, who: &file::Who,
     }
 }
 
-pub fn update_file(user: &user::User, who: &file::Who,
+pub fn update_file(user: &user::User,
+                   sdata: &serialize::ServerData,
+                   who: &file::Who,
                    file: &serialize::File) {
 
     match who {

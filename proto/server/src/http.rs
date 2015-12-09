@@ -127,7 +127,7 @@ pub fn parse_post(mut request: hyper::server::Request,
                 Err(e) => error!("POST request is invalid: {}", e),
                 Ok(ref r) => {
                     api::connect_user(username, &sdata.users,
-                                      &request, r, &client_port);
+                                      &request, r, &client_port, sdata);
                 }
 
             }

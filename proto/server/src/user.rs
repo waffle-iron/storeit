@@ -23,16 +23,20 @@ pub struct User {
 
 impl User {
 
-    pub fn process_tree(&mut self, user_vision: &serialize::File) {
+    pub fn process_tree(&mut self,
+                        sdata: &serialize::ServerData,
+                        user_vision: &serialize::File) {
 
         let mut new_tree = self.root.clone();
 
-        self.process_subtree(user_vision, &mut new_tree);
+        self.process_subtree(sdata, user_vision, &mut new_tree);
         self.root = new_tree;
     }
 
-    fn process_subtree(&self, user_vision: &serialize::File,
-                            server_vision: &mut serialize::File) {
+    fn process_subtree(&self,
+                       sdata: &serialize::ServerData,
+                       user_vision: &serialize::File,
+                       server_vision: &mut serialize::File) {
 
         // TODO: use some hashmaps for files
         for file_u in user_vision.files.as_ref().unwrap() {
@@ -47,7 +51,7 @@ impl User {
                         // TODO: handle the case where a directory
                         // has been transformed into a file
                         if file_u.kind == 0 && file_s.kind == 0 {
-                            self.process_subtree(file_u, file_s);
+                            self.process_subtree(sdata, file_u, file_s);
                         }
 
                         if {
@@ -55,8 +59,9 @@ impl User {
                             file::get_most_recent(file_u, file_s);
 
                             api::update_file(&self,
-                                         &who_is_most_recent,
-                                         file_most_recent);
+                                             sdata,
+                                             &who_is_most_recent,
+                                             file_most_recent);
 
                             who_is_most_recent
                         } == file::Who::Server {
@@ -72,7 +77,7 @@ impl User {
             }
 
             if !found {
-                api::add_file(self, &file::Who::Server, file_u);
+                api::add_file(self, sdata, &file::Who::Server, file_u);
                 server_vision.files.as_mut().unwrap().push(file_u.clone());
             }
         }
@@ -89,7 +94,7 @@ impl User {
             }
 
             if !found {
-                api::add_file(self, &file::Who::Client, file_s);
+                api::add_file(self, sdata, &file::Who::Client, file_s);
             }
         }
 

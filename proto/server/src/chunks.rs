@@ -16,80 +16,97 @@ impl Chunks {
         }
     }
 
-    pub fn add_user(& mut self, username : String, hash_vec : Vec<String>) {
+    pub fn add_user(& mut self, username : &str, hash_vec : Vec<String>) {
 
-
-        if !self.user_map.contains_key(&username){ // If user doesn't exist create blank vec
-            self.user_map.insert(username.clone(), hash_vec.clone());
+        // If user doesn't exist create blank vec
+        if !self.user_map.contains_key(username){
+            self.user_map.insert(username.to_string(), hash_vec.clone());
         }
         else {
-        *self.user_map.get_mut(&username).unwrap() = hash_vec.clone(); // else copy all the hashes
+            // else copy all the hashes
+            *self.user_map.get_mut(username).unwrap() = hash_vec.clone();
         }
 
 
         for hash in hash_vec{
 
             let h = hash.clone();
-            if !self.chunk_map.contains_key(&hash) {  // If chunk map doesn't contain the current hash, create empty vec
-                   self.chunk_map.insert(hash, Vec::new());
+            // If chunk map doesn't contain the current hash, create empty vec
+            if !self.chunk_map.contains_key(&hash) { 
+                // If chunk map doesn't contain the current hash, create empty vec
+                self.chunk_map.insert(hash, Vec::new());
             }
-            self.chunk_map.get_mut(&h).unwrap().push(username.clone()); // Add the user for this hash
+            // Add the user for this hash
+            self.chunk_map.get_mut(&h).unwrap().push(username.to_string());
         }
     }
 
-    pub fn get_chunk_owners(& mut self, chunk : String) -> Option<Vec<String>>{
-        match self.chunk_map.get(&chunk) {
+    pub fn get_chunk_owners(& mut self, chunk : &str) -> Option<Vec<String>>{
+        match self.chunk_map.get(chunk) {
             Some(c) => Some(c.to_owned()),
             None => None
         }
     }
 
-    pub fn add_chunk_for_user(& mut self, username : String, chunk : String) {
-        if !self.chunk_map.contains_key(&chunk) { // chunk isn't already registered, add it
+    pub fn add_chunk_for_user(& mut self, username : &str, chunk : String) {
+        // chunk isn't already registered, add it
+        if !self.chunk_map.contains_key(&chunk) {
             self.chunk_map.insert(chunk.clone(), Vec::new());
         }
-        self.chunk_map.get_mut(&chunk).unwrap().push(username.clone()); // Add user to chunk
-        self.user_map.get_mut(&username).unwrap().push(chunk.clone()); // Add chunk to user
+        // Add user to chunk
+        self.chunk_map.get_mut(&chunk).unwrap().push(username.to_string());
+        // Add chunk to user
+        self.user_map.get_mut(username).unwrap().push(chunk.to_string());
     }
 
-    pub fn remove_chunk_for_user(& mut self, username: String, chunk : String){
+    pub fn remove_chunk_for_user(& mut self, username: &str, chunk : String){
 
     }
 
-    pub fn remove_user(&mut self, username: String){
-        if self.user_map.contains_key(&username)
+    pub fn remove_user(&mut self, username: &str){
+        if self.user_map.contains_key(username)
         {
             {
-                let chunk_vec = self.user_map.get(&username).unwrap(); // Get list of chunk for user
+                // Get list of chunk for user
+                let chunk_vec = self.user_map.get(username).unwrap();
 
                 for chunk in chunk_vec {
-                    let index = self.chunk_map.get(chunk).unwrap().iter().position(|usr| *usr == username).unwrap(); // Get the index of the chunk in the list of chunk
-                        self.chunk_map.get_mut(chunk).unwrap().remove(index); // Remove the chunk thanks to the index
+                    // Get the index of the chunk in the list of chunk
+                    let index = self.chunk_map.get(chunk).unwrap().iter().position(|usr| *usr == username).unwrap();
+                    // Remove the chunk thanks to the index
+                    self.chunk_map.get_mut(chunk).unwrap().remove(index);
 
-                        if self.chunk_map.get(chunk).unwrap().is_empty() { // If the user was the last owner, remove the chunk from the chunk map
-                            self.chunk_map.remove(chunk);                   
-                        }
+                    // If the user was the last owner, remove the chunk from the chunk map
+                    if self.chunk_map.get(chunk).unwrap().is_empty() {
+                        self.chunk_map.remove(chunk);                   
+                    }
                 }
             }
-                self.user_map.remove(&username); // Remove user from user map
-            }
+            // Remove user from user map
+            self.user_map.remove(username);
         }
+    }
 
     pub fn remove_chunk(& mut self, chunk: String){
         if self.chunk_map.contains_key(&chunk){
             {
-                let user_vec = self.chunk_map.get(&chunk).unwrap(); // Get list of chunk owners
+                // Get list of chunk owners
+                let user_vec = self.chunk_map.get(&chunk).unwrap();
 
                 for user in user_vec {
-                    let index = self.user_map.get(user).unwrap().iter().position(|c| *c == chunk).unwrap(); // Get the index of the user in the list of users
-                    self.user_map.get_mut(user).unwrap().remove(index); // Remove the user
+                    // Get the index of the user in the list of users
+                    let index = self.user_map.get(user).unwrap().iter().position(|c| *c == chunk).unwrap();
+                    // Remove the user
+                    self.user_map.get_mut(user).unwrap().remove(index);
 
-                    if self.user_map.get(user).unwrap().is_empty() { // if the user doesn't have anymore chunk, delete it
+                    // if the user doesn't have anymore chunk, delete it
+                    if self.user_map.get(user).unwrap().is_empty() {
                         self.user_map.remove(user);
                     }
                 }
             }
-            self.chunk_map.remove(&chunk); // Remove chunk from chunk map
+            // Remove chunk from chunk map
+            self.chunk_map.remove(&chunk);
         }
     }
 }
@@ -106,9 +123,9 @@ fn test_chunk_manager() {
     chunks_manager.add_user("romain".to_string(), vec!["123456789".to_string(), "787dsd851".to_string()].clone());
     chunks_manager.add_user("alex".to_string(), vec!["123456789".to_string(), "5641azesd2".to_string()].clone());    
     chunks_manager.add_user("louis".to_string(), vec!["123456789".to_string(), "1234a56".to_string()].clone());
-  
 
-      match chunks_manager.get_chunk_owners("123456789".to_string()) {
+
+    match chunks_manager.get_chunk_owners("123456789".to_string()) {
         Some(chunks) => {
             print!("owners of [123456789] : ");
             for c in chunks {
@@ -144,7 +161,7 @@ fn test_chunk_manager() {
             debug!("No chunks...");
         }        
     }  
-  
+
     chunks_manager.remove_chunk("123456789".to_string());
     match chunks_manager.get_chunk_owners("123456789".to_string()) {
         Some(chunks) => {
