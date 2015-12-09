@@ -2,6 +2,7 @@ use rustc_serialize::json;
 use std::sync::Arc;
 use user;
 use chunks;
+use std::sync::RwLock;
 
 /*
  * The json datastructures involved in the requests
@@ -20,7 +21,7 @@ pub struct File {
 // TODO: put in main
 pub struct ServerData {
     pub users : Arc<user::Users>,
-    pub chunks : chunks::Chunks,
+    pub chunks : RwLock<chunks::Chunks>,
 }
 
 pub fn decode_tree(json: &str) -> Result<File, json::DecoderError> {

@@ -41,25 +41,49 @@ impl Chunks {
         }
     }
 
-    pub fn get_chunk_owners(& mut self, chunk : &str) -> Option<Vec<String>>{
+    //pub fn get_chunk_owners(&self, chunk: &str) -> Option<Vec<
+
+
+    pub fn get_chunk_owners_names(&mut self, chunk : &str) -> Option<Vec<String>>{
         match self.chunk_map.get(chunk) {
             Some(c) => Some(c.to_owned()),
             None => None
         }
     }
 
-    pub fn add_chunk_for_user(& mut self, username : &str, chunk : String) {
-        // chunk isn't already registered, add it
-        if !self.chunk_map.contains_key(&chunk) {
-            self.chunk_map.insert(chunk.clone(), Vec::new());
+    pub fn has_user_chunk(&self, chunk: &str, username: &str) -> bool {
+
+        let users = self.chunk_map.get(chunk);
+
+        match users {
+            None => return false,
+            Some(us) => {
+                for user in us {
+                    if user == username {
+                        return true;
+                    }
+                }
+            }
         }
+
+        false
+    }
+
+    pub fn add_chunk_for_user(& mut self, username : &str, chunk : &str) {
+
+        // chunk isn't already registered, add it
+        if !self.chunk_map.contains_key(chunk) {
+            self.chunk_map.insert(chunk.to_string(), Vec::new());
+        }
+
         // Add user to chunk
-        self.chunk_map.get_mut(&chunk).unwrap().push(username.to_string());
+        self.chunk_map.get_mut(chunk).unwrap().push(username.to_string());
+
         // Add chunk to user
         self.user_map.get_mut(username).unwrap().push(chunk.to_string());
     }
 
-    pub fn remove_chunk_for_user(& mut self, username: &str, chunk : String){
+    pub fn remove_chunk_for_user(& mut self, username: &str, chunk : &str){
 
     }
 
@@ -87,11 +111,11 @@ impl Chunks {
         }
     }
 
-    pub fn remove_chunk(& mut self, chunk: String){
-        if self.chunk_map.contains_key(&chunk){
+    pub fn remove_chunk(& mut self, chunk: &str){
+        if self.chunk_map.contains_key(chunk){
             {
                 // Get list of chunk owners
-                let user_vec = self.chunk_map.get(&chunk).unwrap();
+                let user_vec = self.chunk_map.get(chunk).unwrap();
 
                 for user in user_vec {
                     // Get the index of the user in the list of users
@@ -106,7 +130,7 @@ impl Chunks {
                 }
             }
             // Remove chunk from chunk map
-            self.chunk_map.remove(&chunk);
+            self.chunk_map.remove(chunk);
         }
     }
 }
@@ -129,11 +153,11 @@ fn test_chunk_manager() {
         Some(chunks) => {
             print!("owners of [123456789] : ");
             for c in chunks {
-                debug!("{}", c);
+                println!("DEBUG: {}", c);
             }
         },
         None => {
-            debug!("No chunks...");
+            println!("DEBUG: No chunks...");
         }
     }
 
@@ -142,11 +166,11 @@ fn test_chunk_manager() {
         Some(chunks) => {
 
             for c in chunks {
-                debug!("{}", c);
+                println!("DEBUG: {}", c);
             }
         },
         None => {
-            debug!("No chunks...");
+            println!("DEBUG: No chunks...");
         }        
     }
 
@@ -154,24 +178,24 @@ fn test_chunk_manager() {
     match chunks_manager.get_chunk_owners("trololol".to_string()) {
         Some(chunks) => {
             for c in chunks {
-                debug!("ici {}", c);
+                println!("DEBUG: ici {}", c);
             }
         },
         None => {
-            debug!("No chunks...");
+            println!("DEBUG: No chunks...");
         }        
     }  
 
     chunks_manager.remove_chunk("123456789".to_string());
     match chunks_manager.get_chunk_owners("123456789".to_string()) {
         Some(chunks) => {
-            debug!("la");
+            println!("DEBUG: la");
             for c in chunks {
-                debug!("ici {}", c);
+                println!("DEBUG: ici {}", c);
             }
         },
         None => {
-            debug!("No chunks...");
+            println!("DEBUG: No chunks...");
         }        
     }
 }

@@ -21,7 +21,7 @@ use hyper::server::Response;
 use hyper::net::Fresh;
 use hyper::method::Method;
 use hyper::status::StatusCode;
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 struct RequestHandler {
     sdata : serialize::ServerData,
@@ -61,17 +61,17 @@ fn listen(port: &str) {
     let http_handler = RequestHandler {
         sdata: serialize::ServerData {
             users: users.clone(),
-            chunks: chunks::Chunks::new(),
+            chunks: RwLock::new(chunks::Chunks::new()),
         }
     };
 
     match Server::http(addr).unwrap().handle(http_handler) {
-        Ok(l) => info!("server runs on port {}", l.socket.port()),
+        Ok(l) => println!("INFO: server runs on port {}", l.socket.port()),
         Err(_) => error!("server could not start")
     }
 
     let res = ping_thread.join();
-    debug!("child ended with {:?}", res);
+    println!("DEBUG: child ended with {:?}", res);
 }
 
 fn main() {

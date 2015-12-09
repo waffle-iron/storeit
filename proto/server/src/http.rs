@@ -12,8 +12,6 @@ use user;
 use api;
 use serialize;
 
-// time between each ping sent to a user in seconds
-static PING_TIME : i8 = 1;
 
 fn build_url(ip: &str, path: &str, client_port: &str) -> String {
 
@@ -28,7 +26,7 @@ pub fn get(ip: &std::net::SocketAddr, path: &str, port: &str)
 
     let url = build_url(&ip, path, port);
 
-    debug!("url is {}", url);
+    println!("DEBUG: url is {}", url);
 
     let client = hyper::Client::new();
 
@@ -62,7 +60,7 @@ pub fn post(ip: &std::net::SocketAddr, path: &str, body_content: &str, port: &st
 
     let client = hyper::Client::new();
 
-    debug!("posting at {}", url);
+    println!("DEBUG: posting at {}", url);
 
     client.post(&url)
         .body(body_content)
@@ -121,12 +119,12 @@ pub fn parse_post(mut request: hyper::server::Request,
 
             let client_port = variable;
 
-            debug!("client port is : {}", client_port);
+            println!("DEBUG: client port is : {}", client_port);
 
             match serialize::decode_tree(&request_body) {
                 Err(e) => error!("POST request is invalid: {}", e),
                 Ok(ref r) => {
-                    api::connect_user(username, &sdata.users,
+                    api::connect_user(username,
                                       &request, r, &client_port, sdata);
                 }
 

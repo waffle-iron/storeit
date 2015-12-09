@@ -11,6 +11,7 @@ use serialize;
 use user;
 use file;
 use api;
+use chunks;
 
 pub struct User {
     pub ip : std::net::SocketAddr,
@@ -58,10 +59,10 @@ impl User {
                             let (who_is_most_recent, file_most_recent) =
                             file::get_most_recent(file_u, file_s);
 
-                            api::update_file(&self,
-                                             sdata,
-                                             &who_is_most_recent,
-                                             file_most_recent);
+                            //api::update_file(&self,
+                            //                 sdata,
+                            //                 &who_is_most_recent,
+                            //                 file_most_recent);
 
                             who_is_most_recent
                         } == file::Who::Server {
@@ -101,7 +102,7 @@ impl User {
     }
 
     pub fn refresh_timestamp(&mut self) {
-        debug!("updating user {}'s timestamp", self.username);
+        println!("DEBUG: updating user {}'s timestamp", self.username);
         self.last_ping = time::now();
     }
 }
@@ -117,6 +118,20 @@ impl Users {
             users_map: RwLock::new(HashMap::new())
         }
     }
+
+    pub fn get_available_user<'a>(users: &'a HashMap<String, user::User>,
+                                  without_chunk: &str,
+                                  chunks: &chunks::Chunks)
+        -> Option<&'a user::User> {
+
+            for (name, user) in users.iter() {
+                if !chunks.has_user_chunk(without_chunk, &user.username) {
+                    return Some(&user);
+                }
+            }
+            None
+    }
+
 
     pub fn add(&self, user: User) {
 
@@ -168,7 +183,7 @@ pub fn make_new_user_from_db(request: &hyper::server::Request,
         None => return None
     };
 
-    debug!("on server, user has tree: {}", user.file_tree);
+    println!("DEBUG: on server, user has tree: {}", user.file_tree);
 
     Some(User {
         ip: request.remote_addr,
