@@ -1,59 +1,43 @@
-gulp        = require 'gulp'
-# concat      = require 'gulp-concat'
-notify      = require 'gulp-notify'
-pipeIf      = require 'gulp-if-else'
-pipeWrapper = require 'gulp-plumber'
-# rename      = require 'gulp-rename'
-rm          = require 'del'
+gulp        = (require 'gulp-help')(require 'gulp')
+plug        = (require 'gulp-load-plugins')()
+path        = require 'path'
+env         = require './.gulp/env'
+conf        = require './.gulp/conf'
 
-jshint      = require 'gulp-jshint'
-jscs        = require 'gulp-jscs'
-# minify      = require 'gulp-uglify'
-sourcemaps  = require 'gulp-sourcemaps'
-transpile   = require 'gulp-babel'
+gulp.task 'default', 'Run build or watch (dev environment).',
+    [if env.dev then 'watch' else 'build']
 
-config      = require './.gulpconfig'
-config.srcs = "#{config.srcsPath}/#{config.srcsPattern}"
+gulp.task 'watch', 'Watch sources changes.', ['build'], ->
+    gulp.watch conf.scripts, ['scripts']
+    gulp.watch conf.data, ['data']
 
-gulp.task 'default',
-    if config.dev is true
-    then ['build', 'watch']
-    else ['build']
+gulp.task 'build', 'Build node application.', ['scripts', 'data']
 
-gulp.task 'install', ['build', 'data-copy']
-
-gulp.task 'build', ['lint'], ->
-    gulp.src config.srcs
-        .pipe pipeWrapper()
-        .pipe sourcemaps.init()
-            .pipe transpile optional: ['runtime']
-            # .pipe minify()
-        .pipe sourcemaps.write '.'
-        .pipe gulp.dest config.dist
-        .pipe pipeIf(config.notify, -> notify
+gulp.task 'scripts', 'Compile ES2015 scripts to ES5.', ->
+    gulp.src conf.scripts
+        .pipe plug.plumber()
+        .pipe plug.changed conf.dest
+        .pipe plug.jshint '.jshintrc'
+        .pipe plug.jshint.reporter 'jshint-stylish'
+        .pipe plug.sourcemaps.init loadMaps: true
+            .pipe plug.babel optional: ['runtime']
+            .pipe plug.uglify()
+        .pipe plug.sourcemaps.write '.', sourceRoot: path.resolve(conf.srcs)
+        .pipe gulp.dest conf.dest
+        .pipe plug.if(env.notify, plug.notify
             onLast: true
-            message: 'JavaScript files compiled')
+            message: -> 'JavaScript files compiled')
 
-gulp.task 'lint', ->
-    gulp.src config.srcs
-        .pipe pipeWrapper()
-        .pipe jshint('.jshintrc')
-        .pipe(jshint.reporter('jshint-stylish'))
-        # .pipe(jshint.reporter('fail'))
-        # .pipe jscs()
-        # .pipe jscs.reporter()
+gulp.task 'data', 'Copy data directory.', ->
+    gulp.src conf.data
+        .pipe gulp.dest "#{conf.dest}/data"
 
-gulp.task 'data-copy', ->
-    gulp.src "#{config.srcsPath}/data/**"
-        .pipe gulp.dest "#{config.dist}/data"
+gulp.task 'clean', 'Clean dist directory.', ->
+    gulp.src "#{conf.dest}/*", read: false
+        .pipe plug.rimraf()
 
-gulp.task 'watch', ->
-    gulp.watch config.srcs, ['build']
+gulp.task 'rebuild', 'Rebuild.', ->
+    (require 'run-sequence') 'clean', 'build'
 
-gulp.task 'clean', ->
-    rm ["#{config.dist}/#{config.main}"]
-
-gulp.task 'fclean', ->
-    rm [config.dist]
-
-gulp.task 're', ['fclean', 'install']
+gulp.task 'env', 'Display gulp environment variables.', ->
+    console.log JSON.stringify(env, null, 4)

@@ -1,4 +1,4 @@
 dist
-.gulpconfig.json
+.gulp/env.json
 node_modules
 npm-debug.log
