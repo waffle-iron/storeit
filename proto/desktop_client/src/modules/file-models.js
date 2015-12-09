@@ -14,8 +14,7 @@ const HASH_FMT = {
     enc: 'hex'
 };
 
-// Abstract class, should not be instanciated
-class AFileModel
+class BasicFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
@@ -26,7 +25,7 @@ class AFileModel
             // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
             path: './' + relPath.replace(/\\/g, '/'),
             metadata: '',
-            unique_hash: null,
+            unique_hash: '',
             kind: null,
             chunks_hashes: [],
             files: []
@@ -59,7 +58,7 @@ class AFileModel
     }
 }
 
-export class FileModel extends AFileModel
+export class FileModel extends BasicFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
@@ -102,7 +101,7 @@ export class FileModel extends AFileModel
     }
 }
 
-export class DirModel extends AFileModel
+export class DirModel extends BasicFileModel
 {
     // jscs:disable disallowAnonymousFunctions
 
