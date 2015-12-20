@@ -2,7 +2,7 @@ extern crate time;
 extern crate hyper;
 
 use std;
-use std::sync::{RwLock, RwLockReadGuard};
+use std::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::collections::HashMap;
 use self::time::Tm;
 
@@ -59,10 +59,10 @@ impl User {
                             let (who_is_most_recent, file_most_recent) =
                             file::get_most_recent(file_u, file_s);
 
-                            //api::update_file(&self,
-                            //                 sdata,
-                            //                 &who_is_most_recent,
-                            //                 file_most_recent);
+                            api::update_file(&self,
+                                             sdata,
+                                             &who_is_most_recent,
+                                             file_most_recent);
 
                             who_is_most_recent
                         } == file::Who::Server {
@@ -124,7 +124,7 @@ impl Users {
                                   chunks: &chunks::Chunks)
         -> Option<&'a user::User> {
 
-            for (name, user) in users.iter() {
+            for (_, user) in users.iter() {
                 if !chunks.has_user_chunk(without_chunk, &user.username) {
                     return Some(&user);
                 }
@@ -162,6 +162,12 @@ impl Users {
         -> RwLockReadGuard<HashMap<String, User>> {
 
             self.users_map.read().unwrap()
+        }
+
+    pub fn get_write_guard(&self)
+        -> RwLockWriteGuard<HashMap<String, User>> {
+
+            self.users_map.write().unwrap()
         }
 
     /* TODO: succeed this someday 

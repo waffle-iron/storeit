@@ -83,9 +83,9 @@ impl Chunks {
         self.user_map.get_mut(username).unwrap().push(chunk.to_string());
     }
 
-    pub fn remove_chunk_for_user(& mut self, username: &str, chunk : &str){
+    //pub fn remove_chunk_for_user(& mut self, username: &str, chunk : &str){
 
-    }
+    //}
 
     pub fn remove_user(&mut self, username: &str){
         if self.user_map.contains_key(username)

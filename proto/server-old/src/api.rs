@@ -64,8 +64,8 @@ fn send_ping(users: &user::Users) {
             // TODO: use IpAddr when not nightly anymore
             match http::get(&user_tuple.1.ip, "/session/ping", &user_tuple.1.http_port) {
                 Err(e)      => {
-                    //println!("ERROR: {:?}", e);
-                    //ping_failure(&user_tuple.1, &mut dead_users);
+                    println!("ERROR: {:?}", e);
+                    ping_failure(&user_tuple.1, &mut dead_users);
                 }
                 Ok(res) =>
                     if res.status != hyper::status::StatusCode::Ok {

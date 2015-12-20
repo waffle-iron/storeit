@@ -3,7 +3,6 @@ extern crate std;
 extern crate regex;
 
 use hyper::client::Response;
-use hyper::header::Connection;
 use hyper::error::Error;
 use regex::Regex;
 
@@ -11,6 +10,7 @@ use std::io::Read;
 use user;
 use api;
 use serialize;
+use file;
 
 
 fn build_url(ip: &str, path: &str, client_port: &str) -> String {
@@ -90,8 +90,10 @@ pub fn parse_post(mut request: hyper::server::Request,
 
     // we take everything before "?" for the path (ex: /session/join?port=1234)
     let re = Regex::new(r"(.+)\?").unwrap();
-    let path = re.captures(api_uri.as_ref()).unwrap().at(1).unwrap();
-
+    let path = match re.captures(api_uri.as_ref()) {
+        Some(p) => p.at(1).unwrap(),
+        None => api_uri.as_ref(),
+    };
 
     let mut request_body = String::new();
 
@@ -114,22 +116,45 @@ pub fn parse_post(mut request: hyper::server::Request,
                 }
             };
 
-            //let re = Regex::new(r"^port=([:digit:]+)$").unwrap();
-            //let client_port = re.captures(variable.as_ref()).unwrap().at(0).unwrap().parse::<i16>().unwrap();
-
-            let client_port = variable;
+            let re = Regex::new(r"^port=([:digit:]+)$").unwrap();
+            let client_port = re.captures(variable.as_ref()).unwrap().at(1).unwrap();
 
             println!("DEBUG: client port is : {}", client_port);
 
             match serialize::decode_tree(&request_body) {
                 Err(e) => error!("POST request is invalid: {}", e),
-                Ok(ref r) => {
+                Ok(ref tree) => {
                     api::connect_user(username,
-                                      &request, r, &client_port, sdata);
+                                      &request, tree, &client_port, sdata);
                 }
 
             }
         }
+        "/data/tree" => {
+            match serialize::decode_tree(&request_body) {
+                Err(e) => error!("POST request is invalid: {}", e),
+                Ok(ref tree) => {
+
+                    let mut users = (*sdata.users).get_write_guard();
+
+                    let user = {
+
+                        match (*users).get_mut(username) {
+                            None => {
+                                error!("user {} is not connected", username);
+                                return;
+                            },
+                            Some(usr) => usr
+                        }
+                    };
+
+                    if user.root.add_file(tree) == false {
+                        error!("invalid tree added to user tree");
+                    }
+                }
+            }
+        }
+
         other     => error!("Request has bad or unimplemented API url: {}", other),
     }
 }

@@ -9,6 +9,7 @@ extern crate env_logger;
 mod http;
 mod serialize;
 mod user;
+mod path;
 mod api;
 mod database;
 mod file;
