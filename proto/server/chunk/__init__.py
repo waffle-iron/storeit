@@ -10,6 +10,8 @@ def add_user(username: str, hashes: list):
         register_chunk(h, username)
 
 def get_chunk_owners(chk: str):
+    if not chk in chunks:
+        return []
     return [shared.climanager.get_cli(name) for name in chunks[chk]]
 
 #TODO: add an availability flag to know if the client is available
@@ -48,6 +50,7 @@ def remove_user(username: str):
 def remove_chunk(chk: str):
     if not chk in chunks:
         logger.debug('chunk {} does not exists'.format(chk))
+        return
 
     for user in chunks[chk]:
         users[user].remove(chk)
@@ -75,6 +78,7 @@ def keep_chunk_alive(chk: str):
     
     redundancy = get_redundancy(chk)
 
+    #TODO: do some multicast propagation for chunk hosting
     while redundancy < 6:
         engine.host_chunk(chk)
         redundancy += 1

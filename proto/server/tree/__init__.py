@@ -12,7 +12,7 @@ class Tree:
         return str(self.raw_tree)
 
     def get_most_recent(ufile, sfile):
-        if ufile['metadata'] == sfile['metadata']:
+        if ufile['metadata'] > sfile['metadata']:
             return 'client', ufile, sfile
         else:
             return 'server', sfile, ufile

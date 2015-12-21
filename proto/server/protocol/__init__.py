@@ -30,6 +30,9 @@ def FUPDATE(tree, client):
 def FADD(tree, client):
     client.send_cmd('FADD {}'.format(tree))
 
+def CHDELETE(client, chk):
+    client.send_cmd('CHDELETE ' + chk)
+
 def CHSEND(from_cli, to_cli, send: int, chk: str):
 
     addr = to_cli.transport.get_extra_info('peername')
