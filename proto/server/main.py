@@ -8,7 +8,7 @@ from log import logger
 
 logger.setLevel(logging.DEBUG)
 
-if sys.argv[1] == 'test':
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
     test.all()
     exit(0)
 

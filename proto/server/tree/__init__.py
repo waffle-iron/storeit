@@ -38,15 +38,11 @@ class Tree:
 
                     who_new, file_new, file_old = Tree.get_most_recent(ufile, sfile)
 
-                    client = client if who_new == 'client' else None
-                    
-                    engine.FUPDATE(file_new, file_old, client)
+                    engine.FUPDATE(file_new, who_new, file_old, client)
 
             else:
-                print('fadd fo {}'.format(file_name))
-                engine.FADD(sfiles, file_name, ufile)
+                engine.FADD(sfiles, 'client', file_name, ufile, client)
 
         for  file_name, sfile in sfiles.items():
             if file_name not in ufiles:
-                print('fadd for {}'.format(file_name))
-                engine.FADD(ufiles, file_name, sfile, client)
+                engine.FADD(ufiles, 'server', file_name, sfile, client)

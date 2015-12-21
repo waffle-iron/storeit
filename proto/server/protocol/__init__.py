@@ -29,3 +29,12 @@ def FUPDATE(tree, client):
 
 def FADD(tree, client):
     client.send_cmd('FADD {}'.format(tree))
+
+def CHSEND(from_cli, to_cli, send: int, chk: str):
+
+    addr = to_cli.transport.get_extra_info('peername')
+    if addr == None:
+        logger.error('could not get ip for user {}'.format(to_cli.username))
+
+    addr_and_port = addr[0] + ':' + to_cli.port
+    from_cli.send_cmd('CHSEND {} {} {}'.format(send, chk, addr_and_port))

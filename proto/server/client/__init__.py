@@ -49,7 +49,7 @@ class CliManager:
 
         cli = Client(username, port, ts, transport)
 
-        self.clients['sevauk'] = cli
+        self.clients[username] = cli
 
         tree.Tree.process_subtree(cli, ts.raw_tree, td.raw_tree)
 
@@ -61,4 +61,8 @@ class CliManager:
 
 
     def get_cli(self, username: str):
+
+        if not username in self.clients:
+            return None
+
         return self.clients[username]
