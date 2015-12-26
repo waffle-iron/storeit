@@ -17,6 +17,14 @@ class NetManager(asyncio.Protocol):
     def connection_made(self, transport):
         self.transp = transport
 
+    def connection_lost(self, ext):
+        try:
+            username = shared.climanager.transports[self.transp]
+            del shared.climanager.clients[username]
+            del shared.climanager.transports[self.transp]
+        except KeyError:
+            logger.error('disconnected user could not be found')
+
     def data_received(self, data):
 
         message = data.decode()

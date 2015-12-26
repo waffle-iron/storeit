@@ -6,8 +6,15 @@ chunks = dict()
 users = dict()
 
 def add_user(username: str, hashes: list):
+
+    logger.debug('{} has {} chunks to register'.format(username, len(hashes)))
+
     for h in hashes:
+        if h == '':
+            logger.warn('{} sent invalid chunk hash'.format(username))
+            continue
         register_chunk(h, username)
+        keep_chunk_alive(h)
 
 def get_chunk_owners(chk: str):
     if not chk in chunks:
@@ -16,7 +23,7 @@ def get_chunk_owners(chk: str):
 
 #TODO: add an availability flag to know if the client is available
 def get_chunk_owner(chk: str):
-    if not chk in chunks:
+    if not chk in chunks or chunks[chk] == []:
         return None
     return shared.climanager.get_cli(chunks[chk][0])
 
@@ -35,6 +42,7 @@ def register_chunk(chk: str, username: str):
         users[username] = [chk]
     else:
         users[username].append(chk)
+
 
 def remove_user(username: str):
     if not username in users:
@@ -64,8 +72,8 @@ def get_redundancy(chk: str):
     return len(chunks[chk])
 
 def dump():
-    logger.debug(chunks)
-    logger.debug(users)
+    logger.debug('dump chunks:'.format(chunks))
+    logger.debug('dump users:'.format(users))
 
 def find_user_for_storing(chk: str):
 

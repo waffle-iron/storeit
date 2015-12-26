@@ -9,7 +9,7 @@ class Tree:
         self.raw_tree = json.loads(json_str)
 
     def __str__(self):
-        return str(self.raw_tree)
+        return json.dumps(self.raw_tree)
 
     def get_most_recent(ufile, sfile):
         if ufile['metadata'] > sfile['metadata']:
@@ -46,3 +46,7 @@ class Tree:
         for  file_name, sfile in sfiles.items():
             if file_name not in ufiles:
                 engine.FADD(ufiles, 'server', file_name, sfile, client)
+
+
+def is_dir(tr: dict):
+    return tr['kind'] == 0
