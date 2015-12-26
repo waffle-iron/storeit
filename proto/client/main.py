@@ -5,6 +5,10 @@ import network
 import sys
 from watchdog.observers import Observer  
 
+if len(sys.argv) < 2:
+    print('usage ./main.py username [listening port]')
+    exit(1)
+
 port = 7642
 username = sys.argv[1]
 storage_dir = tree.root
