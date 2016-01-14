@@ -77,7 +77,7 @@ def dump():
 
 def find_user_for_storing(chk: str):
 
-    for u in users.keys():
+    for u in shared.climanager.clients.keys():
         if not has_user_chunk(chk, u):
             return shared.climanager.get_cli(u)
     return None

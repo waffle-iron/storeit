@@ -87,7 +87,7 @@ class CliManager:
 
     def add_cli(self, username: str, port: str, tree_sent: str, transport):
 
-        tree_database = database.find_user(username, 'zulu')
+        tree_database = database.find_user(username, 'pass')
 
         if tree_database is None:
             logger.info('user {} does not exists'.format(username))
@@ -106,6 +106,7 @@ class CliManager:
         logger.debug('tree has been processed for {}'.format(username))
 
         database.save_new_tree(username, ts.raw_tree)
+        logger.debug('{}<---'.format(self.clients))
 
     def get_cli(self, username: str):
 

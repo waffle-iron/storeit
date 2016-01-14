@@ -22,6 +22,7 @@ class NetManager(asyncio.Protocol):
             username = shared.climanager.transports[self.transp]
             del shared.climanager.clients[username]
             del shared.climanager.transports[self.transp]
+            logger.warn('{} has disconnected'.format(username))
         except KeyError:
             logger.error('disconnected user could not be found')
 

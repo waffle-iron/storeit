@@ -6,7 +6,6 @@ class WatchFs(FileSystemEventHandler):
     
     def process(self, event):
         
-        print(':::{}'.format(event))
         if event.event_type == 'modified':
             cmd = 'FUPDATE'
         elif event.event_type == 'created':
@@ -19,14 +18,12 @@ class WatchFs(FileSystemEventHandler):
             return
 
         if event.is_directory:
-            print('directory event {}'.format(event.src_path))
             return
 
         concerned = tree.produce_tree(False, event.src_path)
         protocol.send_FCMD(cmd, concerned)
 
     def dispatch(self, event):
-        print(event)
         self.process(event)
     
     def on_modified(self, event):

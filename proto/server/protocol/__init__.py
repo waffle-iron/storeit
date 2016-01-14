@@ -36,6 +36,7 @@ def parse(command: str, transport):
         logger.error('unknown command {}'.format(asked_cmd))
 
     client = None
+    client_name = str()
     if transport in shared.climanager.transports:
         client_name = shared.climanager.transports[transport]
         client = shared.climanager.clients[client_name]

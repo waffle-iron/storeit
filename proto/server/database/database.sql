@@ -9,7 +9,7 @@ CREATE TABLE client (
     file_tree text
 );
 
-INSERT INTO client VALUES(0, 'sevauk', 'zulu', '{
+INSERT INTO client VALUES(0, 'sevauk', 'pass', '{
         "path": "./",
         "metadata": "0",
         "unique_hash": "unique_hash",
@@ -18,7 +18,16 @@ INSERT INTO client VALUES(0, 'sevauk', 'zulu', '{
         }
     }');
 
-INSERT INTO client VALUES(0, 'matt', 'zulu', '{
+INSERT INTO client VALUES(0, 'raspberry', 'pass', '{
+        "path": "./",
+        "metadata": "0",
+        "unique_hash": "unique_hash",
+        "kind": 0, 
+        "files": {
+        }
+    }');
+
+INSERT INTO client VALUES(0, 'blueberry', 'pass', '{
         "path": "./",
         "metadata": "0",
         "unique_hash": "unique_hash",
