@@ -9,7 +9,7 @@ CREATE TABLE client (
     file_tree text
 );
 
-INSERT INTO client VALUES(0, 'sevauk', 'pass', '{
+INSERT INTO client VALUES(0, 'cli1', 'pass', '{
         "path": "./",
         "metadata": "0",
         "unique_hash": "unique_hash",
@@ -18,7 +18,7 @@ INSERT INTO client VALUES(0, 'sevauk', 'pass', '{
         }
     }');
 
-INSERT INTO client VALUES(0, 'raspberry', 'pass', '{
+INSERT INTO client VALUES(0, 'cli2', 'pass', '{
         "path": "./",
         "metadata": "0",
         "unique_hash": "unique_hash",
@@ -27,7 +27,25 @@ INSERT INTO client VALUES(0, 'raspberry', 'pass', '{
         }
     }');
 
-INSERT INTO client VALUES(0, 'blueberry', 'pass', '{
+INSERT INTO client VALUES(0, 'cli3', 'pass', '{
+        "path": "./",
+        "metadata": "0",
+        "unique_hash": "unique_hash",
+        "kind": 0, 
+        "files": {
+        }
+    }');
+
+INSERT INTO client VALUES(0, 'cli4', 'pass', '{
+        "path": "./",
+        "metadata": "0",
+        "unique_hash": "unique_hash",
+        "kind": 0, 
+        "files": {
+        }
+    }');
+
+INSERT INTO client VALUES(0, 'cli5', 'pass', '{
         "path": "./",
         "metadata": "0",
         "unique_hash": "unique_hash",
