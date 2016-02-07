@@ -17,11 +17,11 @@ if len(sys.argv) > 1 and sys.argv[1] == 'test':
 
 try:
   database.__init__()
-  print(database.find_user('maoizejf', 'maoziejf'))
+  database.find_user('maoizejf', 'maoziejf')
 except Exception:
   logger.warn('Looks like postgres daemon is not running. It will be started')
   subprocess.call("./database/postgre.sh")
-  time.sleep(1)
+  time.sleep(0.2)
   database.__init__()
 
 netmanager = network.NetManager()
