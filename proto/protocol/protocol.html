@@ -1,0 +1,62 @@
+<h1>StoreIt Protocol v0.1</h1>
+This protocol is ASCII. Every command ends with \r\n.<br>
+<br>
+<h3>1. JSON object description</h3>
+<h4>1. 1. File object:</h4>
+<br>
+<img src='./file.png'>
+<img src='./file_ex.png'>
+<br>
+<h3>1. Session:</h3>
+<h4>1. 1. JOIN</h4>
+[client]->[server] This is the first request to make whenever a client wants to get online.<br>
+<br>
+command: <b>JOIN username port file_json_object</b><br>
+<br>
+<h4>1. 2. LEAVE</h4>
+<br>
+[client]->[server] A client should send this to the master server to leave the network<br>
+<br>
+command: <b>LEAVE</b><br>
+<br>
+<h3>2. Data:</h3>
+<br>
+<h4>2. 1. CHDELETE</h4>
+<br>
+[server -> client] Delete a chunk from the hidden store<br>
+<br>
+command: <b>CHDELETE chunk_hash</b><br>
+<br>
+
+<h4>2. 2. CHSEND</h4>
+<br>
+[server -> client] Tells a client to wait for a specific client to send it a chunk (only in the case of chunks that don't belongs to a user), or to send a chunk to another client<br>
+<br>
+command: <b>CHSEND send chunk_hash ip_address:port</b><br>
+<br>
+<i>send</i>: 0: should wait for incoming chunk 1: should send the chunk to the specified client<br>
+<i>chunk_hash</i>: the chunk's hash<br>
+<i>ip_address:port</i>: the ip address and port of the client that shoud be contacted<br>
+<h4>2. 3. CHSTORE</h4>
+<br>
+[client -> client] Send a chunk to a client<br>
+
+command: <b>CHSTORE data_length row_data</b><br>
+
+<h4>2. 4. FDELETE</h4>
+
+[client or server] Delete a file<br>
+
+command: <b>FDELETE file_path</b><br>
+
+<h4>2. 5. FADD</h4>
+
+[client or server] Add a file to the user tree. If it is sent from the server, the user should create the file and wait further instructions to fetch the file data. Otherwise if it is sent from the client, the server will attempt to add the file to the user virtual tree. It will then send further instructions to dispatch the data on the network.<br>
+
+command: <b>FADD json_file_object</b><br>
+
+<h4>2. 6. FUPDATE</h4>
+
+[client or server] update a file<br>
+
+command: <b>FUPDATE json_file_object</b><br>
