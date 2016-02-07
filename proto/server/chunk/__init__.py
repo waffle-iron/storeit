@@ -91,3 +91,7 @@ def keep_chunk_alive(frm, chk: str):
     while redundancy < 6:
         engine.host_chunk(frm, chk)
         redundancy += 1
+
+def pretty_print_hash(hsh):
+  hsh_size = 4
+  return hsh[:hsh_size] + '...' + hsh[-hsh_size:]

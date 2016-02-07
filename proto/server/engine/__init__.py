@@ -47,7 +47,8 @@ def send_chunk_to(client, chk):
 
     from_cli = chunk.get_chunk_owner(chk)
     if from_cli == None:
-        logger.warn('could not find any user hosting {}'.format(chk))
+        pchk = chunk.pretty_print_hash(chk)
+        logger.warn('could not find any user hosting {}'.format(pchk))
         return
 
     logger.debug('{} is being sent from {} to {}'.format(chk, from_cli.username, client.username))
@@ -60,7 +61,8 @@ def host_chunk(frm, chk: str):
     user = chunk.find_user_for_storing(chk)
 
     if user == None:
-        logger.warn('could not find any user to store {} (from {}). Chunk currently has {} hosted instances'.format(chk, frm.username, chunk.get_redundancy(chk)))
+        pchk = chunk.pretty_print_hash(chk)
+        logger.warn('could not find any user to store {} (from {}). Chunk currently has {} hosted instances'.format(pchk, frm.username, chunk.get_redundancy(chk)))
         return
 
     send_chunk_to(user, chk)
