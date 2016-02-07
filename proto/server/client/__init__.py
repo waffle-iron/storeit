@@ -91,7 +91,7 @@ class CliManager:
 
         if tree_database is None:
             logger.info('user {} does not exists'.format(username))
-            return
+            return None
 
         ts = tree.Tree(tree_sent)
         td = tree.Tree(tree_database)
@@ -106,6 +106,8 @@ class CliManager:
         logger.debug('tree has been processed for {}'.format(username))
 
         database.save_new_tree(username, ts.raw_tree)
+
+        return cli
 
     def get_cli(self, username: str):
 

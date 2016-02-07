@@ -14,10 +14,10 @@ def JOIN(client, data):
 
     username, port, hashes, json = data.split(' ', 3)
 
-    shared.climanager.add_cli(username, port, json, last_transport)
+    client = shared.climanager.add_cli(username, port, json, last_transport)
 
     if hashes != 'None':
-        chunk.add_user(username, hashes.split(':'))
+        chunk.add_user(client, hashes.split(':'))
 
 def parse(command: str, transport):
 
@@ -41,6 +41,10 @@ def parse(command: str, transport):
     if transport in shared.climanager.transports:
         client_name = shared.climanager.transports[transport]
         client = shared.climanager.clients[client_name]
+
+    if client == None and asked_cmd != 'JOIN':
+      logger.error('no client has been found for this connection and command {}. Refusing to continue'.format(command))
+      return
 
     cmds[asked_cmd](client, command_split[1])
 

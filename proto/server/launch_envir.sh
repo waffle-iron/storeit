@@ -17,6 +17,11 @@ while getopts "f" opt; do
       esac
 done
 
+function reset_db {
+  cd ./database
+  ./init_database.sh &> /dev/null
+  cd ..
+}
 
 function run_in_tmux {
   tmux split-window -t $SNAME $*
@@ -44,7 +49,7 @@ function kill_client {
   kill $(ps aux|grep -v grep | grep "main.py $1" | awk '{print $2}')
 }
 
-
+tmux kill-session -t storeit 2> /dev/null
 tmux new-session -d -s $SNAME $SPATH/main.py
 sleep 0.5 # wait a little bit for the server to start:w
 ps cax | grep postgres > /dev/null

@@ -1,20 +1,21 @@
 from log import logger
 import shared
+import client
 import engine
 
 chunks = dict()
 users = dict()
 
-def add_user(username: str, hashes: list):
+def add_user(who, hashes: list):
 
-    logger.debug('{} has {} chunks to register'.format(username, len(hashes)))
+    logger.debug('{} has {} chunks to register'.format(who.username, len(hashes)))
 
     for h in hashes:
         if h == '':
-            logger.warn('{} sent invalid chunk hash'.format(username))
+            logger.warn('{} sent invalid chunk hash'.format(who.username))
             continue
-        register_chunk(h, username)
-        keep_chunk_alive(h)
+        register_chunk(h, who.username)
+        keep_chunk_alive(who, h)
 
 def get_chunk_owners(chk: str):
     if not chk in chunks:
@@ -44,16 +45,16 @@ def register_chunk(chk: str, username: str):
         users[username].append(chk)
 
 
-def remove_user(username: str):
-    if not username in users:
-        logger.debug('user {} has zero chunks'.format(username))
+def remove_user(frm):
+    if not frm.username in users:
+        logger.debug('user {} has zero chunks'.format(frm.username))
         return
 
-    for chk in users[username]:
-        chunks[chk].remove(username)
-        keep_chunk_alive(chk)
+    for chk in users[frm.username]:
+        chunks[chk].remove(frm.username)
+        keep_chunk_alive(frm, chk)
 
-    del users[username]
+    del users[frm.username]
 
 def remove_chunk(chk: str):
     if not chk in chunks:
@@ -82,11 +83,11 @@ def find_user_for_storing(chk: str):
             return shared.climanager.get_cli(u)
     return None
 
-def keep_chunk_alive(chk: str):
+def keep_chunk_alive(frm, chk: str):
     
     redundancy = get_redundancy(chk)
 
     #TODO: do some multicast propagation for chunk hosting
     while redundancy < 6:
-        engine.host_chunk(chk)
+        engine.host_chunk(frm, chk)
         redundancy += 1

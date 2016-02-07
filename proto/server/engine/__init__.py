@@ -1,6 +1,7 @@
 import protocol
 import chunk
 import shared
+import client
 from log import logger
 
 def FADD(directory, from_who, filename, tree, client):
@@ -11,7 +12,7 @@ def FADD(directory, from_who, filename, tree, client):
         protocol.send_FADD(tree, client)
     elif tree['kind'] != 0:
         chunk.register_chunk(tree['unique_hash'], client.username)
-        chunk.keep_chunk_alive(tree['unique_hash'])
+        chunk.keep_chunk_alive(client, tree['unique_hash'])
     else:
         pass #TODO: handle adding a directory with some content
 
@@ -28,7 +29,7 @@ def FUPDATE(new_tree, from_who, old_tree, client):
         #FIXME: it will happen that some clients share identical chunks,
         # do not do this
         make_chunk_disappear(old_tree['unique_hash'])
-        chunk.keep_chunk_alive(new_tree['unique_hash'])
+        chunk.keep_chunk_alive(client, new_tree['unique_hash'])
 
     old_tree['unique_hash'] = new_tree['unique_hash']
 
@@ -54,12 +55,12 @@ def send_chunk_to(client, chk):
     protocol.send_CHSEND(client, from_cli, 0, chk)
     chunk.register_chunk(chk, client.username)
 
-def host_chunk(chk):
+def host_chunk(frm, chk: str):
 
     user = chunk.find_user_for_storing(chk)
 
     if user == None:
-        logger.warn('could not find any user to store {}'.format(chk))
+        logger.warn('could not find any user to store {} (from {}). Chunk currently has {} hosted instances'.format(chk, frm.username, chunk.get_redundancy(chk)))
         return
 
     send_chunk_to(user, chk)
