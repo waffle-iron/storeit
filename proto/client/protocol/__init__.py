@@ -24,6 +24,11 @@ def CHDELETE(params: str):
     chunk.remove_chunk(chk)
 
 def send_FCMD(name: str, tree: dict):
+
+    #FIXME: remove this quickfix
+    if json.dumps(tree).find('DS_Store') != -1:
+        return
+
     network.send_cmd('{} {}'.format(name, json.dumps(tree)))
 
 def send_FDELETE(path: str):

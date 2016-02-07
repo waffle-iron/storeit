@@ -4,7 +4,14 @@ import tree.fs
 import network
 import sys
 import chunk
+import os
 from watchdog.observers import Observer  
+
+try:
+    os.remove('.DS_Store')
+except:
+    print('no ds store')
+    pass
 
 if len(sys.argv) < 2:
     print('usage ./main.py username [listening port] [store dir]')
@@ -13,6 +20,7 @@ if len(sys.argv) < 2:
 port = 7642
 username = sys.argv[1]
 storage_dir = tree.root
+
 if len(sys.argv) >= 4:
     chunk.store_name = sys.argv[3]
 

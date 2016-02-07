@@ -9,6 +9,10 @@ def register_chunk(chk: str, path: str):
 
 def register_tree(file_tree):
 
+    if file_tree['kind'] != 0:
+        register_chunk(file_tree['unique_hash'], file_tree['path'])
+        return
+
     for f in file_tree['files'].values():
         if f['kind'] == 0:
             register_tree(f)
@@ -32,6 +36,7 @@ def wait_for_chunk(chk: str, path: str):
 store_name = '.store/'
 
 def get_path_for_chunk(hsh):
+
     if hsh not in my_chunks:
         if os.path.exists(store_name + hsh):
             return store_name + hsh

@@ -47,6 +47,10 @@ def walk(indent, name, st_mtime, is_dir, path):
 
             passed = False
             for entry in os.scandir(path):
+                #FIXME: ugly quickfix
+                if entry.name[0] == '.' and entry.name[1] != '/':
+                    print('dismissing {}'.format(entry.name))
+                    continue
                 if passed:
                     result += printind(indent + 2, ',')
                 result += printind(indent + 2, '"' + entry.name + '":')

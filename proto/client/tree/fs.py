@@ -1,5 +1,6 @@
 from watchdog.events import FileSystemEventHandler 
 import tree
+import chunk
 import protocol
 
 class WatchFs(FileSystemEventHandler):
@@ -21,6 +22,7 @@ class WatchFs(FileSystemEventHandler):
             return
 
         concerned = tree.produce_tree(False, event.src_path)
+        chunk.register_tree(concerned)
         protocol.send_FCMD(cmd, concerned)
 
     def dispatch(self, event):
