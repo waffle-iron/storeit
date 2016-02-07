@@ -6,8 +6,10 @@ conn = None
 
 def __init__():
   try:
+      global conn
       conn = psycopg2.connect("dbname=storeit user=server host=localhost")
-  except:
+  except Exception as e:
+      print(e)
       log.logger.error('could not connect to db')
 
 def find_user(username: str, password: str):

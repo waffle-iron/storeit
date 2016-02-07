@@ -6,6 +6,7 @@ import network
 import sys
 import logging
 import test
+import time
 from log import logger
 
 logger.setLevel(logging.DEBUG)
@@ -14,12 +15,13 @@ if len(sys.argv) > 1 and sys.argv[1] == 'test':
     test.all()
     exit(0)
 
-database.__init__()
 try:
+  database.__init__()
   print(database.find_user('maoizejf', 'maoziejf'))
-except AttributeError:
+except Exception:
   logger.warn('Looks like postgres daemon is not running. It will be started')
-  #subprocess.call("")
+  subprocess.call("./database/postgre.sh")
+  time.sleep(1)
   database.__init__()
 
 netmanager = network.NetManager()
