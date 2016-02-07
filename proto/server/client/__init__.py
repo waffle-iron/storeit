@@ -42,7 +42,7 @@ class Client:
             path_sep = path.split('/', 1)
 
             if len(path_sep) == 2:
-                return tr, path_sep[1]
+                return tr['files'], path_sep[1]
             elif path_sep[0] not in tr['files']:
                 logger.error('error {} is invalid'.format(subtree['path']))
                 return None, None
@@ -106,7 +106,6 @@ class CliManager:
         logger.debug('tree has been processed for {}'.format(username))
 
         database.save_new_tree(username, ts.raw_tree)
-        logger.debug('{}<---'.format(self.clients))
 
     def get_cli(self, username: str):
 

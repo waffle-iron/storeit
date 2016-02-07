@@ -29,7 +29,7 @@ function init_client {
   mkdir /tmp/$1
   cp -r $SPATH/testree /tmp/$1/storeit
   if [ $FINDER -eq 1 ]; then
-    open /tmp/$1
+    open /tmp/$1/storeit
   fi
 }
 

@@ -1,6 +1,7 @@
 import shared
 import engine
 import client
+import database
 import json
 import chunk
 import tree
@@ -54,6 +55,9 @@ def FADD(client, cmds):
     directory, filename = client.find_in_tree(tr)
 
     engine.FADD(directory, 'client', filename, tr, client)
+
+    print('saving new user tree {}'.format(client.user_tree.raw_tree))
+    database.save_new_tree(client.username, client.user_tree.raw_tree)
 
 def FUPDATE(client, cmds):
 

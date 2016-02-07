@@ -2,10 +2,13 @@ import psycopg2
 import log
 import json
 
-try:
-    conn = psycopg2.connect("dbname=storeit user=server host=localhost")
-except:
-    log.logger.error('could not connect to db')
+conn = None
+
+def __init__():
+  try:
+      conn = psycopg2.connect("dbname=storeit user=server host=localhost")
+  except:
+      log.logger.error('could not connect to db')
 
 def find_user(username: str, password: str):
 
