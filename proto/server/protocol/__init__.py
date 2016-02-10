@@ -60,7 +60,7 @@ def FADD(client, cmds):
 
     engine.FADD(directory, 'client', filename, tr, client)
 
-    print('saving new user tree {}'.format(client.user_tree.raw_tree))
+    logger.info('new user tree has been saved for {}'.format(client.username))
     database.save_new_tree(client.username, client.user_tree.raw_tree)
 
 def FUPDATE(client, cmds):
