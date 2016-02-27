@@ -1,9 +1,11 @@
+"""Relates to client."""
+
 from log import logger
 import tree
 import database
-import json
 import chunk
 import os
+
 
 class Client:
 
@@ -24,7 +26,7 @@ class Client:
     def send_cmd(self, msg):
         logger.debug('to {}: {}'.format(self.username, msg))
 
-        if self.transport == None:
+        if self.transport is None:
             logger.error('client has no transport registered')
             return
 
@@ -33,7 +35,7 @@ class Client:
 
     def __del__(self):
         logger.debug('{} is disconnecting'.format(self.username))
-        chunk.remove_user(self.username)
+        chunk.remove_user(self)
 
     def find_in_tree(self, subtree):
 
@@ -47,36 +49,14 @@ class Client:
                 logger.error('error {} is invalid'.format(subtree['path']))
                 return None, None
             else:
-                #TODO: handle deletion. Maybe if the thing exists and
+                # TODO: handle deletion. Maybe if the thing exists and
                 # has same metadata delete it
-                return update_tree_rec(path_sep[1], tr['files'][path_sep[0]])
+                return find_tree_rec(path_sep[1], tr['files'][path_sep[0]])
 
         usr_tree_dict = self.user_tree.raw_tree
         return find_tree_rec(os.path.normpath(subtree['path']), usr_tree_dict)
 
-    #def update_tree(self, subtree):
-    #    logger.debug('{} is updating its tree at {}'.format(self.username, subtree['path']))
 
-    #    def update_tree_rec(path, tr):
-
-    #        path_sep = path.split('/', 1)
-
-    #        if len(path_sep) == 2:
-    #            logger.debug('{} has been updated'.format(subtree['path']))
-    #            tr['files'] = subtree
-    #        elif path_sep[0] not in tr['files']:
-    #            logger.error('error {} is invalid'.format(subtree['path']))
-    #        else:
-    #            #TODO: handle deletion. Maybe if the thing exists and
-    #            # has same metadata delete it
-    #            update_tree_rec(path_sep[1], tr['files'][path_sep[0]])
-
-    #    user_tree_dict = self.user_tree.raw_tree
-    #    update_tree_rec(os.path.normpath(subtree['path']), user_tree_dict)
-
-    #    #TODO: some better design, e.g: use the tree module
-    #    database.save_new_tree(self.username, user_tree_dict)
-    
 class CliManager:
 
     clients = dict()
@@ -111,7 +91,7 @@ class CliManager:
 
     def get_cli(self, username: str):
 
-        if not username in self.clients:
+        if username not in self.clients:
             return None
 
         return self.clients[username]

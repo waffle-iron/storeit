@@ -8,7 +8,7 @@ def walk_entry(indent, entry, path):
     walk(indent, entry.name, entry.stat().st_mtime, entry.is_dir(), path)
 
 def walk(indent, name, st_mtime, is_dir, path):
-    
+
     def printind(indent, msg):
         print('{}{}'.format(' ' * indent, msg))
 
@@ -19,7 +19,7 @@ def walk(indent, name, st_mtime, is_dir, path):
         kind = ('0' if is_dir else '1')
         if kind == '1':
             path = path[:-1]
-            
+
         printind(indent, '"path": "{}",'.format(path))
         printind(indent, '"metadata": "{}",'.format(int(st_mtime)))
         printind(indent, '"unique_hash": "{}",'.format(random.randrange(0, 10000000)))
@@ -35,7 +35,7 @@ def walk(indent, name, st_mtime, is_dir, path):
                 printind(indent + 2, '"' + entry.name + '":')
                 walk_entry(indent + 2, entry, path)
                 passed = True
-                
+
         printind(indent, '}')
         indent -= 2
         printind(indent, '}')
