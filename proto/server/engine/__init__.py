@@ -1,7 +1,7 @@
 import protocol
 import chunk
 from common.log import logger
-
+from common import hash
 
 def FADD(directory, from_who, filename, tree, client):
     logger.debug('user {} adding {} from {}'
@@ -22,13 +22,13 @@ def FUPDATE(new_tree, from_who, old_tree, client):
     if from_who == 'server':
         protocol.send_FUPDATE(new_tree, client)
         if new_tree['kind'] != 0:
-            send_chunk_to(client, chunk.Hash(new_tree['unique_hash']))
+            send_chunk_to(client, hash.Hash(new_tree['unique_hash']))
 
     if from_who == 'client' and old_tree['kind'] != 0:
         # FIXME: it will happen that some clients share identical chunks,
         # do not do this
-        make_chunk_disappear(chunk.Hash(old_tree['unique_hash']))
-        chunk.keep_chunk_alive(client, chunk.Hash(new_tree['unique_hash']))
+        make_chunk_disappear(hash.Hash(old_tree['unique_hash']))
+        chunk.keep_chunk_alive(client, hash.Hash(new_tree['unique_hash']))
 
     old_tree['unique_hash'] = new_tree['unique_hash']
 
@@ -46,13 +46,13 @@ def make_chunk_disappear(chk):
 
 
 def check_for_string(s):
-    if type(s) != chunk.Hash:
-        return chunk.Hash(s)
+    if type(s) != hash.Hash:
+        return hash.Hash(s)
 
     return s
 
 
-def send_chunk_to(client: chunk.Hash, chk):
+def send_chunk_to(client: hash.Hash, chk):
     chk = check_for_string(chk)
 
     from_cli = chunk.get_chunk_owner(chk)
