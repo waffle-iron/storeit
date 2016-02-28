@@ -7,7 +7,7 @@ import sys
 import logging
 import test
 import time
-from log import logger
+from common.log import logger
 
 logger.setLevel(logging.DEBUG)
 

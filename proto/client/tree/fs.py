@@ -1,12 +1,15 @@
-from watchdog.events import FileSystemEventHandler 
+from watchdog.events import FileSystemEventHandler
 import tree
 import chunk
 import protocol
 
+from common.log import logger
+
+
 class WatchFs(FileSystemEventHandler):
-    
+
     def process(self, event):
-        
+
         if event.event_type == 'modified':
             cmd = 'FUPDATE'
         elif event.event_type == 'created':
@@ -15,7 +18,7 @@ class WatchFs(FileSystemEventHandler):
             protocol.send_FDELETE(event.src_path)
             return
         else:
-            print('unknown event happening {}'.format(event))
+            logger.error('unknown event happening {}'.format(event))
             return
 
         if event.is_directory:
@@ -27,10 +30,10 @@ class WatchFs(FileSystemEventHandler):
 
     def dispatch(self, event):
         self.process(event)
-    
+
     def on_modified(self, event):
         self.process(event)
-    
+
     def on_created(self, event):
         self.process(event)
 

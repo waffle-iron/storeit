@@ -5,12 +5,16 @@ import network
 import sys
 import chunk
 import os
-from watchdog.observers import Observer  
+from watchdog.observers import Observer
+from common.log import logger
+import logging
+
+logger.setLevel(logging.DEBUG)
 
 try:
     os.remove('.DS_Store')
 except:
-    print('no ds store')
+    logger.debug('no ds store')
     pass
 
 if len(sys.argv) < 2:
@@ -34,5 +38,4 @@ try:
 
     network.loop(username, port)
 except ConnectionRefusedError:
-    print('error: connection refused')
-
+    logger.error('error: connection refused')

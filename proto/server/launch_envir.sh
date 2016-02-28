@@ -6,6 +6,18 @@ CLIPATH=$HOME/code/epitech/storeit/proto/client
 PORT=7643
 FINDER=0
 
+
+# API documentation:
+# reset_db
+#   reset the database
+#
+# run_client [client_name] ["keep-files"]
+#   run a client
+#
+# kill_client [client_name]
+#   kill a client process
+
+
 while getopts "f" opt; do
     case $opt in
       f)
@@ -32,16 +44,19 @@ function run_in_tmux {
 }
 
 function init_client {
-  rm -rf /tmp/$1
-  mkdir /tmp/$1
-  cp -r $SPATH/testree /tmp/$1/storeit
+  if [ "$1" = "keep-files" ]; then
+    rm -rf /tmp/$1
+    mkdir /tmp/$1
+    cp -r $SPATH/testree /tmp/$1/storeit
+  fi
+
   if [ $FINDER -eq 1 ]; then
     open /tmp/$1/storeit
   fi
 }
 
 function run_client {
-  init_client $1
+  init_client $1 $2
   pushd /tmp/$1
   run_in_tmux $CLIPATH/main.py $1 $((PORT++))
   popd
@@ -62,6 +77,8 @@ function log_to_pane {
 }
 
 tmux kill-session -t storeit 2> /dev/null
+
+reset_db
 
 touch /tmp/panelog.log
 tmux new-session -d -s $SNAME "tail -f /tmp/panelog.log"

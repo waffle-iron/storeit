@@ -3,7 +3,7 @@ import chunk
 import shared
 import traceback
 import client
-from log import logger
+from common.log import logger
 
 def FADD(directory, from_who, filename, tree, client):
 
@@ -20,7 +20,7 @@ def FADD(directory, from_who, filename, tree, client):
     directory[filename] = tree
 
 def FUPDATE(new_tree, from_who, old_tree, client):
-    
+
     if from_who == 'server':
         protocol.send_FUPDATE(new_tree, client)
         if new_tree['kind'] != 0:
@@ -44,7 +44,7 @@ def make_chunk_disappear(chk):
     for o in owners:
         protocol.send_CHDELETE(o, chk)
 
-    chunk.remove_chunk(chk) 
+    chunk.remove_chunk(chk)
 
 def check_for_string(s):
 

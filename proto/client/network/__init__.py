@@ -3,13 +3,17 @@ import protocol
 import threading
 import socket
 
+from common.log import logger
+
 server_transport = None
 receivers = list()
+
 
 class Receiver():
 
     def __init__(self, transport):
         self.transport = transport
+
 
 class Server(asyncio.Protocol):
 
@@ -58,8 +62,6 @@ class Server(asyncio.Protocol):
             exit(1)
 
 
-
-
 class Client(asyncio.Protocol):
 
     data_buffer = str()
@@ -68,14 +70,14 @@ class Client(asyncio.Protocol):
         self.loop = loop
         self.port = port
         self.username = username
-    
+
     def connection_made(self, transp):
 
         global server_transport
 
         server_transport = transp
         protocol.login(self)
-    
+
     def data_received(self, data):
 
         message = data.decode()
@@ -86,27 +88,28 @@ class Client(asyncio.Protocol):
 
         for cmd in commands:
             protocol.parse(cmd)
-    
+
     def connection_lost(self, exc):
-        print('The server closed the connection')
-        print('Stop the event loop')
+        logger.error('The server closed the connection')
+        logger.info('Stop the event loop')
         self.loop.stop()
 
+
 def send_cmd(msg):
-    print('cmd: ' + msg)
+    logger.debug('cmd: ' + msg)
 
     msg += '\r\n'
     server_transport.write(msg.encode())
 
-def listen(port):
 
+def listen(port):
     eloop = asyncio.new_event_loop()
     asyncio.set_event_loop(eloop)
 
     coro = eloop.create_server(Server, '127.0.0.1', port)
     server = eloop.run_until_complete(coro)
 
-    print('listening on {}'.format(server.sockets[0].getsockname()))
+    logger.info('listening on {}'.format(server.sockets[0].getsockname()))
     try:
         eloop.run_forever()
     except KeyboardInterrupt:
@@ -117,8 +120,8 @@ def listen(port):
     eloop.close()
     exit(0)
 
-def loop(username, client_port, server_port = 7641):
 
+def loop(username, client_port, server_port = 7641):
     thread = threading.Thread(target=listen, args = (client_port,))
     thread.start()
 
@@ -137,11 +140,10 @@ def loop(username, client_port, server_port = 7641):
 
 def send_payload(ip: str, port: int, cmd: str, data: bytes):
 
-    print('sending {}'.format(cmd))
+    logger.info('sending {}'.format(cmd))
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((ip, port))
 
-    #TODO: something memory efficient
+    # TODO: something memory efficient
     final = cmd.encode() + data + '\r\n'.encode()
-    sent = sock.send(final)
-
+    sock.send(final)

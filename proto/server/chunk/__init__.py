@@ -1,6 +1,6 @@
 """Handle the chunk (stored/sent pieces of a file)."""
 
-from log import logger
+from common.log import logger
 import shared
 import engine
 

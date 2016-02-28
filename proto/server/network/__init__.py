@@ -1,10 +1,9 @@
 import asyncio
 import shared
-import re
-import client
 import protocol
 
-from log import logger
+from common.log import logger
+
 
 class NetManager(asyncio.Protocol):
 

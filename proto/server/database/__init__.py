@@ -1,19 +1,20 @@
 import psycopg2
-import log
+from common.log import logger
 import json
 
 conn = None
 
+
 def __init__():
-  try:
-      global conn
-      conn = psycopg2.connect("dbname=storeit user=server host=localhost")
-  except Exception as e:
-      print(e)
-      log.logger.error('could not connect to db')
+    try:
+        global conn
+        conn = psycopg2.connect("dbname=storeit user=server host=localhost")
+    except Exception as e:
+        print(e)
+        logger.error('could not connect to db')
+
 
 def find_user(username: str, password: str):
-
     cur = conn.cursor()
     cur.execute("SELECT * FROM client WHERE username = '" + username + "'")
 
@@ -22,8 +23,8 @@ def find_user(username: str, password: str):
     cur.close()
     return None if rows == [] else rows[0][3]
 
-def save_new_tree(username: str, tree: dict):
 
+def save_new_tree(username: str, tree: dict):
     strtree = json.dumps(tree)
 
     conn = psycopg2.connect("dbname=storeit user=server host=localhost")

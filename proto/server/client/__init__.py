@@ -1,6 +1,6 @@
 """Relates to client."""
 
-from log import logger
+from common.log import logger
 import tree
 import database
 import chunk
