@@ -17,6 +17,9 @@ class Hash:
         self.hsh = hsh
 
     def __str__(self):
+        return self.hsh
+
+    def pretty(self):
         hsh_size = 4
         return self.hsh[:hsh_size] + '...' + self.hsh[-hsh_size:]
 
