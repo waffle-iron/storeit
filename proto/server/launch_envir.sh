@@ -44,7 +44,7 @@ function run_in_tmux {
 }
 
 function init_client {
-  if [ "$1" = "keep-files" ]; then
+  if [ "$1" != "keep-files" ]; then
     rm -rf /tmp/$1
     mkdir /tmp/$1
     cp -r $SPATH/testree /tmp/$1/storeit
