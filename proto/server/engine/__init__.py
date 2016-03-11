@@ -3,6 +3,7 @@ import chunk
 from common.log import logger
 from common import hash
 
+
 def FADD(directory, from_who, filename, tree, client):
     logger.debug('user {} adding {} from {}'
                  .format(client.username, tree['path'], from_who))
@@ -57,7 +58,7 @@ def send_chunk_to(client: hash.Hash, chk):
 
     from_cli = chunk.get_chunk_owner(chk)
     if from_cli is None:
-        logger.warn('could not find any user hosting {}'.format(chk))
+        logger.warn('could not find any user hosting {}'.format(chk.pretty()))
         return
 
     logger.debug('{} is being sent from {} to {}'

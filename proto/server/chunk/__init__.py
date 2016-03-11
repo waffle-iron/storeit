@@ -33,7 +33,7 @@ def get_chunk_owners(chk: Hash):
 def get_chunk_owner(chk: Hash):
     if chk not in chunks or chunks[chk] == []:
         return None
-    return shared.climanager.get_cli(chunks[chk][0])
+    return shared.climanager.get_cli(list(chunks[chk])[0])  # FIXME: ugly
 
 
 def has_user_chunk(chk: Hash, username: str):
@@ -44,19 +44,24 @@ def has_user_chunk(chk: Hash, username: str):
 
 def register_chunk(chk, username: str):
 
+    logger.debug("registering chunk {} for {}".format(chk, username))
+
     if isinstance(chk, str):
         chk = Hash(chk)
 
+    # TODO: use smart dict
+
     if chk not in chunks:
-        chunks[chk] = [username]
+        chunks[chk] = {username}
     else:
-        chunks[chk].append(username)
+        chunks[chk].add(username)
 
     if username not in users:
-        users[username] = [chk]
+        users[username] = {chk}
     else:
-        users[username].append(chk)
+        users[username].add(chk)
 
+    dump()
     return chk
 
 
@@ -92,8 +97,12 @@ def get_redundancy(chk: str):
 
 
 def dump():
-    logger.debug('dump chunks:'.format(chunks))
-    logger.debug('dump users:'.format(users))
+
+    for user, chks in users.items():
+        logger.debug('user {} has {}'
+                     .format(user, tuple(c.pretty() for c in chks))) # TODO: use builtin istead of comprehension
+    for chks, usrs in chunks.items():
+        logger.debug('chk {} is owned by {}'.format(chks.pretty(), usrs))
 
 
 def find_user_for_storing(chk: Hash):
