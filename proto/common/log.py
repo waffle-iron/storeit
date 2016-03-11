@@ -24,3 +24,17 @@ ch.setFormatter(formatter)
 
 logger = logging.getLogger('storeit')
 logger.addHandler(ch)
+
+
+def nomore(s):
+    MAX = 80
+
+    if len(s) > MAX:
+        appended = ' [...]'
+
+        if isinstance(s, bytes):
+            appended = appended.encode()
+
+        return s[:MAX] + appended
+
+    return s

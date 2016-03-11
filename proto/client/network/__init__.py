@@ -17,7 +17,7 @@ class Receiver():
 
 class Server(asyncio.Protocol):
 
-    data_buffer = str()
+    data_buffer = bytes()
 
     def __init_(self):
         pass
@@ -27,9 +27,8 @@ class Server(asyncio.Protocol):
 
     def data_received(self, data):
 
-        message = data.decode()
-        self.data_buffer += data.decode()
-        commands = self.data_buffer.split("\r\n")
+        self.data_buffer += data
+        commands = self.data_buffer.split(b"\r\n")
         self.data_buffer = commands[-1]
         commands = commands[:-1]
 
@@ -64,7 +63,7 @@ class Server(asyncio.Protocol):
 
 class Client(asyncio.Protocol):
 
-    data_buffer = str()
+    data_buffer = bytes()
 
     def __init__(self, loop, port, username):
         self.loop = loop
@@ -80,9 +79,8 @@ class Client(asyncio.Protocol):
 
     def data_received(self, data):
 
-        message = data.decode()
-        self.data_buffer += data.decode()
-        commands = self.data_buffer.split("\r\n")
+        self.data_buffer += data
+        commands = self.data_buffer.split(b"\r\n")
         self.data_buffer = commands[-1]
         commands = commands[:-1]
 

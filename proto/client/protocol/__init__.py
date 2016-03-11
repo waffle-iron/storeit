@@ -4,31 +4,44 @@ import json
 import hashlib
 import network
 
+from common import log
 from common.log import logger
 
 
 def parse(cmd: str):
 
-    command_split = cmd.split(' ', 1)
+    command_split = cmd.split(b' ', 1)
 
-    cmds = {'FADD': FADD,
-            'FUPDATE': FUPDATE,
-            'CHSEND': CHSEND,
-            'CHSTORE': CHSTORE,
-            'CHDELETE': CHDELETE}
+    class Command:
 
-    logger.info('server sent {}'.format(cmd))
-    cmds[command_split[0]](command_split[1])
+        def __init__(self, fcall, isstr):
+            self.function_call = fcall
+            self.is_string = isstr
+
+    cmds = {b'FADD': Command(FADD, True),
+            b'FUPDATE': Command(FUPDATE, True),
+            b'CHSEND': Command(CHSEND, True),
+            b'CHSTORE': Command(CHSTORE, False),
+            b'CHDELETE': Command(CHDELETE, True)}
+
+    logger.info(log.nomore('somebody sent {}'.format(cmd)))
+
+    content = command_split[1]
+    cmd = cmds[command_split[0]]
+    if cmd.is_string:
+        content = content.decode()
+
+    cmds[command_split[0]].function_call(content)
 
 
-def CHDELETE(params: str):
+def CHDELETE(params):
 
     chk = params[0]
 
     chunk.remove_chunk(chk)
 
 
-def send_FCMD(name: str, tree: dict):
+def send_FCMD(name, tree):
 
     # FIXME: remove this quickfix
     if json.dumps(tree).find('DS_Store') != -1:
@@ -37,21 +50,21 @@ def send_FCMD(name: str, tree: dict):
     network.send_cmd('{} {}'.format(name, json.dumps(tree)))
 
 
-def send_FDELETE(path: str):
+def send_FDELETE(path):
     network.send_cmd('FDELETE {}'.format(path))
 
 
-def FADD(params: str):
+def FADD(params):
 
     tr = json.loads(params)
     tree.make_file(tr)
 
 
-def FUPDATE(params: str):
+def FUPDATE(params):
     pass
 
 
-def CHSEND(params: str):
+def CHSEND(params):
     send, hsh, addr = params.split(' ', 3)
 
     ip, port = addr.split(':')
@@ -63,14 +76,13 @@ def CHSEND(params: str):
         pass  # TODO
 
 
-def CHSTORE(params: str):
-    length, data = params.split(' ', 1)
+def CHSTORE(params):
+    length, data = params.split(b' ', 1)
 
     logger.debug('CHSTORE for {} bytes'.format(length))
 
     # TODO: store only if we are waiting for it
     hasher = hashlib.sha256()
-    data = data.encode()
     hasher.update(data)
     chk = hasher.hexdigest()
 
