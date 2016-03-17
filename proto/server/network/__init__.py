@@ -41,7 +41,7 @@ class NetManager(asyncio.Protocol):
         loop = asyncio.get_event_loop()
 
         # Each client connection will create a new protocol instance
-        coro = loop.create_server(NetManager, '127.0.0.1', 7641)
+        coro = loop.create_server(NetManager, '0', 7641)
         server = loop.run_until_complete(coro)
 
         # Serve requests until Ctrl+C is pressed
