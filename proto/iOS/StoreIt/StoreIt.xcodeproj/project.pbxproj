@@ -17,6 +17,8 @@
 		8500F70C1C97103E00C69875 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F70B1C97103E00C69875 /* File.swift */; };
 		8500F70E1C97112800C69875 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F70D1C97112800C69875 /* FileManager.swift */; };
 		8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F7101C972B0400C69875 /* NetworkManager.swift */; };
+		853AD04A1C99A8230036A7FF /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD0491C99A8230036A7FF /* Server.swift */; };
+		853AD04C1C99A8400036A7FF /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD04B1C99A8400036A7FF /* Client.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		8500F70B1C97103E00C69875 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		8500F70D1C97112800C69875 /* FileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		8500F7101C972B0400C69875 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		853AD0491C99A8230036A7FF /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		853AD04B1C99A8400036A7FF /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,15 +107,14 @@
 		8500F6DC1C970F1C00C69875 /* StoreIt */ = {
 			isa = PBXGroup;
 			children = (
-				8500F70F1C972A7900C69875 /* Classes */,
+				853AD0481C99A7E30036A7FF /* FileManagement */,
+				853AD0471C99A7D60036A7FF /* Network */,
 				8500F6DD1C970F1C00C69875 /* AppDelegate.swift */,
 				8500F6DF1C970F1C00C69875 /* ViewController.swift */,
 				8500F6E11C970F1C00C69875 /* Main.storyboard */,
 				8500F6E41C970F1C00C69875 /* Assets.xcassets */,
 				8500F6E61C970F1C00C69875 /* LaunchScreen.storyboard */,
 				8500F6E91C970F1C00C69875 /* Info.plist */,
-				8500F70D1C97112800C69875 /* FileManager.swift */,
-				8500F7101C972B0400C69875 /* NetworkManager.swift */,
 			);
 			path = StoreIt;
 			sourceTree = "<group>";
@@ -134,12 +137,23 @@
 			path = StoreItUITests;
 			sourceTree = "<group>";
 		};
-		8500F70F1C972A7900C69875 /* Classes */ = {
+		853AD0471C99A7D60036A7FF /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				8500F7101C972B0400C69875 /* NetworkManager.swift */,
+				853AD0491C99A8230036A7FF /* Server.swift */,
+				853AD04B1C99A8400036A7FF /* Client.swift */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		853AD0481C99A7E30036A7FF /* FileManagement */ = {
 			isa = PBXGroup;
 			children = (
 				8500F70B1C97103E00C69875 /* File.swift */,
+				8500F70D1C97112800C69875 /* FileManager.swift */,
 			);
-			name = Classes;
+			name = FileManagement;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,9 +288,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8500F6E01C970F1C00C69875 /* ViewController.swift in Sources */,
+				853AD04C1C99A8400036A7FF /* Client.swift in Sources */,
 				8500F70C1C97103E00C69875 /* File.swift in Sources */,
 				8500F6DE1C970F1C00C69875 /* AppDelegate.swift in Sources */,
 				8500F70E1C97112800C69875 /* FileManager.swift in Sources */,
+				853AD04A1C99A8230036A7FF /* Server.swift in Sources */,
 				8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -504,6 +520,7 @@
 				8500F7041C970F1C00C69875 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8500F7051C970F1C00C69875 /* Build configuration list for PBXNativeTarget "StoreItTests" */ = {
 			isa = XCConfigurationList;
@@ -512,6 +529,7 @@
 				8500F7071C970F1C00C69875 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8500F7081C970F1C00C69875 /* Build configuration list for PBXNativeTarget "StoreItUITests" */ = {
 			isa = XCConfigurationList;
@@ -520,6 +538,7 @@
 				8500F70A1C970F1C00C69875 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
