@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/bash
 
 SNAME=storeit
 SPATH=$HOME/code/epitech/storeit/proto/server
