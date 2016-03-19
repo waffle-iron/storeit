@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		241B726554C97932431BE4C2 /* Pods_StoreIt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2454C174D35A6508F9B22EE5 /* Pods_StoreIt.framework */; };
 		8500F6DE1C970F1C00C69875 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F6DD1C970F1C00C69875 /* AppDelegate.swift */; };
 		8500F6E01C970F1C00C69875 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F6DF1C970F1C00C69875 /* ViewController.swift */; };
 		8500F6E31C970F1C00C69875 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8500F6E11C970F1C00C69875 /* Main.storyboard */; };
@@ -39,6 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2454C174D35A6508F9B22EE5 /* Pods_StoreIt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StoreIt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B1C3B2D59B66914CB4AE770 /* Pods-StoreIt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StoreIt.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StoreIt/Pods-StoreIt.debug.xcconfig"; sourceTree = "<group>"; };
+		4C64B7762EBB3D1DF812D4B8 /* Pods-StoreIt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StoreIt.release.xcconfig"; path = "Pods/Target Support Files/Pods-StoreIt/Pods-StoreIt.release.xcconfig"; sourceTree = "<group>"; };
 		8500F6DA1C970F1C00C69875 /* StoreIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StoreIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8500F6DD1C970F1C00C69875 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8500F6DF1C970F1C00C69875 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				241B726554C97932431BE4C2 /* Pods_StoreIt.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +89,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0032228BD7B5DB5251D90335 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3B1C3B2D59B66914CB4AE770 /* Pods-StoreIt.debug.xcconfig */,
+				4C64B7762EBB3D1DF812D4B8 /* Pods-StoreIt.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		734FCD23F0830BD3F91C18D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2454C174D35A6508F9B22EE5 /* Pods_StoreIt.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8500F6D11C970F1C00C69875 = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +113,8 @@
 				8500F6F11C970F1C00C69875 /* StoreItTests */,
 				8500F6FC1C970F1C00C69875 /* StoreItUITests */,
 				8500F6DB1C970F1C00C69875 /* Products */,
+				0032228BD7B5DB5251D90335 /* Pods */,
+				734FCD23F0830BD3F91C18D5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -163,9 +187,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8500F7021C970F1C00C69875 /* Build configuration list for PBXNativeTarget "StoreIt" */;
 			buildPhases = (
+				31BF9416A3F78E29554CF81C /* Check Pods Manifest.lock */,
 				8500F6D61C970F1C00C69875 /* Sources */,
 				8500F6D71C970F1C00C69875 /* Frameworks */,
 				8500F6D81C970F1C00C69875 /* Resources */,
+				0707757418910AEA4818C73C /* Embed Pods Frameworks */,
+				58C70A24B7AF1A152C6CAB46 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -281,6 +308,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0707757418910AEA4818C73C /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-StoreIt/Pods-StoreIt-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		31BF9416A3F78E29554CF81C /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		58C70A24B7AF1A152C6CAB46 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-StoreIt/Pods-StoreIt-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8500F6D61C970F1C00C69875 /* Sources */ = {
@@ -433,6 +508,7 @@
 		};
 		8500F7031C970F1C00C69875 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B1C3B2D59B66914CB4AE770 /* Pods-StoreIt.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = StoreIt/Info.plist;
@@ -444,6 +520,7 @@
 		};
 		8500F7041C970F1C00C69875 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C64B7762EBB3D1DF812D4B8 /* Pods-StoreIt.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = StoreIt/Info.plist;
