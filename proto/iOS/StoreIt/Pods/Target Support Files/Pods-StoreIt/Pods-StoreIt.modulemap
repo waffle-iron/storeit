@@ -1,6 +1,0 @@
-framework module Pods_StoreIt {
-  umbrella header "Pods-StoreIt-umbrella.h"
-
-  export *
-  module * { export * }
-}
