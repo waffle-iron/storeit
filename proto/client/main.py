@@ -42,8 +42,10 @@ except:
 try:
     observer = Observer()
     observer.schedule(tree.fs.WatchFs(), storage_dir, recursive=True)
+
     observer.start()
 
     network.loop(username, port)
+
 except ConnectionRefusedError:
     logger.error('error: connection refused')

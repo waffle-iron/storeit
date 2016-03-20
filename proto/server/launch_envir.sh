@@ -37,7 +37,7 @@ function reset_db {
 }
 
 function run_in_tmux {
-  tmux split-window -t $SNAME $*
+  tmux split-window -t $SNAME "$* || (echo 'program crashed. Press Enter'; read)"
   tmux select-layout tile
   sleep 0.1
   log_to_pane "command $* has been run"
@@ -58,7 +58,7 @@ function init_client {
 function run_client {
   init_client $1 $2
   pushd /tmp/$1
-  run_in_tmux $CLIPATH/main.py $1 $((PORT++))
+  run_in_tmux $CLIPATH/main.py $1 -p $((PORT++)) -l
   popd
   log_to_pane "client $1 is running"
 }
@@ -83,8 +83,8 @@ reset_db
 touch /tmp/panelog.log
 tmux new-session -d -s $SNAME "tail -f /tmp/panelog.log"
 log_to_pane "logging pane..."
-run_in_tmux $SPATH/main.py
-sleep 0.5 # wait a little bit for the server to start:w
+run_in_tmux $SPATH/main.py -l
+sleep 0.5 # wait a little bit for the server to start
 ps cax | grep postgres > /dev/null
 
 if [ $? -eq 0 ]; then

@@ -37,6 +37,10 @@ class Server(asyncio.Protocol):
 
     def loop(self, port):
 
+        # FIXME looks like dead code
+        raise Exception("should not run")
+        return
+
         loop = asyncio.get_event_loop()
 
         # Each client connection will create a new protocol instance
@@ -45,20 +49,12 @@ class Server(asyncio.Protocol):
 
         # Serve requests until Ctrl+C is pressed
         logger.info('Serving on {}'.format(server.sockets[0].getsockname()))
-        try:
-                loop.run_forever()
-        except KeyboardInterrupt:
-                pass
+        loop.run_forever()
 
-        try:
-            # Close the server
-            server.close()
-            loop.run_until_complete(server.wait_closed())
-            loop.close()
-
-        except KeyboardInterrupt:
-            logger.warn('ok, nevermind')
-            exit(1)
+        # Close the server
+        server.close()
+        loop.run_until_complete(server.wait_closed())
+        loop.close()
 
 
 class Client(asyncio.Protocol):
@@ -114,26 +110,29 @@ def listen(port):
         pass
 
     server.close()
-    eloop.run_until_complete(server.wait_closed())
+    try:
+        eloop.run_until_complete(server.wait_closed())
+    except KeyboardInterrupt:
+        print('just passin around')
     eloop.close()
     exit(0)
 
 
-def loop(username, client_port, server_port = 7641):
-    thread = threading.Thread(target=listen, args = (client_port,))
+def loop(username, client_port, server_port=7641):
+    thread = threading.Thread(target=listen, args=(client_port,))
+    thread.daemon = True
     thread.start()
 
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(lambda: Client(loop, client_port, username),
                                   '127.0.0.1', server_port)
-    loop.run_until_complete(coro)
     try:
+        loop.run_until_complete(coro)
         loop.run_forever()
     except KeyboardInterrupt:
         pass
 
     loop.close()
-    exit(0)
 
 
 def send_payload(ip: str, port: int, cmd: str, data: bytes):
