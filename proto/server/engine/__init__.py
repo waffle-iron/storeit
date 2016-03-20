@@ -11,7 +11,7 @@ def FADD(directory, from_who, filename, tree, client):
     if from_who == 'server':
         protocol.send_FADD(tree, client)
     elif tree['kind'] != 0:
-        hsh = chunk.register_chunk(tree['unique_hash'], client.username)
+        hsh = chunk.register_chunk(hash.Hash(tree['unique_hash']), client.username)
         chunk.keep_chunk_alive(client, hsh)
     else:
         pass  # TODO: handle adding a directory with some content

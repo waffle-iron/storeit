@@ -105,4 +105,4 @@ def send_CHSEND(from_cli, to_cli, send: int, chk: str):
 
     addr_and_port = addr[0] + ':' + to_cli.port
     from_cli.send_cmd('CHSEND {} {} {}'
-                      .format(send, chk.pretty(), addr_and_port))
+                      .format(send, chk, addr_and_port))

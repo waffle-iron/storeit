@@ -44,7 +44,7 @@ def has_user_chunk(chk: Hash, username: str):
 
 def register_chunk(chk, username: str):
 
-    logger.debug("registering chunk {} for {}".format(chk, username))
+    logger.debug("registering chunk {} for {}".format(chk.pretty(), username))
 
     if isinstance(chk, str):
         chk = Hash(chk)

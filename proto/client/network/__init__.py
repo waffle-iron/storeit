@@ -110,10 +110,7 @@ def listen(port):
         pass
 
     server.close()
-    try:
-        eloop.run_until_complete(server.wait_closed())
-    except KeyboardInterrupt:
-        print('just passin around')
+    eloop.run_until_complete(server.wait_closed())
     eloop.close()
     exit(0)
 

@@ -34,7 +34,10 @@ class NetManager(asyncio.Protocol):
         commands = commands[:-1]
 
         for cmd in commands:
-            protocol.parse(cmd, self.transp)
+            try:
+                protocol.parse(cmd, self.transp)
+            except Exception as e:
+                logger.error('{} was raised'.format(e))
 
     def loop(self):
 
@@ -49,6 +52,7 @@ class NetManager(asyncio.Protocol):
         try:
                 loop.run_forever()
         except KeyboardInterrupt:
+                print('KeyboardInterrupt')
                 pass
 
         try:
@@ -60,6 +64,3 @@ class NetManager(asyncio.Protocol):
         except KeyboardInterrupt:
             logger.warn('ok, nevermind')
             exit(1)
-
-if __name__ == '__main__':
-    print('testing...')
