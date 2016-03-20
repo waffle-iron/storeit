@@ -29,7 +29,6 @@ public class LoginActivity extends Activity{
     private SocketService mBoundService = null;
 
     private ServiceConnection mConnection = new ServiceConnection() {
-        //EDITED PART
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBoundService = ((SocketService.LocalBinder)service).getService();
@@ -51,7 +50,7 @@ public class LoginActivity extends Activity{
 
     @Subscribe
     public void getMessage(StoreItProtocol.NetworkCommand c){
-        if (c.type == )
+
     }
 
     @Override
@@ -116,6 +115,7 @@ public class LoginActivity extends Activity{
 
 
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
 

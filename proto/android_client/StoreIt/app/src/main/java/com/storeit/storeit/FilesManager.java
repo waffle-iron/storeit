@@ -17,25 +17,30 @@ public class FilesManager {
     private Context mContext; // Used for getting file path to data
     private File mDataDir;
 
-    public FilesManager(Context ctx){
+    public FilesManager(Context ctx) {
         File path[] = ctx.getExternalFilesDirs(Environment.DIRECTORY_DOCUMENTS);
-        mDataDir = path[1];
+        mDataDir = new File(path[1].getAbsolutePath() + "/storeit");
+        if (!mDataDir.exists()) {
+            mDataDir.mkdirs();
+        }
+
+
     }
 
-    private void recursiveListFile(File root){
+    private void recursiveListFile(File root) {
         File[] files = root.listFiles();
 
-        for (File file : files){
-            if (file.isDirectory()){
+        for (File file : files) {
+            if (file.isDirectory()) {
                 Log.d(LOGTAG, "[" + file.getAbsoluteFile() + "] : ");
                 recursiveListFile(file);
-            }else{
+            } else {
                 Log.d(LOGTAG, "-" + file.getAbsoluteFile());
             }
         }
     }
 
-    public void listFiles(){
+    public void listFiles() {
         recursiveListFile(mDataDir);
     }
 }
