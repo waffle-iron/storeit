@@ -38,7 +38,7 @@ def wait_for_chunk(chk: str, path: str):
     logger.debug('waiting for chunk {} ({})'.format(chk, path))
     chunk_awaiting[chk] = path
 
-store_name = '.store/'
+store_name = None
 
 
 def get_path_for_chunk(hsh):

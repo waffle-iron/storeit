@@ -3,26 +3,30 @@
 import database
 import subprocess
 import network
-import sys
 import logging
-import test
 import time
 from common.log import logger
+import argparse
 
-logger.setLevel(logging.DEBUG)
+logfile = '/tmp/storeit-server.log'
 
-if len(sys.argv) > 1 and sys.argv[1] == 'test':
-    test.all()
-    exit(0)
+parser = argparse.ArgumentParser(description='StoreIt backend server.')
+parser.add_argument('-l', '--log', nargs='?', const=logfile,
+                    help='log to a file (default is {})'.format(logfile))
+
+args = parser.parse_args()
+
+if args.log is not None:
+    logging.basicConfig(filename=args.log, level=logging.DEBUG)
 
 try:
-  database.__init__()
-  database.find_user('maoizejf', 'maoziejf')
+    database.__init__()
+    database.find_user('maoizejf', 'maoziejf')
 except Exception:
-  logger.warn('Looks like postgres daemon is not running. It will be started')
-  subprocess.call("./database/postgre.sh")
-  time.sleep(0.2)
-  database.__init__()
+    logger.warn('Looks like postgre daemon is not running. It will be started')
+    subprocess.call("./database/postgre.sh")
+    time.sleep(0.2)
+    database.__init__()
 
 netmanager = network.NetManager()
 netmanager.loop()

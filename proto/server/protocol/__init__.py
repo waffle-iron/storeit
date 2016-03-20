@@ -104,4 +104,5 @@ def send_CHSEND(from_cli, to_cli, send: int, chk: str):
         logger.error('could not get ip for user {}'.format(to_cli.username))
 
     addr_and_port = addr[0] + ':' + to_cli.port
-    from_cli.send_cmd('CHSEND {} {} {}'.format(send, chk, addr_and_port))
+    from_cli.send_cmd('CHSEND {} {} {}'
+                      .format(send, chk.pretty(), addr_and_port))
