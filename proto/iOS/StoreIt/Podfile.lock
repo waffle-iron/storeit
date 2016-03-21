@@ -1,10 +1,13 @@
 PODS:
   - ObjectMapper (1.1.5)
+  - TCPIP (0.1)
 
 DEPENDENCIES:
   - ObjectMapper (~> 1.1)
+  - TCPIP (~> 0.1)
 
 SPEC CHECKSUMS:
   ObjectMapper: 528b1a6677a6acac7747edd508576983e76a9148
+  TCPIP: fbb5c669e3a63f944294be647c0d8f4d01ca3ade
 
 COCOAPODS: 0.39.0

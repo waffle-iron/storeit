@@ -11,9 +11,13 @@ import ObjectMapper
 
 class ViewController: UIViewController {
 
+    let nm = NetworkManager(host: "0.0.0.0", port: 7641);
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        nm.client.start();
     }
 
     override func didReceiveMemoryWarning() {
@@ -22,6 +26,10 @@ class ViewController: UIViewController {
     }
 
     @IBAction func login(sender: AnyObject) {
+        
+        
+        nm.client.login();
+        
         
         // test scan dir and file type
         
@@ -41,6 +49,13 @@ class ViewController: UIViewController {
         let file = Mapper<File>().map(testJSON);
         
         NSLog(testJSON!);*/
+        
+        // test login
+        /*if (nm != nil) {
+        	nm!.client?.read();
+            nm!.client?.toto();
+        }*/
+        //print(nm.client.clientSocket!.closed);
     }
 
 }

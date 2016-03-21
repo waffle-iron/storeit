@@ -20,6 +20,7 @@
 		8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F7101C972B0400C69875 /* NetworkManager.swift */; };
 		853AD04A1C99A8230036A7FF /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD0491C99A8230036A7FF /* Server.swift */; };
 		853AD04C1C99A8400036A7FF /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD04B1C99A8400036A7FF /* Client.swift */; };
+		85A6F5981C9EC6950018ABDF /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		8500F7101C972B0400C69875 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		853AD0491C99A8230036A7FF /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		853AD04B1C99A8400036A7FF /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				8500F7101C972B0400C69875 /* NetworkManager.swift */,
 				853AD0491C99A8230036A7FF /* Server.swift */,
 				853AD04B1C99A8400036A7FF /* Client.swift */,
+				85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				8500F70E1C97112800C69875 /* FileManager.swift in Sources */,
 				853AD04A1C99A8230036A7FF /* Server.swift in Sources */,
 				8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */,
+				85A6F5981C9EC6950018ABDF /* RequestBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,10 +515,13 @@
 			baseConfigurationReference = 3B1C3B2D59B66914CB4AE770 /* Pods-StoreIt.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = StoreIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.StoreIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "StoreIt-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -523,10 +530,12 @@
 			baseConfigurationReference = 4C64B7762EBB3D1DF812D4B8 /* Pods-StoreIt.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = StoreIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.StoreIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "StoreIt-Bridging-Header.h";
 			};
 			name = Release;
 		};
