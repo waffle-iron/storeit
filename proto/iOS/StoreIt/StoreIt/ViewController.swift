@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     @IBAction func login(sender: AnyObject) {
         
         
-        nm.client.login();
+        nm.client.join();
         
         
         // test scan dir and file type

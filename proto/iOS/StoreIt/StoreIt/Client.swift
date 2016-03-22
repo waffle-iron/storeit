@@ -35,25 +35,21 @@ class Client {
   
     func start()  {
         let queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0);
-        var i = 0
 
         dispatch_async(queue) {
             while (!self.clientSocket!.closed) {
-                print("Socket closed : \(self.clientSocket!.closed) \(i)")
-                sleep(1)
-                i++
+                // read
             }
         }
     }
     
-    func login() {
+    func join() {
         let testFile = File(path: "./", unique_hash: "unique_hash", metadata: "0", chunks_hashes: ["chunks_hashes"], kind: 0, files: [])
         let request = requestBuilder.join("cli1", port: self.port, chunk_hashes: [], file: testFile)
-        
+        print(request)
         do {
             try self.clientSocket!.sendString(request)
             try self.clientSocket!.flush()
-            print("Request should be sent by now")
         } catch {
             print("[NetworkManager.Client] Error while writing on socket; Request : JOIN.")
         }
