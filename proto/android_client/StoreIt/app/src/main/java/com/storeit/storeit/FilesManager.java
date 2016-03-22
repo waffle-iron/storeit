@@ -3,19 +3,15 @@ package com.storeit.storeit;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
-
 import com.storeit.storeit.protocol.HashManager;
 import com.storeit.storeit.protocol.StoreitFile;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.Deque;
 
 /**
  * Handle file creation and deletion
@@ -38,31 +34,14 @@ public class FilesManager {
         mDataDir = new File(path[1].getAbsolutePath());
     }
 
-    private void recursiveListFile(File root) {
+    private void listDir(File root, StoreitFile rootFile) {
         File[] files = root.listFiles();
 
         for (File file : files) {
             if (file.isDirectory()) {
-                Log.d(LOGTAG, "[" + file.getAbsoluteFile() + "] : ");
-                recursiveListFile(file);
-            } else {
-                Log.d(LOGTAG, "-" + file.getAbsoluteFile());
-            }
-        }
-    }
-
-    public void listFiles() {
-        recursiveListFile(mDataDir);
-    }
-
-    private void goDown(File root, StoreitFile rootFile) {
-        File[] files = root.listFiles();
-
-        for (File file : files) {
-            if (file.isDirectory()) {
-                StoreitFile dir = new StoreitFile(file.getPath(), "0", 0);
+                StoreitFile dir = new StoreitFile(toLocalPath(file.getPath()), "0", 0);
                 rootFile.addFile(dir);
-                goDown(file, dir);
+                listDir(file, dir);
             } else {
                 InputStream in ;
 
@@ -80,18 +59,28 @@ public class FilesManager {
                     e.printStackTrace();
                 }
 
-                Log.v(LOGTAG, file.getPath() + " : " + unique_hash);
-
-                StoreitFile stFile = new StoreitFile(file.getPath(), unique_hash, 1);
+                StoreitFile stFile = new StoreitFile(toLocalPath(file.getPath()), unique_hash, 1);
                 rootFile.addFile(stFile);
             }
         }
     }
 
-    public StoreitFile makeTree() {
-        StoreitFile rootFile = new StoreitFile(mDataDir.getPath() + "/storeit", "0", 0);
-        goDown(new File(mDataDir + "/storeit"), rootFile);
+    private String toLocalPath(String path){
+        return path.replace(mDataDir.getPath(), ".");
+    }
 
+    public void dumpTree(StoreitFile file){
+        Log.v(LOGTAG, "{" + file.getPath() + " " + file.getUnique_hash() + " " + file.getKind() + "}");
+        for (StoreitFile f : file.getFiles()){
+            Log.v(LOGTAG, "{" + f.getPath() + " " + f.getUnique_hash() + " " + f.getKind() + "}");
+            if (f.getKind() == 0)
+                dumpTree(f);
+        }
+    }
+
+    public StoreitFile makeTree() {
+        StoreitFile rootFile = new StoreitFile(toLocalPath(mDataDir.getPath() + "/storeit"), "0", 0);
+        listDir(new File(mDataDir + "/storeit"), rootFile);
         return rootFile;
     }
 }

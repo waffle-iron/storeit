@@ -32,9 +32,7 @@ public class SocketService extends Service {
 
     public static final String SERVERIP = "51.254.99.47"; //your computer IP address should be written here
     public static final int SERVERPORT = 7641;
-
     public static final String LOGTAG = "SocketService";
-
     private Bus bus = OttoManager.getBus();
 
     PrintWriter mSocketWriter;
@@ -55,7 +53,7 @@ public class SocketService extends Service {
                 mConnected = connectToServer(mSocket, SERVERIP, SERVERPORT);
                 try {
                     Thread.sleep(5000);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }
@@ -91,8 +89,8 @@ public class SocketService extends Service {
         return START_STICKY;
     }
 
-    void sendJoin(String username, String password) {
-        String cmd = mProtocol.createJoinCommand(username, password, 7641, new StoreitFile("/toto/tata", "super_hash", 0));
+    void sendJoin(String username, String password, StoreitFile file) {
+        String cmd = mProtocol.createJoinCommand(username, password, 7641, file);
 
         if (mSocketWriter != null && !mSocketWriter.checkError()) {
             mSocketWriter.print(cmd);
@@ -177,7 +175,6 @@ public class SocketService extends Service {
         }
         return true;
     }
-
     public boolean isConnected(){
         return mConnected;
     }

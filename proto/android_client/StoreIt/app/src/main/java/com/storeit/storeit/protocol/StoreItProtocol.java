@@ -3,6 +3,9 @@ package com.storeit.storeit.protocol;
 import android.util.Log;
 import android.widget.TabHost;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 
 /**
@@ -28,8 +31,15 @@ public class StoreItProtocol {
     public String createJoinCommand(String username, String password, int port, StoreitFile file) {
         lastCommand = "Join";
 
+
+        Gson gson = new Gson();
+
+
+        String jsonFile = gson.toJson(file);
+        Log.v(TAG, jsonFile);
+
         String hashes = "None";
-        String cmd = "JOIN " + username + " " + port + " None " + file.toJson() + "\r\n";
+        String cmd = "JOIN " + username + " " + port + " None " + jsonFile + "\r\n";
 
         return cmd;
     }

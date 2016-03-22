@@ -1,6 +1,5 @@
 package com.storeit.storeit;
 
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,13 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-import com.squareup.otto.ThreadEnforcer;
 import com.storeit.storeit.protocol.StoreItProtocol;
 import com.storeit.storeit.protocol.StoreitFile;
-
 
 /*
 * Login Activity
@@ -42,7 +38,6 @@ public class LoginActivity extends Activity{
             mIsBound = false;
         }
     };
-
 
     @Subscribe
     public void getMessage(String s){
@@ -87,8 +82,6 @@ public class LoginActivity extends Activity{
         Bus bus = OttoManager.getBus();
         bus.register(this);
 
-        StoreitFile file = filesManager.makeTree();
-
 //        filesManager.listFiles();
 
         final EditText email = (EditText)findViewById(R.id.login_input_email);
@@ -113,13 +106,15 @@ public class LoginActivity extends Activity{
                         return ;
                     }
 
+                    StoreitFile file = filesManager.makeTree();
+                    filesManager.dumpTree(file);
 
-                    mBoundService.sendJoin(email.getText().toString(), password.getText().toString());
-
+                    mBoundService.sendJoin(email.getText().toString(), password.getText().toString(), file);
 
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+
                 }
 
             }
