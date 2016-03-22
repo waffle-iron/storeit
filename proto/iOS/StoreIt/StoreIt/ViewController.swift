@@ -17,7 +17,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        nm.client.start();
+        if (nm.client.isRunning) {
+        	nm.client.start();
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,9 +30,7 @@ class ViewController: UIViewController {
 
     @IBAction func login(sender: AnyObject) {
         
-        
         nm.client.join();
-        
         
         // test scan dir and file type
         

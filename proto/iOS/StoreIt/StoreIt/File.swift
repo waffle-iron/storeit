@@ -9,20 +9,6 @@
 import Foundation
 import ObjectMapper
 
-/*class FileTransform: TransformType {
-    
-    typealias Object = [File]
-    typealias JSON = String
-    
-    func transformFromJSON(value: AnyObject?) -> [File]? {
-        return nil
-    }
-    
-    func transformToJSON(value: [File]?) -> String? {
-        return "{}"
-    }
-}*/
-
 class File: Mappable {
     
     var path: String
@@ -30,7 +16,25 @@ class File: Mappable {
     var unique_hash: String
     var kind: Int
     var chunks_hashes: [String]
-    var files: [File]
+    var files: [String: File]
+    
+    init() {
+        self.path = ""
+        self.unique_hash = ""
+        self.metadata = ""
+        self.chunks_hashes = [""]
+        self.files = [String: File]()
+        self.kind = -1
+    }
+
+    init(path: String, unique_hash: String, metadata: String, chunks_hashes: [String], kind: Int, files: [String: File]) {
+        self.path = path
+        self.unique_hash = unique_hash
+        self.metadata = metadata
+        self.chunks_hashes = chunks_hashes
+        self.files = files
+        self.kind = kind
+    }
     
    required init?(_ map: Map) {
         self.path = ""
@@ -38,16 +42,7 @@ class File: Mappable {
     	self.unique_hash = ""
     	self.kind = -1
     	self.chunks_hashes = []
-    	self.files = []
-    }
-
-    init(path: String, unique_hash: String, metadata: String, chunks_hashes: [String], kind: Int, files: [File]) {
-        self.path = path
-        self.unique_hash = unique_hash
-        self.metadata = metadata
-        self.chunks_hashes = chunks_hashes
-        self.files = files
-        self.kind = kind
+    	self.files = [String:File]()
     }
     
     func mapping(map: Map) {

@@ -11,9 +11,9 @@ import ObjectMapper
 
 class RequestBuilder {
     
-    let escapeChars: String = "\r\n"
+    private let escapeChars: String = "\r\n"
     
-    enum RequestString{
+    private enum RequestString{
         case JOIN
     }
     
@@ -27,11 +27,11 @@ class RequestBuilder {
     
     // TOOLS
     
-    func chunkHashesToStr(chunk_hashes: [String], separator: String) -> String {
+    private func chunkHashesToStr(chunk_hashes: [String], separator: String) -> String {
         return chunk_hashes.isEmpty ? "None" : chunk_hashes.joinWithSeparator(separator)
     }
     
-    func fileObjectToJSON(file: File) -> String {
+    private func fileObjectToJSON(file: File) -> String {
         return Mapper().toJSONString(file)!
     }
     

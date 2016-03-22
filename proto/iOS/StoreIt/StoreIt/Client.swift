@@ -13,12 +13,14 @@ import CocoaAsyncSocket
 
 class Client {
     
-    let host: String
-    let port: Int
-    let requestBuilder: RequestBuilder
+    private let host: String
+    private let port: Int
+    private let requestBuilder: RequestBuilder
     
-    var ip: IP?
-    var clientSocket: TCPClientSocket?
+    private var ip: IP?
+    private var clientSocket: TCPClientSocket?
+    
+    var isRunning: Bool = false
     
     init(host: String, port: Int) {
         self.host = host
@@ -28,8 +30,9 @@ class Client {
         do {
             self.ip = try IP(address: host, port: port);
             self.clientSocket = try TCPClientSocket(ip: ip!);
+            self.isRunning = true
         } catch {
-            print("[NetworkManager.Client] Error while initializing socket: the server might not be runnning, or wrong port or host are given.");
+            print("[NetworkManager.Client] Error while initializing socket: the server might not be runnning or the connexion is not established yet.");
         }
     }
   
@@ -44,16 +47,15 @@ class Client {
     }
     
     func join() {
-        let testFile = File(path: "./", unique_hash: "unique_hash", metadata: "0", chunks_hashes: ["chunks_hashes"], kind: 0, files: [])
-        let request = requestBuilder.join("cli1", port: self.port, chunk_hashes: [], file: testFile)
+        let file1 = File(path: "./", unique_hash: "0", metadata: "0", chunks_hashes: ["0"], kind: 0, files: [String: File]())
+        let request = requestBuilder.join("cli1", port: self.port, chunk_hashes: [], file: file1)
         print(request)
         do {
             try self.clientSocket!.sendString(request)
             try self.clientSocket!.flush()
         } catch {
-            print("[NetworkManager.Client] Error while writing on socket; Request : JOIN.")
+            print("[NetworkManager.Client] JOIN: Error while writing on socket.")
         }
-    
     }
 
 }
