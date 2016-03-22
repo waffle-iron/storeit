@@ -67,8 +67,6 @@ public class SocketService extends Service {
         return myBinder;
     }
 
-
-
     public class LocalBinder extends Binder {
         public SocketService getService() {
             return SocketService.this;

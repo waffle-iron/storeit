@@ -17,6 +17,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
 import com.storeit.storeit.protocol.StoreItProtocol;
+import com.storeit.storeit.protocol.StoreitFile;
 
 
 /*
@@ -86,7 +87,9 @@ public class LoginActivity extends Activity{
         Bus bus = OttoManager.getBus();
         bus.register(this);
 
-        filesManager.listFiles();
+        StoreitFile file = filesManager.makeTree();
+
+//        filesManager.listFiles();
 
         final EditText email = (EditText)findViewById(R.id.login_input_email);
         final EditText password = (EditText)findViewById(R.id.login_input_password);
