@@ -11,24 +11,28 @@ import ObjectMapper
 
 class RequestBuilder {
     
-    enum RequestString : String {
-        case Join = "JOIN"
+    private let escapeChars: String = "\r\n"
+    
+    private enum RequestString{
+        case JOIN
     }
     
+    init() {}
+        
     // REQUESTS
     
     func join(username: String, port: Int, chunk_hashes: [String], file: File) -> String {
-        return "\(RequestString.Join.rawValue) \(username) \(port) \(chunkHashesToStr(chunk_hashes, separator: ":")) \(fileObjectToJSON(file))";
+        return "\(RequestString.JOIN) \(username) \(port) \(chunkHashesToStr(chunk_hashes, separator: ":")) \(fileObjectToJSON(file)) \(escapeChars)"
     }
     
     // TOOLS
     
-    func chunkHashesToStr(chunk_hashes: [String], separator: String) -> String {
-        return chunk_hashes.isEmpty ? "None" : chunk_hashes.joinWithSeparator(separator);
+    private func chunkHashesToStr(chunk_hashes: [String], separator: String) -> String {
+        return chunk_hashes.isEmpty ? "None" : chunk_hashes.joinWithSeparator(separator)
     }
     
-    func fileObjectToJSON(file: File) -> String {
-        return Mapper().toJSONString(file)!;
+    private func fileObjectToJSON(file: File) -> String {
+        return Mapper().toJSONString(file)!
     }
     
 }
