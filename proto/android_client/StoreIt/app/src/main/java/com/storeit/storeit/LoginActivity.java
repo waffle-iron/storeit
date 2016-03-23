@@ -88,6 +88,14 @@ public class LoginActivity extends Activity{
         final EditText password = (EditText)findViewById(R.id.login_input_password);
         Button btn = (Button)findViewById(R.id.login_btn);
 
+
+        Intent serviceIntent = new Intent(this, SendService.class);
+        serviceIntent.putExtra("ip", "51.254.99.47");
+        serviceIntent.putExtra("port", 7642);
+        serviceIntent.putExtra("hash", "000000");
+
+        startService(serviceIntent);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,9 +122,7 @@ public class LoginActivity extends Activity{
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-
                 }
-
             }
         });
     }
