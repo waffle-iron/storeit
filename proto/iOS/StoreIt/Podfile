@@ -6,6 +6,7 @@ use_frameworks!
 target 'StoreIt' do
 	pod 'ObjectMapper', '~> 1.1'
     pod 'TCPIP', '~> 0.1'
+    pod 'CryptoSwift'
 end
 
 target 'StoreItTests' do

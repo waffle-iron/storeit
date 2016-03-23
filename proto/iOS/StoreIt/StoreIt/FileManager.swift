@@ -8,6 +8,7 @@
 
 import Foundation
 import ObjectMapper
+import CryptoSwift
 
 enum FileType: Int {
     case Unknown = -1
@@ -40,14 +41,14 @@ class FileManager {
             switch type {
                 case .Regular_file :
                     nestedFiles[file] = File(path: filePath,
-                                             unique_hash: "",
+                                             unique_hash: sha256(filePath),
                                              metadata: "",
                                              chunks_hashes: [""],
                                              kind: type.rawValue,
                                              files: [String:File]())
                 case .Directory :
                     nestedFiles[file] = File(path: filePath,
-                                             unique_hash: "",
+                                             unique_hash: "0",
                                              metadata: "",
                                              chunks_hashes: [""],
                                              kind: type.rawValue,
@@ -103,6 +104,13 @@ class FileManager {
         let parentURL: NSURL = NSURL(fileURLWithPath: absoluteRootDirPath).URLByDeletingLastPathComponent!
         let parent: String = parentURL.path!
         return "\(parent)/\(path)"
+    }
+    
+    private func sha256(path: String) -> String {
+        let url: NSURL = NSURL(fileURLWithPath: getFullPath(path))
+        let data: NSData = NSData(contentsOfURL: url)!
+        
+        return data.sha256()!.toHexString()
     }
 
 }
