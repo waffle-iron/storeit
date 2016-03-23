@@ -11,15 +11,15 @@ import ObjectMapper
 
 class ViewController: UIViewController {
 
-    let nm = NetworkManager(host: "0.0.0.0", port: 7641);
+    //let nm = NetworkManager(host: "0.0.0.0", port: 7641);
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        if (nm.client.isRunning) {
+        /*if (nm.client.isRunning) {
         	nm.client.start();
-        }
+        }*/
 
     }
 
@@ -30,16 +30,27 @@ class ViewController: UIViewController {
 
     @IBAction func login(sender: AnyObject) {
         
-        nm.client.join();
+        //nm.client.join();
         
         // test scan dir and file type
         
-        /*let path = "/Users/gjura_r/Desktop/";
-        let fm = FileManager(rootDir: path);
-        let content = fm.getDirectoryContent();
+        let path = "/Users/gjura_r/Desktop/aaa/"
+        let fm = FileManager(path: path)
+        //fm.getDirectoryContent(path)
+        //fm.buildTree(fm.getDirectoryNestedContent())
+        
+        
+        let test: File = File(path: "aaa/", unique_hash: "", metadata: "", chunks_hashes: [""], kind: 0, files: fm.buildTree("aaa/"))
+        
+        NSLog(Mapper().toJSONString(test, prettyPrint: true)!)
+        
+        
+        
         //print(content);
-        for file in content {
-            print(file + " " + "\(fm.fileType(file).rawValue)");
+        /*for file in content {
+            //print("\(file) \(fm.fileType(file).rawValue)");
+            let url: NSURL = NSURL(fileURLWithPath: file)
+            print(url.pathComponents)
         }*/
         
         // test json conversion

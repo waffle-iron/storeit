@@ -8,8 +8,6 @@
 
 import Foundation
 import TCPIP
-import SwiftSockets
-import CocoaAsyncSocket
 
 class Client {
     
@@ -28,8 +26,8 @@ class Client {
         self.requestBuilder = RequestBuilder()
         
         do {
-            self.ip = try IP(address: host, port: port);
-            self.clientSocket = try TCPClientSocket(ip: ip!);
+            self.ip = try IP(address: host, port: port)
+            self.clientSocket = try TCPClientSocket(ip: ip!)
             self.isRunning = true
         } catch {
             print("[NetworkManager.Client] Error while initializing socket: the server might not be runnning or the connexion is not established yet.");
@@ -37,7 +35,7 @@ class Client {
     }
   
     func start()  {
-        let queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0);
+        let queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
 
         dispatch_async(queue) {
             while (!self.clientSocket!.closed) {
