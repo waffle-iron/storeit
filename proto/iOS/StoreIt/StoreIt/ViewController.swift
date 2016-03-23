@@ -42,7 +42,12 @@ class ViewController: UIViewController {
         
         let test: File = File(path: "aaa/", unique_hash: "", metadata: "", chunks_hashes: [""], kind: 0, files: fm.buildTree("aaa/"))
         
-        NSLog(Mapper().toJSONString(test, prettyPrint: true)!)
+        let rb: RequestBuilder = RequestBuilder()
+        let request: String = rb.join("toto", port: 0, file: test)
+        
+        print(request)
+        
+        //NSLog(Mapper().toJSONString(test, prettyPrint: true)!)
         
         
         

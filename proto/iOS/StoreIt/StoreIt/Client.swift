@@ -44,10 +44,10 @@ class Client {
         }
     }
     
-    func join() {
-        let file1 = File(path: "./", unique_hash: "0", metadata: "0", chunks_hashes: ["0"], kind: 0, files: [String: File]())
-        let request = requestBuilder.join("cli1", port: self.port, chunk_hashes: [], file: file1)
-        print(request)
+    func join(username: String, file: File) {
+        let request = requestBuilder.join(username, port: self.port, file: file)
+        //print(request)
+        
         do {
             try self.clientSocket!.sendString(request)
             try self.clientSocket!.flush()
