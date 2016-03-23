@@ -52,9 +52,10 @@ public class SendService extends IntentService {
             return;
         }
 
+        // To
 
         try {
-            writer.write("fuck you\r\n");
+            writer.write("CHSTORE 18 Ceci est un test!!\r\n");
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
