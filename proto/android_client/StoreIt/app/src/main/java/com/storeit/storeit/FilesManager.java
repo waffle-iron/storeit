@@ -69,6 +69,7 @@ public class FilesManager {
         return path.replace(mDataDir.getPath(), ".");
     }
 
+    /*
     public void dumpTree(StoreitFile file){
         Log.v(LOGTAG, "{" + file.getPath() + " " + file.getUnique_hash() + " " + file.getKind() + "}");
         for (StoreitFile f : file.getFiles()){
@@ -77,6 +78,7 @@ public class FilesManager {
                 dumpTree(f);
         }
     }
+*/
 
     public StoreitFile makeTree() {
         StoreitFile rootFile = new StoreitFile(toLocalPath(mDataDir.getPath() + "/storeit"), "0", 0);

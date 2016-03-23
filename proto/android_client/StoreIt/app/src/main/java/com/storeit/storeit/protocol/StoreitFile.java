@@ -1,6 +1,9 @@
 package com.storeit.storeit.protocol;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * StoreIt file object
@@ -12,29 +15,28 @@ public class StoreitFile {
     private String unique_hash;
     private String metadata;
     private int kind;
-    private ArrayList<StoreitFile> files;
+    private HashMap<String, StoreitFile> files;
 
     public StoreitFile(String path, String unique_hash, int kind) {
         this.path = path;
         this.unique_hash = unique_hash;
         this.kind = kind;
         this.metadata = "";
-        this.files = new ArrayList<>();
+        this.files = new HashMap<>();
     }
 
     public String getPath() {
         return path;
     }
 
-    public ArrayList<StoreitFile> getFiles() {
+    public HashMap<String, StoreitFile> getFiles() {
         return files;
     }
 
     public void addFile(StoreitFile file) {
-        this.files.add(file);
+        Uri uri = Uri.parse(file.getPath());
+        this.files.put(uri.getLastPathSegment(), file);
     }
-
-
 
     public String getUnique_hash() {
         return unique_hash;

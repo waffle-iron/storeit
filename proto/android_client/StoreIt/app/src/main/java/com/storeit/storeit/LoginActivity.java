@@ -107,7 +107,7 @@ public class LoginActivity extends Activity{
                     }
 
                     StoreitFile file = filesManager.makeTree();
-                    filesManager.dumpTree(file);
+                    //filesManager.dumpTree(file);
 
                     mBoundService.sendJoin(email.getText().toString(), password.getText().toString(), file);
 
