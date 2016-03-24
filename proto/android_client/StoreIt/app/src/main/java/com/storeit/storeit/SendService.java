@@ -4,10 +4,15 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -18,6 +23,9 @@ import java.net.UnknownHostException;
  * Created by loulo on 23/03/2016.
  */
 public class SendService extends IntentService {
+
+    private final String LOGTAG = "SendService";
+
     public SendService() {
         super("SendService");
     }
@@ -25,40 +33,61 @@ public class SendService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Log.v("SendService", "Hello");
-
+        // Get parameters from intent
         String ip = intent.getStringExtra("ip");
         int port = intent.getIntExtra("port", 7642);
-        String hash = intent.getStringExtra("hash");
+        String chunkPath = intent.getStringExtra("chunkPath");
+
+        // Chunk file
+        File chunFile = new File(chunkPath);
+        InputStream in = null;
+
+        // chunk stream
+        try {
+            in = new BufferedInputStream(new FileInputStream(chunFile));
+        } catch (FileNotFoundException e) {
+            Log.e(LOGTAG, "chunk: " + chunkPath + " not found...");
+            return ;
+        }
+
+        // Read whole file
+        // Todo : send small packet
+        byte[] buffer = new byte[(int)chunFile.length()];
+        try {
+            in.read(buffer);
+        } catch (IOException e) {
+            Log.e(LOGTAG, "Error while reading chunk");
+        }
 
         Socket socket = new Socket();
-        BufferedWriter writer = null;
+        OutputStream out = null;
 
         InetAddress addr;
         try {
             addr = InetAddress.getByName(ip);
             SocketAddress sockaddr = new InetSocketAddress(addr, port);
             socket.connect(sockaddr, 5000);
-            writer  = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            out = socket.getOutputStream();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (writer == null)
+        if (out == null)
         {
-            Log.e("SendService", "writer == null");
+            Log.e("SendService", "out == null");
             return;
         }
 
-        // To
+        String cmd = "CHSTORE " + buffer.length + " ";
 
         try {
-            writer.write("CHSTORE 18 Ceci est un test!!\r\n");
-            writer.flush();
+            out.write(cmd.getBytes());
+            out.write(buffer);
+            out.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.v("SendService", "Write failed...");
         }
     }
 }

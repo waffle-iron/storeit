@@ -19,8 +19,14 @@ public class StoreItProtocol {
             "CHDELETE",
             "CHSEND",
     };
+    private  StoreitHandler storeitHandler;
 
     public static final int CHDELETE = 0, CHSEND = 1, JOIN = 2, LEAVE = 3;
+
+    public void setStoreitHandler(StoreitHandler storeitHandler){
+        this.storeitHandler = storeitHandler;
+    }
+
 
     public class NetworkCommand
     {
@@ -53,7 +59,18 @@ public class StoreItProtocol {
     }
 
     public void handleCHSEND(String[] tokens){
+        int send = Integer.valueOf(tokens[1]);
+        String chunk_name = tokens[2];
 
+        String[] infos = tokens[3].split(":");
+        if (infos.length != 2)
+            return ;
+
+        String ip = infos[0];
+        int port = Integer.parseInt(infos[1]);
+
+        if (storeitHandler != null)
+            storeitHandler.handleCHSEND(send, chunk_name, ip, port);
     }
 
     public void commandReceived(String command) {
@@ -83,5 +100,4 @@ public class StoreItProtocol {
                 Log.d(TAG, "Not implemented : " + command);
         }
     }
-
 }

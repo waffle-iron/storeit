@@ -11,6 +11,8 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 import com.storeit.storeit.protocol.StoreItProtocol;
 import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.protocol.StoreitHandler;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -41,6 +43,13 @@ public class SocketService extends Service {
     private StoreItProtocol mProtocol = new StoreItProtocol();
 
     Handler handler = new Handler(Looper.getMainLooper());
+
+    StoreitHandler storeitHandler = null;
+
+    public void setStoreitHandler(StoreitHandler storeitHandler){
+        this.storeitHandler = storeitHandler;
+        mProtocol.setStoreitHandler(storeitHandler);
+    }
 
     private class SocketManager implements Runnable {
         @Override
