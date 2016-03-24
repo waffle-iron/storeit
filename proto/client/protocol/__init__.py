@@ -21,7 +21,8 @@ def parse(cmd: str):
     cmds = {b'FADD': Command(FADD, True),
             b'FUPDATE': Command(FUPDATE, True),
             b'CHSEND': Command(CHSEND, True),
-            b'CHSTORE': Command(CHSTORE, False),
+            # TODO: rethink the hole stuff
+#            b'CHSTORE': Command(CHSTORE, False),
             b'CHDELETE': Command(CHDELETE, True)}
 
     logger.info(log.nomore('somebody sent {}'.format(cmd)))
@@ -76,10 +77,9 @@ def CHSEND(params):
         pass  # TODO
 
 
-def CHSTORE(params):
-    length, data = params.split(b' ', 1)
+def CHSTORE(data):
 
-    logger.debug('CHSTORE for {} bytes'.format(length))
+    logger.debug('CHSTORE for {} bytes'.format(len(data)))
 
     # TODO: store only if we are waiting for it
     hasher = hashlib.sha256()

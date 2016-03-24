@@ -15,19 +15,23 @@ class Receiver():
         self.transport = transport
 
 
-class Server(asyncio.Protocol):
+class Network():
 
     data_buffer = bytes()
 
-    def __init_(self):
-        pass
+    def data_received(self, data):
+        self.data_buffer += data
+
+
+class Server(Network):
 
     def connection_made(self, transport):
         receivers.append(Receiver(transport))
 
     def data_received(self, data):
 
-        self.data_buffer += data
+        super.data_received(data)
+
         commands = self.data_buffer.split(b"\r\n")
         self.data_buffer = commands[-1]
         commands = commands[:-1]
@@ -35,36 +39,16 @@ class Server(asyncio.Protocol):
         for cmd in commands:
             protocol.parse(cmd)
 
-    def loop(self, port):
-
-        # FIXME looks like dead code
-        raise Exception("should not run")
-        return
-
-        loop = asyncio.get_event_loop()
-
-        # Each client connection will create a new protocol instance
-        coro = loop.create_server(NetManager, '127.0.0.1', port)
-        server = loop.run_until_complete(coro)
-
-        # Serve requests until Ctrl+C is pressed
-        logger.info('Serving on {}'.format(server.sockets[0].getsockname()))
-        loop.run_forever()
-
-        # Close the server
-        server.close()
-        loop.run_until_complete(server.wait_closed())
-        loop.close()
+waiting_for_command = True
 
 
-class Client(asyncio.Protocol):
-
-    data_buffer = bytes()
+class Client(Network):
 
     def __init__(self, loop, port, username):
         self.loop = loop
         self.port = port
         self.username = username
+        self.byte_count = 0
 
     def connection_made(self, transp):
 
@@ -75,13 +59,20 @@ class Client(asyncio.Protocol):
 
     def data_received(self, data):
 
-        self.data_buffer += data
-        commands = self.data_buffer.split(b"\r\n")
-        self.data_buffer = commands[-1]
-        commands = commands[:-1]
+        super.data_received(data)
 
-        for cmd in commands:
-            protocol.parse(cmd)
+        if self.byte_count > 0:
+            self.byte_count -= len(data)
+            if self.byte_count <= 0:
+                protocol.CHSTORE(self.data_buffer)
+
+        else:
+            commands = self.data_buffer.split(b"\r\n")
+            self.data_buffer = commands[-1]
+            commands = commands[:-1]
+
+            for cmd in commands:
+                protocol.parse(cmd)
 
     def connection_lost(self, exc):
         logger.error('The server closed the connection')

@@ -21,7 +21,7 @@ Hello, this is the documentation for the StoreIt protocol. It is used when two c
 \end{center}
 
 \begin{itemize}
-  \item NAME is the command name. "JOIN" for example.
+  \item NAME is the command name. "JOIN" for example. Every command name is ALWAYS 4 characters long.
   \item SIZE is the size in bytes following the ' ' (space) after SIZE. For example \textit{TAKE 9 money 900}.
   \item \textit{arg} are command ASCII arguments.
   \item payload is a list of bytes for some payload. Example :\\
@@ -97,30 +97,30 @@ This is the first request to make whenever a client wants to get online.\\
 \begin{center}JOIN SIZE username port json\_file\end{center}
 Json\_file is the json tree describe in the second section.
 
-\paragraph{LEAVE}
+\paragraph{QUIT}
 
 [client] -> [server]\\
 A client should send this to our server to leave the network.\\
 
-\begin{center}LEAVE 0\end{center}
+\begin{center}QUIT 0\end{center}
 
 Note that '0' is the SIZE parameter. It is always zero since there is no argument.\\
 
 \subsection{Raw Data Manipulation (chunks)}
 
-\paragraph{CHDELETE}
+\paragraph{CDEL (chunk delete)}
 
 [server] -> [client]\\
 The server asks the client to delete a chunk it is storing.
 
-\begin{center}CHDELETE SIZE chunk\_hash\end{center}
+\begin{center}CDEL SIZE chunk\_hash\end{center}
 
-\paragraph{CHSEND}
+\paragraph{CSND (chunk send)}
 
 [server] -> [client]\\
  Tells a client to wait for a specific client to send it a chunk (only in the case of chunks that don't belongs to a user), or to send a chunk to another client. See the diagram at the end of the document to better understand.
 
-\begin{center}CHSEND SIZE send chunk\_hash ip\_address:port\end{center}
+\begin{center}CSND SIZE send chunk\_hash ip\_address:port\end{center}
 
 \begin{itemize}
   \item send: \begin{itemize}
@@ -131,24 +131,24 @@ The server asks the client to delete a chunk it is storing.
   \item ip\_address:port: the ip address and port of the client that should be contacted.
 \end{itemize}
     
-\paragraph{CHSTORE}
+\paragraph{CSTR (chunk store)}
 [client] -> [client]\\
 Send a chunk to a client.
 
-\begin{center}CHSTORE SIZE payload\end{center}
+\begin{center}CSTR SIZE payload\end{center}
 
 Payload is the chunk bytes.
 
 \subsection{File Management}
 
-\paragraph{FDELETE}
+\paragraph{FDEL (file delete)}
 
 [client] -> [server] or [server] -> [client] \\
 Delete a file/directory.\\
 
-\begin{center}FDELETE SIZE file\_path\end{center}
+\begin{center}FDEL SIZE file\_path\end{center}
 
-\paragraph{FADD}
+\paragraph{FADD (file add)}
 
 [client] -> [server] or [server] -> [client] \\
 
@@ -156,12 +156,12 @@ Add a file to the user tree. If it is sent from the server, the user should crea
 
 \begin{center}FADD SIZE json\_file\end{center}
 
-\paragraph{FUPDATE}
+\paragraph{FUPT (file update)}
 
 [client] -> [server] or [server] -> [client] \\
 Tell the server to update a file, or receive the order to update a file. Like FADD, it will be followed by further instructions to get the raw data.
 
-\begin{center}FUPDATE SIZE json\_file\end{center}
+\begin{center}FUPT SIZE json\_file\end{center}
 
 \section{Numeric responses}
 
