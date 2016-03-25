@@ -39,7 +39,7 @@ class Tree:
                     who_new, file_new, file_old = Tree. get_most_recent(ufile,
                                                                         sfile)
 
-                    engine.FUPDATE(file_new, who_new, file_old, client)
+                    engine.FUPT(file_new, who_new, file_old, client)
 
             else:
                 engine.FADD(sfiles, 'client', file_name, ufile, client)

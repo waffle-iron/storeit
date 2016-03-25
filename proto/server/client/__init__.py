@@ -24,14 +24,17 @@ class Client:
         self.transport = transport
 
     def send_cmd(self, msg):
-        logger.debug('to {}: {}'.format(self.username, msg))
 
         if self.transport is None:
             logger.error('client has no transport registered')
             return
 
-        msg += '\r\n'
-        self.transport.write(msg.encode())
+        if type(msg) is str:
+            msg = msg.encode()
+
+        final_cmd = msg[:5] + bytes(str(len(msg) - 5) + ' ', 'ascii') + msg[5:]
+        logger.debug('to {}: {}'.format(self.username, final_cmd.decode()))
+        self.transport.write(final_cmd)
 
     def __del__(self):
         logger.debug('{} is disconnecting'.format(self.username))

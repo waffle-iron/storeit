@@ -11,11 +11,11 @@ class WatchFs(FileSystemEventHandler):
     def process(self, event):
 
         if event.event_type == 'modified':
-            cmd = 'FUPDATE'
+            cmd = 'FUPT'
         elif event.event_type == 'created':
             cmd = 'FADD'
         elif event.event_type == 'deleted':
-            protocol.send_FDELETE(event.src_path)
+            protocol.send_FDEL(event.src_path)
             return
         else:
             logger.error('unknown event happening {}'.format(event))

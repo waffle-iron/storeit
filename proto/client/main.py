@@ -26,7 +26,7 @@ print(args)
 port = args.port
 username = args.username
 storage_dir = args.files
-chunk.store_name = args.store
+chunk.store_name = args.store + '/'
 
 if args.log is not None:
     if type(args.log) is bool:

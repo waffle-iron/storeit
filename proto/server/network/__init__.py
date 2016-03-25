@@ -1,6 +1,7 @@
 import asyncio
 import shared
 import protocol
+import traceback
 
 from common.log import logger
 
@@ -21,23 +22,28 @@ class NetManager(asyncio.Protocol):
             username = shared.climanager.transports[self.transp]
             del shared.climanager.clients[username]
             del shared.climanager.transports[self.transp]
-            logger.warn('{} has disconnected'.format(username))
+            logger.info('{} has disconnected'.format(username))
         except KeyError:
-            logger.error('disconnected user could not be found')
+            logger.info('connection with some unidentified client lost')
 
+    # TODO: implement the fact that a command could be split in multiple data
     def data_received(self, data):
 
-        message = data.decode()
-        self.data_buffer += data.decode()
-        commands = self.data_buffer.split("\r\n")
-        self.data_buffer = commands[-1]
-        commands = commands[:-1]
+        parsed = data.split(b' ', 2)
+        if len(parsed) < 2:
+            logger.warn('invalid command {}'.format(data))
+            return
+        cmd = parsed[0]
+        size = parsed[1]
+        args = parsed[2]
 
-        for cmd in commands:
-            try:
-                protocol.parse(cmd, self.transp)
-            except Exception as e:
-                logger.error('{} was raised'.format(e))
+        try:
+            protocol.parse(cmd, size, args, self.transp)
+        except Exception as e:
+            logger.error('{} was raised'.format(e))
+            for l in traceback.format_tb(e.__traceback__):
+                logger.debug(l)
+            raise e
 
     def loop(self):
 

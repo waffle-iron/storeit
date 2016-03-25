@@ -19,9 +19,9 @@ def FADD(directory, from_who, filename, tree, client):
     directory[filename] = tree
 
 
-def FUPDATE(new_tree, from_who, old_tree, client):
+def FUPT(new_tree, from_who, old_tree, client):
     if from_who == 'server':
-        protocol.send_FUPDATE(new_tree, client)
+        protocol.send_FUPT(new_tree, client)
         if new_tree['kind'] != 0:
             send_chunk_to(client, hash.Hash(new_tree['unique_hash']))
 
@@ -41,7 +41,7 @@ def make_chunk_disappear(chk):
     owners = chunk.get_chunk_owners(chk)
 
     for o in owners:
-        protocol.send_CHDELETE(o, chk)
+        protocol.send_CDEL(o, chk)
 
     chunk.remove_chunk(chk)
 
@@ -63,8 +63,8 @@ def send_chunk_to(client: hash.Hash, chk):
 
     logger.debug('{} is being sent from {} to {}'
                  .format(chk.pretty(), from_cli.username, client.username))
-    protocol.send_CHSEND(from_cli, client, 1, chk)
-    protocol.send_CHSEND(client, from_cli, 0, chk)
+    protocol.send_CSND(from_cli, client, 1, chk)
+    protocol.send_CSND(client, from_cli, 0, chk)
     chunk.register_chunk(chk, client.username)
 
 

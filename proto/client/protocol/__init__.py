@@ -8,9 +8,7 @@ from common import log
 from common.log import logger
 
 
-def parse(cmd: str):
-
-    command_split = cmd.split(b' ', 1)
+def parse(cmd, size, args):
 
     class Command:
 
@@ -19,25 +17,19 @@ def parse(cmd: str):
             self.is_string = isstr
 
     cmds = {b'FADD': Command(FADD, True),
-            b'FUPDATE': Command(FUPDATE, True),
-            b'CHSEND': Command(CHSEND, True),
+            b'FUPT': Command(FUPT, True),
+            b'CSND': Command(CSND, True),
             # TODO: rethink the hole stuff
-#            b'CHSTORE': Command(CHSTORE, False),
-            b'CHDELETE': Command(CHDELETE, True)}
+            b'CSTR': Command(CSTR, False),
+            b'CDEL': Command(CDEL, True)}
 
     logger.info(log.nomore('somebody sent {}'.format(cmd)))
-
-    content = command_split[1]
-    cmd = cmds[command_split[0]]
-    if cmd.is_string:
-        content = content.decode()
-
-    cmds[command_split[0]].function_call(content)
+    cmds[cmd].function_call(args)
 
 
-def CHDELETE(params):
+def CDEL(params):
 
-    chk = params[0]
+    chk = params.decode()
 
     chunk.remove_chunk(chk)
 
@@ -51,35 +43,40 @@ def send_FCMD(name, tree):
     network.send_cmd('{} {}'.format(name, json.dumps(tree)))
 
 
-def send_FDELETE(path):
-    network.send_cmd('FDELETE {}'.format(path))
+def send_FDEL(path):
+    network.send_cmd('FDEL {}'.format(path))
 
 
 def FADD(params):
+
+    params = params.decode()
 
     tr = json.loads(params)
     tree.make_file(tr)
 
 
-def FUPDATE(params):
+def FUPT(params):
     pass
 
 
-def CHSEND(params):
-    send, hsh, addr = params.split(' ', 3)
+def CSND(params):
+
+    params = params.decode()
+
+    send, hsh, addr = params.split(' ', 2)
 
     ip, port = addr.split(':')
     if send == '1':
         logger.info('sending chunk {} to {} on port {}'.format(hsh, ip, port))
-        send_CHSTORE(ip, int(port), hsh)
+        send_CSTR(ip, int(port), hsh)
     else:
         logger.info('getting chunk {} from {}'.format(hsh, ip))
         pass  # TODO
 
 
-def CHSTORE(data):
+def CSTR(data):
 
-    logger.debug('CHSTORE for {} bytes'.format(len(data)))
+    logger.debug('CSTR for {} bytes'.format(len(data), data))
 
     # TODO: store only if we are waiting for it
     hasher = hashlib.sha256()
@@ -94,7 +91,7 @@ def CHSTORE(data):
         chunk.store_chunk(chk, data)
 
 
-def send_CHSTORE(ip, port, hsh):
+def send_CSTR(ip, port, hsh):
 
     path = chunk.get_path_for_chunk(hsh)
 
@@ -111,7 +108,7 @@ def send_CHSTORE(ip, port, hsh):
         logger.error('file read returned None')
         return
 
-    network.send_payload(ip, port, 'CHSTORE {} '.format(len(data)), data)
+    network.send_payload(ip, port, data)
 
 
 def login(client):
