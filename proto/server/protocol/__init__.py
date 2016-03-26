@@ -56,6 +56,7 @@ def FDEL(client, args):
 
 
 def FADD(client, args):
+    logger.debug('fadd : {}'.format(args))
     tr = json.loads(args.decode())
 
     directory, filename = client.find_in_tree(tr)
@@ -89,7 +90,7 @@ def send_FADD(tree, client):
     if type(tree) == dict:
         tree_json = json.dumps(tree)
 
-    client.send_cmd(b'FADD {}'.format(tree_json))
+    client.send_cmd('FADD {}'.format(tree_json))
     # TODO: wait for response
 
     if tree['kind'] != 0:

@@ -29,21 +29,36 @@ class NetManager(asyncio.Protocol):
     # TODO: implement the fact that a command could be split in multiple data
     def data_received(self, data):
 
-        parsed = data.split(b' ', 2)
-        if len(parsed) < 2:
-            logger.warn('invalid command {}'.format(data))
-            return
-        cmd = parsed[0]
-        size = parsed[1]
-        args = parsed[2]
+        data_left = data
 
-        try:
-            protocol.parse(cmd, size, args, self.transp)
-        except Exception as e:
-            logger.error('{} was raised'.format(e))
-            for l in traceback.format_tb(e.__traceback__):
-                logger.debug(l)
-            raise e
+        while len(data_left) > 0:
+
+            parsed = data_left.split(b' ', 2)
+
+            if len(parsed) < 2:
+                logger.warn('invalid command {}'.format(data_left))
+                return
+
+            cmd = parsed[0]
+            size = parsed[1]
+            args = parsed[2]
+
+            size_int = int(size.decode())
+
+            if size_int < len(args):
+                args = args[:size_int]
+                data_left = args[size_int:]
+            else:
+                data_left = bytes()
+
+            try:
+                logger.info("{} {}".format(cmd, size))
+                protocol.parse(cmd, size, args, self.transp)
+            except Exception as e:
+                logger.error('{} was raised'.format(e))
+                for l in traceback.format_tb(e.__traceback__):
+                    logger.debug(l)
+                raise e
 
     def loop(self):
 
