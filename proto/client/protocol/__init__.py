@@ -23,7 +23,7 @@ def parse(cmd, size, args):
             b'CSTR': Command(CSTR, False),
             b'CDEL': Command(CDEL, True)}
 
-    logger.info(log.nomore('somebody sent {}'.format(cmd)))
+    logger.debug(log.nomore('somebody sent {}'.format(cmd)))
     cmds[cmd].function_call(args)
 
 

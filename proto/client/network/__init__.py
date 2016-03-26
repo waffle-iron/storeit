@@ -27,6 +27,10 @@ class Network():
 
 class Server(Network):
 
+    def __init__(self):
+        self.incoming_bytes = 0
+        self.data_buffer = bytes()
+
     def connection_made(self, transport):
         receivers.append(Receiver(transport))
 
@@ -34,19 +38,41 @@ class Server(Network):
 
         # super.data_received(data)
 
-        parsed = data.split(b' ', 2)
-        if len(parsed) < 2:
-            logger.warn('invalid command {}'.format(data))
-            return
-        cmd = parsed[0]
-        size = parsed[1]
-        args = parsed[2]
+        def parse(cmd, size, args):
+            try:
+                protocol.parse(cmd, size, args)
+            except Exception as e:
+                logger.error('{} was raised'.format(log.nomore(str(e))))
+                raise e
 
-        try:
-            protocol.parse(cmd, size, args)
-        except Exception as e:
-            logger.error('{} was raised'.format(e))
-            raise e
+        if self.incoming_bytes > 0:
+            self.data_buffer += data
+            self.incoming_bytes -= len(data)
+            logger.debug("waiting for {}".format(self.incoming_bytes))
+            if self.incoming_bytes <= 0:
+                if self.incoming_bytes < 0:
+                    logger.warn("incoming_bytes should not be less than zero")
+                self.incoming_bytes = 0
+                parse(b'CSTR', 0, self.data_buffer)
+                self.data_buffer = bytes()
+
+        else:
+            parsed = data.split(b' ', 2)
+            if len(parsed) < 2:
+                logger.warn('invalid command {}'.format(data))
+                return
+
+            cmd = parsed[0]
+            size = parsed[1]
+            args = parsed[2]
+
+            # TODO: handle other commands as well
+            size_int = int(size.decode())
+            if cmd == b'CSTR' and size_int > len(args):
+                self.data_buffer = args
+                self.incoming_bytes = size_int - len(self.data_buffer)
+            else:
+                parse(cmd, size, args)
 
 waiting_for_command = True
 
@@ -68,30 +94,32 @@ class Client(Network):
         try:
             protocol.login(self)
         except Exception as e:
-            logger.error('{} was raised'.format(e))
+            logger.error('{} was raised'.format(log.nomore(e)))
             for l in traceback.format_tb(e.__traceback__):
                 logger.debug(l)
             raise e
 
     def data_received(self, data):
 
+        def parse(cmd, size, args):
+            try:
+                protocol.parse(cmd, size, args)
+            except Exception as e:
+                logger.error('{} was raised'.format(e))
+                raise e
+
         # useless for now
         # super.data_received(data)
-
         parsed = data.split(b' ', 2)
         if len(parsed) < 2:
             logger.warn('invalid command {}'.format(data))
             return
+
         cmd = parsed[0]
         size = parsed[1]
         args = parsed[2]
-        try:
-            protocol.parse(cmd, size, args)
-        except Exception as e:
-            logger.error('{} was raised'.format(e))
-            for l in traceback.format_tb(e.__traceback__):
-                logger.debug(l)
-            raise e
+
+        parse(cmd, size, args)
 
     def connection_lost(self, exc):
         logger.error('The server closed the connection')

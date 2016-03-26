@@ -56,6 +56,7 @@ def store_chunk(chk, data: bytes):
 
     with open(store_name + chk, "wb") as file:
         file.write(data)
+        logger.debug("chunk written in {}".format(store_name + chk))
 
 
 def remove_chunk(chk):
