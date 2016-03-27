@@ -13,7 +13,7 @@ import CryptoSwift
 enum FileType: Int {
     case Unknown = -1
 	case Directory
-	case Regular_file
+	case RegularFile
     case Link
 }
 
@@ -30,6 +30,7 @@ class FileManager {
         self.absoluteRootDirPath = url.path!
     }
     
+    // Build recursively the tree of the root directory into a dictionnary
     func buildTree(path: String) -> [String: File] {
         let files: [String] = getDirectoryContent(path)
         var nestedFiles: [String: File] = [String:File]()
@@ -39,7 +40,7 @@ class FileManager {
             let type = fileType(filePath)
 
             switch type {
-                case .Regular_file :
+                case .RegularFile :
                     nestedFiles[file] = File(path: filePath,
                                              unique_hash: sha256(filePath),
                                              metadata: "",
@@ -67,7 +68,7 @@ class FileManager {
             if isDir {
                 return FileType.Directory
             } else {
-                return FileType.Regular_file
+                return FileType.RegularFile
             }
         }
         else {
@@ -84,7 +85,6 @@ class FileManager {
         } catch {
             print("[FileManager] Error while getting file of \(fullPath) directory")
             return []
-
         }
     }
     
@@ -99,7 +99,7 @@ class FileManager {
         return dirContentArray
     }
     
-    // Concatenate absolute path and file path to get full path
+    // Concatenate absolute path and file path to get full path (ex: /path/to/dir/storeit + storeit/dir/file = /path/to/dir/storeit/dir/file)
     private func getFullPath(path: String) -> String {
         let parentURL: NSURL = NSURL(fileURLWithPath: absoluteRootDirPath).URLByDeletingLastPathComponent!
         let parent: String = parentURL.path!

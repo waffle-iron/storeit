@@ -40,13 +40,13 @@ class Client {
         dispatch_async(queue) {
             while (!self.clientSocket!.closed) {
                 // read
+                usleep(500)
             }
         }
     }
     
-    func join(username: String, file: File) {
-        let request = requestBuilder.join(username, port: self.port, file: file)
-        //print(request)
+    func join(username: String, hosted_hashes: [String], file: File) {
+        let request = requestBuilder.join(username, port: self.port, hosted_hashes: hosted_hashes,file: file)
         
         do {
             try self.clientSocket!.sendString(request)

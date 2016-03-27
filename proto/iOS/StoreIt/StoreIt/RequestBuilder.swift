@@ -11,18 +11,13 @@ import ObjectMapper
 
 class RequestBuilder {
     
-    private enum RequestString{
-        case JOIN
-    }
-    
     init() {}
         
     // REQUESTS
     
-    func join(username: String, port: Int, file: File) -> String {
-        let args: String = "\(username) \(port) \(fileObjectToJSON(file))"
-        
-        return "\(RequestString.JOIN) \(size(args)) \(args)"
+    func join(username: String, port: Int, hosted_hashes: [String], file: File) -> String {
+        let args: String = "\(username) \(port) \(chunkHashesToStr(hosted_hashes, separator: ":")) \(fileObjectToJSON(file))"
+		return "JOIN \(size(args)) \(args)"
     }
     
     // TOOLS

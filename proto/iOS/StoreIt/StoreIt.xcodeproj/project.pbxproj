@@ -18,7 +18,6 @@
 		8500F70C1C97103E00C69875 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F70B1C97103E00C69875 /* File.swift */; };
 		8500F70E1C97112800C69875 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F70D1C97112800C69875 /* FileManager.swift */; };
 		8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8500F7101C972B0400C69875 /* NetworkManager.swift */; };
-		85074AA91CA1A72300047CB5 /* 2017_logo_storeit.png in Resources */ = {isa = PBXBuildFile; fileRef = 85074AA81CA1A72300047CB5 /* 2017_logo_storeit.png */; };
 		853AD04A1C99A8230036A7FF /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD0491C99A8230036A7FF /* Server.swift */; };
 		853AD04C1C99A8400036A7FF /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD04B1C99A8400036A7FF /* Client.swift */; };
 		85A6F5981C9EC6950018ABDF /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */; };
@@ -61,7 +60,6 @@
 		8500F70B1C97103E00C69875 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		8500F70D1C97112800C69875 /* FileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		8500F7101C972B0400C69875 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		85074AA81CA1A72300047CB5 /* 2017_logo_storeit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 2017_logo_storeit.png; path = ../../../../Downloads/2017_logo_storeit.png; sourceTree = "<group>"; };
 		853AD0491C99A8230036A7FF /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		853AD04B1C99A8400036A7FF /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
@@ -177,7 +175,6 @@
 		85074AAC1CA1A77A00047CB5 /* img */ = {
 			isa = PBXGroup;
 			children = (
-				85074AA81CA1A72300047CB5 /* 2017_logo_storeit.png */,
 			);
 			name = img;
 			sourceTree = "<group>";
@@ -312,7 +309,6 @@
 				8500F6E81C970F1C00C69875 /* LaunchScreen.storyboard in Resources */,
 				8500F6E51C970F1C00C69875 /* Assets.xcassets in Resources */,
 				8500F6E31C970F1C00C69875 /* Main.storyboard in Resources */,
-				85074AA91CA1A72300047CB5 /* 2017_logo_storeit.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
