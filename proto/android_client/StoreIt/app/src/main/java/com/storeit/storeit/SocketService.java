@@ -11,7 +11,7 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 import com.storeit.storeit.protocol.StoreItProtocol;
 import com.storeit.storeit.protocol.StoreitFile;
-import com.storeit.storeit.protocol.StoreitHandler;
+import com.storeit.storeit.protocol.IStoreitClient;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 
 /*
 * This service handle the tcp connection
@@ -41,14 +42,25 @@ public class SocketService extends Service {
     Socket mSocket;
     private boolean mConnected = false;
     private StoreItProtocol mProtocol = new StoreItProtocol();
-
     Handler handler = new Handler(Looper.getMainLooper());
 
-    StoreitHandler storeitHandler = null;
+    public ArrayList<String> dataBuffer = new ArrayList<>();
 
-    public void setStoreitHandler(StoreitHandler storeitHandler){
-        this.storeitHandler = storeitHandler;
-        mProtocol.setStoreitHandler(storeitHandler);
+    IStoreitClient storeitClient = null;
+
+    public void setStoreitClient(IStoreitClient storeitClient){
+        this.storeitClient = storeitClient;
+        mProtocol.setStoreitClient(storeitClient);
+    }
+
+    private String getCmdFromBuffer(){
+        String cmd = "";
+
+        for (String data : dataBuffer){
+            cmd += data;
+        }
+
+        return cmd;
     }
 
     private class SocketManager implements Runnable {
@@ -77,7 +89,6 @@ public class SocketService extends Service {
     public class LocalBinder extends Binder {
         public SocketService getService() {
             return SocketService.this;
-
         }
     }
 
@@ -87,8 +98,6 @@ public class SocketService extends Service {
 
         Thread t = new Thread(new SocketManager());
         t.start();
-
-
     }
 
     @Override
@@ -99,7 +108,7 @@ public class SocketService extends Service {
     }
 
     void sendJoin(String username, String password, StoreitFile file) {
-        String cmd = mProtocol.createJoinCommand(username, password, 7641, file);
+        String cmd = mProtocol.createJoinCommand(username, password, 7642, file);
 
         if (mSocketWriter != null && !mSocketWriter.checkError()) {
             mSocketWriter.print(cmd);
@@ -155,9 +164,22 @@ public class SocketService extends Service {
                 break;
             }
 
-            String data = "";
             try {
-                data = mSocketReader.readLine();
+                char[] buffer = new char[2048];
+
+                for (int i = 0; i < 2048; i++)
+                    buffer[i] = '\0';
+
+                int ret = mSocketReader.read(buffer);
+
+                if (ret  == -1){
+                    mConnected = false;
+                    return false;
+                }
+
+                String data = new String(buffer, 0, ret);
+                dataBuffer.add(data);
+
                 Log.v(LOGTAG, "Received data : " + data);
             } catch (IOException e) {
                 mConnected = false;
@@ -169,18 +191,18 @@ public class SocketService extends Service {
                 });
             }
 
-            final String str = data;
-
-            if (str != null && !str.equals("")) {
-                mProtocol.commandReceived(str);
+            final String cmd = getCmdFromBuffer();
+            if (cmd.split("[\\s+\\t+]").length >= 3)
+            {
+                dataBuffer.clear();
+                mProtocol.commandReceived(cmd);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        bus.post(str);
+                        bus.post(cmd);
                     }
                 });
-            } else
-                mConnected = false;
+            }
         }
         return true;
     }

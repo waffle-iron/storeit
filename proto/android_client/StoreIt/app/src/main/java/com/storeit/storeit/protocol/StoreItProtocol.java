@@ -1,12 +1,8 @@
 package com.storeit.storeit.protocol;
 
 import android.util.Log;
-import android.widget.TabHost;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
 
 /**
  * Created by loulo on 19/01/2016.
@@ -16,15 +12,16 @@ public class StoreItProtocol {
     private static final String TAG = "StoreItProtocol";
     private String lastCommand = "";
     private static final String[] mCommands = {
-            "CHDELETE",
-            "CHSEND",
+            "CDEL",
+            "CSND",
+            "FADD"
     };
-    private  StoreitHandler storeitHandler;
+    private IStoreitClient storeitClient;
 
-    public static final int CHDELETE = 0, CHSEND = 1, JOIN = 2, LEAVE = 3;
+    public static final int CDEL = 0, CSND = 1, JOIN = 2, LEAVE = 3;
 
-    public void setStoreitHandler(StoreitHandler storeitHandler){
-        this.storeitHandler = storeitHandler;
+    public void setStoreitClient(IStoreitClient storeitClient){
+        this.storeitClient = storeitClient;
     }
 
 
@@ -42,35 +39,37 @@ public class StoreItProtocol {
 
 
         String jsonFile = gson.toJson(file);
-        Log.v(TAG, jsonFile);
-
         String hashes = "None";
-        String cmd = "JOIN " + username + " " + port + " None " + jsonFile + "\r\n";
+        String cmd = "JOIN ";
+        String params =  username + " " + port + " " + hashes + " " + jsonFile;
+        cmd += params.length() + " " + params;
+
+        Log.v(TAG, cmd);
 
         return cmd;
     }
 
-    public void createLeaveCommand() {
+    public void handleFADD(String[] tokens){
 
     }
 
-    public void handleCHDELETE(String[] tokens){
+    public void handleCDEL(String[] tokens){
 
     }
 
-    public void handleCHSEND(String[] tokens){
-        int send = Integer.valueOf(tokens[1]);
-        String chunk_name = tokens[2];
+    public void handleCSND(String[] tokens){
+        int send = Integer.valueOf(tokens[2]);
+        String chunk_name = tokens[3];
 
-        String[] infos = tokens[3].split(":");
+        String[] infos = tokens[4].split(":");
         if (infos.length != 2)
             return ;
 
         String ip = infos[0];
         int port = Integer.parseInt(infos[1]);
 
-        if (storeitHandler != null)
-            storeitHandler.handleCHSEND(send, chunk_name, ip, port);
+        if (storeitClient != null)
+            storeitClient.handleCHSEND(send, chunk_name, ip, port);
     }
 
     public void commandReceived(String command) {
@@ -90,11 +89,11 @@ public class StoreItProtocol {
         }
 
         switch (i) {
-            case CHDELETE:
-                handleCHDELETE(tokens);
+            case CDEL:
+                handleCDEL(tokens);
                 break;
-            case CHSEND:
-                handleCHSEND(tokens);
+            case CSND:
+                handleCSND(tokens);
                 break;
             default:
                 Log.d(TAG, "Not implemented : " + command);

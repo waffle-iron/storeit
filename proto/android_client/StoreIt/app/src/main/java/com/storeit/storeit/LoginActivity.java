@@ -10,17 +10,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.storeit.storeit.protocol.StoreItProtocol;
 import com.storeit.storeit.protocol.StoreitFile;
-import com.storeit.storeit.protocol.StoreitHandler;
+import com.storeit.storeit.protocol.IStoreitClient;
 
 /*
 * Login Activity
 * Create tcp service if it's not launched
 */
-public class LoginActivity extends Activity implements StoreitHandler {
+public class LoginActivity extends Activity implements IStoreitClient {
 
     private boolean mIsBound = false;
     private SocketService mBoundService = null;
@@ -30,7 +32,7 @@ public class LoginActivity extends Activity implements StoreitHandler {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBoundService = ((SocketService.LocalBinder) service).getService();
             mIsBound = true;
-            mBoundService.setStoreitHandler(LoginActivity.this);
+            mBoundService.setStoreitClient(LoginActivity.this);
         }
 
         @Override
@@ -111,11 +113,6 @@ public class LoginActivity extends Activity implements StoreitHandler {
 
                     file = filesManager.makeTree();
                     mBoundService.sendJoin(email.getText().toString(), password.getText().toString(), file);
-/*
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    */
                 }
             }
         });
@@ -131,6 +128,14 @@ public class LoginActivity extends Activity implements StoreitHandler {
             serviceIntent.putExtra("chunkPath", chunkPath);
             startService(serviceIntent);
         }
+    }
+
+    @Override
+    public void handleFADD(String file) {
+        Gson gson = new Gson();
+        gson.fromJson(file, StoreitFile.class);
+
+
     }
 }
 

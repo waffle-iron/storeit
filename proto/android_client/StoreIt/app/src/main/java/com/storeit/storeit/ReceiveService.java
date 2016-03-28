@@ -20,12 +20,12 @@ import java.net.UnknownHostException;
 /**
  * Created by loulo on 23/03/2016.
  */
-public class SendService extends IntentService {
+public class ReceiveService extends IntentService {
 
-    private final String LOGTAG = "SendService";
+    private final String LOGTAG = "ReceiveService";
 
-    public SendService() {
-        super("SendService");
+    public ReceiveService() {
+        super("ReceiveService");
     }
 
     @Override
