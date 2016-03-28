@@ -19,6 +19,10 @@ parser.add_argument('-f', '--files', default=tree.root,
                     help='set file storage directory')
 parser.add_argument('-s', '--store', default='.storeit',
                     help='set the .storeit storage directory')
+parser.add_argument('-a', '--servaddr', default='0.0.0.0',
+                    help='set the server\'s ip address')
+parser.add_argument('-n', '--servport', default=7641,
+                    help='set the server\'s port')
 
 args = parser.parse_args()
 print(args)
@@ -27,6 +31,8 @@ port = args.port
 username = args.username
 storage_dir = args.files
 chunk.store_name = args.store + '/'
+network.server_addr = args.servaddr
+network.server_port = int(args.servport)
 
 if args.log is not None:
     if type(args.log) is bool:

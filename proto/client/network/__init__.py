@@ -9,7 +9,8 @@ from common.log import logger
 
 server_transport = None
 receivers = list()
-
+server_addr = str()
+server_port = int()
 
 class Receiver():
 
@@ -160,14 +161,14 @@ def listen(port):
     eloop.close()
 
 
-def loop(username, client_port, server_port=7641):
+def loop(username, client_port):
     thread = threading.Thread(target=listen, args=(client_port,))
     thread.daemon = True
     thread.start()
 
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(lambda: Client(loop, client_port, username),
-                                  '0.0.0.0', server_port)
+                                  server_addr, server_port)
     try:
         loop.run_until_complete(coro)
         loop.run_forever()
