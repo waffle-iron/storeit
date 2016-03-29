@@ -59,6 +59,9 @@ class Client:
         usr_tree_dict = self.user_tree.raw_tree
         return find_tree_rec(os.path.normpath(subtree['path']), usr_tree_dict)
 
+    def __str__(self):
+        return 'client instance {}-{}'.format(self.username, self.transport)
+
 
 class CliManager:
 
@@ -81,20 +84,25 @@ class CliManager:
 
         cli = Client(username, port, ts, transport)
 
-        self.clients[username] = cli
-        self.transports[transport] = username
+        if username not in self.clients:
+            self.clients[username] = [cli]
+        else:
+            self.clients[username].append(cli)
+            logger.debug("new instance of client {}".format(username))
+        self.transports[transport] = cli
 
         tree.Tree.process_subtree(cli, ts.raw_tree, td.raw_tree)
 
+        # TODO: think about client conflicts + database sync between instances
         logger.debug('tree has been processed for {}'.format(username))
 
         database.save_new_tree(username, ts.raw_tree)
 
         return cli
 
-    def get_cli(self, username: str):
+    def get_cli(self, transport):
 
-        if username not in self.clients:
+        if transport in self.clients:
             return None
 
-        return self.clients[username]
+        return self.clients[transport]

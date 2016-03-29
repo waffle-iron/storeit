@@ -1,7 +1,5 @@
-import asyncio
 import shared
 import protocol
-import traceback
 import common.network
 
 from common.log import logger
@@ -26,8 +24,5 @@ class NetManager(common.network.NetworkServer):
         except KeyError:
             logger.info('connection with some unidentified client lost')
 
-
-
     def parse_cmd(self, cmd, size, args, transport):
-         protocol.parse(cmd, size, args, transport)
-
+        protocol.parse(cmd, size, args, transport)

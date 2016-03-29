@@ -40,11 +40,9 @@ def parse(cmd, size, args, transp):
         return
 
     client = None
-    client_name = str()
 
     if transp in shared.climanager.transports:
-        client_name = shared.climanager.transports[transp]
-        client = shared.climanager.clients[client_name]
+        client = shared.climanager.transports[transp]
 
     if client is None and cmd != b'JOIN':
         logger.error("""no client has been found for this connection and """

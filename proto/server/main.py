@@ -29,4 +29,7 @@ except Exception:
     time.sleep(0.2)
     database.__init__()
 
-common.network.loop(network.NetManager, '0', 7641)
+try:
+    common.network.loop(network.NetManager, '0', 7641)
+except Exception:
+    logger.error("exception")

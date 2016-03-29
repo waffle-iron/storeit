@@ -1,11 +1,10 @@
 from watchdog.events import FileSystemEventHandler
-import tree
 import chunk
+import tree
 import protocol
 from common.log import logger
 
-from common.log import logger
-
+ignore_path = str()
 
 class WatchFs(FileSystemEventHandler):
 
@@ -14,7 +13,6 @@ class WatchFs(FileSystemEventHandler):
         if event.event_type == 'modified':
             cmd = 'FUPT'
         elif event.event_type == 'created':
-            logger.debug('somesin created')
             cmd = 'FADD'
         elif event.event_type == 'deleted':
             protocol.send_FDEL(event.src_path)
@@ -24,6 +22,9 @@ class WatchFs(FileSystemEventHandler):
             return
 
         if event.is_directory:
+            return
+
+        if event.src_path == ignore_path:
             return
 
         concerned = tree.produce_tree(False, event.src_path)

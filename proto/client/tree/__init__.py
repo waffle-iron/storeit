@@ -78,6 +78,7 @@ def produce_tree(is_dir=True, _root=root):
 
 import chunk
 
+from tree import fs
 
 # possible security/bug issue. Add checks on what we create
 def make_file(tree):
@@ -93,6 +94,7 @@ def make_file(tree):
         dirpath = os.path.dirname(path)
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
+        fs.ignore_path = path
         with open(path, "w"):
             pass
         chunk.wait_for_chunk(tree['unique_hash'], tree['path'])

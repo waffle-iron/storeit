@@ -1,5 +1,6 @@
 import protocol
 import chunk
+import shared
 from common.log import logger
 from common import hash
 
@@ -11,8 +12,12 @@ def FADD(directory, from_who, filename, tree, client):
     if from_who == 'server':
         protocol.send_FADD(tree, client)
     elif tree['kind'] != 0:
-        hsh = chunk.register_chunk(hash.Hash(tree['unique_hash']), client.username)
+        hsh = chunk.register_chunk(hash.Hash(tree['unique_hash']), client)
         chunk.keep_chunk_alive(client, hsh)
+
+        for instance in shared.climanager.clients[client.username]:
+            if instance is not client:
+                FADD(directory, 'server', filename, tree, instance)
     else:
         pass  # TODO: handle adding a directory with some content
 
@@ -65,7 +70,7 @@ def send_chunk_to(client: hash.Hash, chk):
                  .format(chk.pretty(), from_cli.username, client.username))
     protocol.send_CSND(from_cli, client, 1, chk)
     protocol.send_CSND(client, from_cli, 0, chk)
-    chunk.register_chunk(chk, client.username)
+    chunk.register_chunk(chk, client)
 
 
 def host_chunk(frm, chk):

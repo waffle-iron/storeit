@@ -4,6 +4,7 @@ SNAME=storeit
 SPATH=$HOME/code/epitech/storeit/proto/server
 CLIPATH=$HOME/code/epitech/storeit/proto/client
 PORT=7643
+CLI_IDX=0
 FINDER=0
 
 
@@ -45,23 +46,23 @@ function run_in_tmux {
 
 function init_client {
   if [ "$1" != "keep-files" ]; then
-    rm -rf /tmp/$1
+    rm -rf /tmp/$1_$CLI_IDX
     rm -f /tmp/$1*.log
-    mkdir /tmp/$1
-    cp -r $SPATH/testree /tmp/$1/storeit
+    mkdir /tmp/$1_$CLI_IDX
+    cp -r $SPATH/testree /tmp/$1_$2/storeit
   fi
 
   if [ $FINDER -eq 1 ]; then
-    open /tmp/$1/storeit
+    open /tmp/$1_$2/storeit
   fi
 }
 
 function run_client {
-  init_client $1 $2
-  pushd /tmp/$1
+  init_client $1 $((++CLI_IDX))
+  pushd /tmp/$1_$CLI_IDX
   run_in_tmux $CLIPATH/main.py $1 -p $((PORT++)) -l
   popd
-  log_to_pane "client $1 is running"
+  log_to_pane "#$CLI_IDX client $1 is running on port $PORT"
 }
 
 function kill_client {

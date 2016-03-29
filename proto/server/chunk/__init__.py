@@ -19,32 +19,32 @@ def add_user(who, hashes: list):
             logger.warn('{} sent invalid chunk hash'.format(who.username))
             continue
         h = Hash(h)
-        register_chunk(h, who.username)
+        register_chunk(h, who)
         keep_chunk_alive(who, h)
 
 
 def get_chunk_owners(chk: Hash):
     if chk not in chunks:
         return []
-    return [shared.climanager.get_cli(name) for name in chunks[chk]]
+    return chunks[chk]
 
 
 # TODO: add an availability flag to know if the client is available
 def get_chunk_owner(chk: Hash):
     if chk not in chunks or chunks[chk] == []:
         return None
-    return shared.climanager.get_cli(list(chunks[chk])[0])  # FIXME: ugly
+    return list(chunks[chk])[0]  # FIXME: ugly, do dynamic
 
 
-def has_user_chunk(chk: Hash, username: str):
+def has_user_chunk(chk, cli):
     if chk not in chunks:
         return []
-    return username in chunks[chk]
+    return cli in chunks[chk]
 
 
-def register_chunk(chk, username: str):
+def register_chunk(chk, cli):
 
-    logger.debug("registering chunk {} for {}".format(chk.pretty(), username))
+    logger.debug("registering chunk {} for {}".format(chk.pretty(), cli.username))
 
     if isinstance(chk, str):
         chk = Hash(chk)
@@ -52,44 +52,43 @@ def register_chunk(chk, username: str):
     # TODO: use smart dict
 
     if chk not in chunks:
-        chunks[chk] = {username}
+        chunks[chk] = {cli}
     else:
-        chunks[chk].add(username)
+        chunks[chk].add(cli)
 
-    if username not in users:
-        users[username] = {chk}
+    if cli not in users:
+        users[cli] = {chk}
     else:
-        users[username].add(chk)
+        users[cli].add(chk)
 
-    dump()
     return chk
 
 
 def remove_user(frm):
 
-    if frm.username not in users:
+    if frm not in users:
         logger.debug('user {} has zero chunks'.format(frm.username))
         return
 
-    for chk in users[frm.username]:
-        chunks[chk].remove(frm.username)
+    for chk in users[frm]:
+        chunks[chk].remove(frm)
         keep_chunk_alive(frm, chk)
 
-    del users[frm.username]
+    del users[frm]
 
 
-def remove_chunk(chk: str):
+def remove_chunk(chk):
     if chk not in chunks:
         logger.debug('chunk {} does not exists'.format(chk))
         return
 
-    for user in chunks[chk]:
-        users[user].remove(chk)
+    for cli in chunks[chk]:
+        users[cli].remove(chk)
 
     del chunks[chk]
 
 
-def get_redundancy(chk: str):
+def get_redundancy(chk):
 
     if chk not in chunks:
         return 0
@@ -100,15 +99,16 @@ def dump():
 
     for user, chks in users.items():
         logger.debug('user {} has {}'
-                     .format(user, tuple(c.pretty() for c in chks))) # TODO: use builtin istead of comprehension
+                     .format(user.username, tuple(c.pretty() for c in chks))) # TODO: use builtin istead of comprehension
     for chks, usrs in chunks.items():
         logger.debug('chk {} is owned by {}'.format(chks.pretty(), usrs))
 
 
 def find_user_for_storing(chk: Hash):
-    for u in shared.climanager.clients.keys():
-        if not has_user_chunk(chk, u):
-            return shared.climanager.get_cli(u)
+    for user_instances in shared.climanager.clients.values():
+        for instance in user_instances:
+            if not has_user_chunk(chk, instance):
+                return instance
     return None
 
 

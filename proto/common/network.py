@@ -1,8 +1,9 @@
 import asyncio
+import traceback
 from common.log import logger
 
-class Network(asyncio.Protocol):
 
+class Network(asyncio.Protocol):
 
     data_buffer = bytes()
     incoming_bytes = 0
@@ -17,11 +18,7 @@ class Network(asyncio.Protocol):
     def data_received(self, data):
 
         def parse(cmd, size, args):
-            try:
-                self.parse_cmd(cmd, size, args, self.transp)
-            except Exception as e:
-                logger.error('{} was raised'.format(log.nomore(str(e))))
-                raise e
+            self.parse_cmd(cmd, size, args, self.transp)
 
         if self.incoming_bytes > 0:
             self.data_buffer += data
@@ -55,7 +52,13 @@ class Network(asyncio.Protocol):
                 args_temp = args[:size_int]
                 bytes_left = args[size_int:]
                 args = args_temp
-                parse(cmd, size, args)
+                try:
+                    parse(cmd, size, args)
+                except Exception as e:
+                    logger.error(e)
+                    for l in traceback.format_tb(e.__traceback__):
+                        logger.error(l)
+
 
 class NetworkServer(Network):
     pass
@@ -69,15 +72,14 @@ def loop(protocol_factory, ip, port):
 
     # Each client connection will create a new protocol instance
     coro = loop.create_server(protocol_factory, ip, port)
-    server = loop.run_until_complete(coro)
-
-    # Serve requests until Ctrl+C is pressed
-    logger.info('Serving on {}'.format(server.sockets[0].getsockname()))
     try:
-            loop.run_forever()
-    except KeyboardInterrupt:
-            print('KeyboardInterrupt')
-            pass
+        server = loop.run_until_complete(coro)
+
+        # Serve requests until Ctrl+C is pressed
+        logger.info('Serving on {}'.format(server.sockets[0].getsockname()))
+        loop.run_forever()
+    except Exception:
+        logger.debug("something happened")
 
     try:
         # Close the server
