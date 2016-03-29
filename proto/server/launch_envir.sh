@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env zsh
 
 SNAME=storeit
 SPATH=$HOME/code/epitech/storeit/proto/server
@@ -46,6 +46,7 @@ function run_in_tmux {
 function init_client {
   if [ "$1" != "keep-files" ]; then
     rm -rf /tmp/$1
+    rm -f /tmp/$1*.log
     mkdir /tmp/$1
     cp -r $SPATH/testree /tmp/$1/storeit
   fi
@@ -80,6 +81,7 @@ tmux kill-session -t storeit 2> /dev/null
 
 reset_db
 
+rm -f /tmp/storeit-server.log
 touch /tmp/panelog.log
 tmux new-session -d -s $SNAME "tail -f /tmp/panelog.log"
 log_to_pane "logging pane..."

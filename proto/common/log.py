@@ -35,12 +35,13 @@ logger = init_logging()
 def nomore(s):
     MAX = 80
 
-    if len(s) > MAX:
+    if len(str(s)) > MAX:
         appended = ' [...]'
 
         if isinstance(s, bytes):
             appended = appended.encode()
-
+        else: 
+            s = str(s)
         return s[:MAX] + appended
 
     return s

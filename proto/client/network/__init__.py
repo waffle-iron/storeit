@@ -5,6 +5,9 @@ import socket
 import traceback
 from common import log
 
+from common.network import NetworkServer
+from common.network import NetworkClient
+
 from common.log import logger
 
 server_transport = None
@@ -26,105 +29,48 @@ class Network():
         self.data_buffer += data
 
 
-class Server(Network):
-
-    def __init__(self):
-        self.incoming_bytes = 0
-        self.data_buffer = bytes()
+class Server(NetworkServer):
 
     def connection_made(self, transport):
         receivers.append(Receiver(transport))
+        NetworkServer.connection_made(self, transport)
 
-    def data_received(self, data):
-
-        # super.data_received(data)
-
-        def parse(cmd, size, args):
-            try:
-                protocol.parse(cmd, size, args)
-            except Exception as e:
-                logger.error('{} was raised'.format(log.nomore(str(e))))
-                raise e
-
-        if self.incoming_bytes > 0:
-            self.data_buffer += data
-            self.incoming_bytes -= len(data)
-            logger.debug("waiting for {}".format(self.incoming_bytes))
-            if self.incoming_bytes <= 0:
-                if self.incoming_bytes < 0:
-                    logger.warn("incoming_bytes should not be less than zero")
-                self.incoming_bytes = 0
-                parse(b'CSTR', 0, self.data_buffer)
-                self.data_buffer = bytes()
-
-        else:
-            parsed = data.split(b' ', 2)
-            if len(parsed) < 2:
-                logger.warn('invalid command {}'.format(data))
-                return
-
-            cmd = parsed[0]
-            size = parsed[1]
-            args = parsed[2]
-
-            # TODO: handle other commands as well
-            size_int = int(size.decode())
-            if cmd == b'CSTR' and size_int > len(args):
-                self.data_buffer = args
-                self.incoming_bytes = size_int - len(self.data_buffer)
-            else:
-                parse(cmd, size, args)
-
-waiting_for_command = True
+    def parse_cmd(self, cmd, size, args, transp):
+        protocol.parse(cmd, size, args)
 
 
-class Client(Network):
+class Client(NetworkClient):
 
     def __init__(self, loop, port, username):
         self.loop = loop
-        self.port = port
-        self.username = username
         self.byte_count = 0
+        self.username = username
+        self.port = port
+        NetworkClient.__init__(self)
 
     def connection_made(self, transp):
+        
+        NetworkClient.connection_made(self, transp)
 
         global server_transport
 
         logger.info("connected to master server")
         server_transport = transp
+
         try:
             protocol.login(self)
         except Exception as e:
+            logger.error(e)
             logger.error('{} was raised'.format(log.nomore(e)))
             for l in traceback.format_tb(e.__traceback__):
                 logger.debug(l)
             raise e
 
-    def data_received(self, data):
-
-        def parse(cmd, size, args):
-            try:
-                protocol.parse(cmd, size, args)
-            except Exception as e:
-                logger.error('{} was raised'.format(e))
-                raise e
-
-        # useless for now
-        # super.data_received(data)
-        parsed = data.split(b' ', 2)
-        if len(parsed) < 2:
-            logger.warn('invalid command {}'.format(data))
-            return
-
-        cmd = parsed[0]
-        size = parsed[1]
-        args = parsed[2]
-
-        parse(cmd, size, args)
+    def parse_cmd(self, cmd, size, args, transp):
+        protocol.parse(cmd, size, args)
 
     def connection_lost(self, exc):
-        logger.error('The server closed the connection')
-        logger.info('Stop the event loop')
+        NetworkClient.connection_lost(self, exc)
         self.loop.stop()
 
 
@@ -161,14 +107,13 @@ def listen(port):
     eloop.close()
 
 
-def loop(username, client_port):
+def loop(client_port, username):
     thread = threading.Thread(target=listen, args=(client_port,))
     thread.daemon = True
     thread.start()
 
     loop = asyncio.get_event_loop()
-    coro = loop.create_connection(lambda: Client(loop, client_port, username),
-                                  server_addr, server_port)
+    coro = loop.create_connection(lambda: Client(loop, client_port, username), server_addr, server_port)
     try:
         loop.run_until_complete(coro)
         loop.run_forever()

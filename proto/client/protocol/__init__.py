@@ -3,6 +3,7 @@ import chunk
 import json
 import hashlib
 import network
+import traceback
 
 from common import log
 from common.log import logger
@@ -23,7 +24,7 @@ def parse(cmd, size, args):
             b'CSTR': Command(CSTR, False),
             b'CDEL': Command(CDEL, True)}
 
-    logger.debug(log.nomore('somebody sent {}'.format(cmd)))
+    logger.debug('somebody sent {} with args {}'.format(cmd, log.nomore(args)))
     cmds[cmd].function_call(args)
 
 
@@ -118,7 +119,13 @@ def login(client):
     my_store = []  # TODO: later read the content of .store
 
     hashes = 'None' if len(my_chks) == 0 else ':'.join(my_chks + my_store)
-
-    network.send_cmd('JOIN {} {} {} {}'
-                     .format(client.username, client.port,
-                             hashes, json.dumps(json_tree)))
+  
+    try:
+      network.send_cmd('JOIN {} {} {} {}'
+          .format(client.username, client.port,
+            hashes, json.dumps(json_tree)))
+    except Exception as e:
+        logger.error('2: {} was raised'.format(log.nomore(e)))
+        for l in traceback.format_tb(e.__traceback__):
+            logger.debug(l)
+        raise e

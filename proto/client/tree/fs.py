@@ -2,6 +2,7 @@ from watchdog.events import FileSystemEventHandler
 import tree
 import chunk
 import protocol
+from common.log import logger
 
 from common.log import logger
 
@@ -13,6 +14,7 @@ class WatchFs(FileSystemEventHandler):
         if event.event_type == 'modified':
             cmd = 'FUPT'
         elif event.event_type == 'created':
+            logger.debug('somesin created')
             cmd = 'FADD'
         elif event.event_type == 'deleted':
             protocol.send_FDEL(event.src_path)

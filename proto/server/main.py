@@ -6,6 +6,7 @@ import network
 import logging
 import time
 from common.log import logger
+import common.network
 import argparse
 
 logfile = '/tmp/storeit-server.log'
@@ -21,12 +22,11 @@ if args.log is not None:
 
 try:
     database.__init__()
-    database.find_user('maoizejf', 'maoziejf')
+    database.find_user('nonexistent', 'user')
 except Exception:
     logger.warn('Looks like postgre daemon is not running. It will be started')
     subprocess.call("./database/postgre.sh")
     time.sleep(0.2)
     database.__init__()
 
-netmanager = network.NetManager()
-netmanager.loop()
+common.network.loop(network.NetManager, '0', 7641)

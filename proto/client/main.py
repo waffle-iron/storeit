@@ -51,7 +51,7 @@ try:
 
     observer.start()
 
-    network.loop(username, port)
+    network.loop(port, username)
 
 except ConnectionRefusedError:
     logger.error('error: connection refused')

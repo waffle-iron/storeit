@@ -11,7 +11,8 @@
 run_client cli1
 run_client cli2
 sleep 1
-cp -r /Applications/TextEdit.app /tmp/cli2/storeit
-sleep 2
+cp -r /var/log /tmp/cli2/storeit
+sleep 105
 kill_client cli2
 run_client cli2
+#open /tmp/cli2/storeit

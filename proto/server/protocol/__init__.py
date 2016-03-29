@@ -16,8 +16,13 @@ def JOIN(client, data):
 
     client = shared.climanager.add_cli(username, port, json, last_transport)
 
+    if client is None:
+        return False
+
     if hashes != 'None':
         chunk.add_user(client, hashes.split(':'))
+
+    return True
 
 
 def parse(cmd, size, args, transp):
@@ -44,7 +49,6 @@ def parse(cmd, size, args, transp):
     if client is None and cmd != b'JOIN':
         logger.error("""no client has been found for this connection and """
                      """command {}. Refusing to continue""".format(cmd))
-        return
 
     # TODO: use size
     cmds[cmd](client, args)
@@ -102,6 +106,11 @@ def send_CDEL(client, chk):
 
 
 def send_CSND(from_cli, to_cli, send: int, chk: str):
+
+    if to_cli.transport is None:
+      logger.error("send_CSND: client has no transport")
+      return
+
     addr = to_cli.transport.get_extra_info('peername')
     if addr is None:
         logger.error('could not get ip for user {}'.format(to_cli.username))
