@@ -42,6 +42,7 @@ function clone(done) {
 }
 
 function change(file, action, done) {
+
   exec(gitcmd() + " " + action + " '" + getRepo() + "/" + file + "'", function(error, stdout, stderr) {
     logerr(error, "add")
     done()
@@ -49,9 +50,11 @@ function change(file, action, done) {
 }
 function commit(file, action) {
 
-if (action == undefined) {
-  action = "add"
-}
+  if (action == undefined) {
+    action = "add"
+  }
+
+  console.log("will change " + file)
 
   change(file, action, function() {
     exec(gitcmd() + "commit -am 'automatic commit from Desktop'", function(error, stdout, stderr) {
@@ -77,57 +80,6 @@ function prepareRepo(done) {
 function pull() {
   exec(gitcmd() + "pull --rebase")
 }
-
-/*
-
-function clone() {
-return git.Clone.clone('./gitrepos/tom/', repo_path, {local: 1})
-}
-
-function add(files) {
-
-const ds = repo.defaultSignature()
-
-console.log("adding " + files)
-repo.createCommitOnHead(files, ds, ds, 'desktop').then(function(oid) {
-return repo.getRemote("origin")
-}).then(function(remoteResult) {
-
-remote = remoteResult;
-
-// Create the push object for this remote
-return remote.push(["refs/heads/master:refs/heads/master"])
-}).done(function() {
-console.log("pushed !")
-})
-}
-
-function prepareRepo() {
-
-console.log("prepare repo with " + repo_path)
-return git.Repository.open(repo_path).then(function(repository) {
-return repository
-}).catch(function(err) {
-return clone()
-}).then(function(repository) {
-repo = repository
-}).catch(function(err) {
-console.error("1:" +err)
-})
-}
-
-function pull() {
-
-repo.fetchAll().then(function() {
-return repo.mergeBranches("master", "origin/master")
-}).catch(function(err) {
-console.log(err.hasConflicts())
-helper.errWithStack(err)
-}).catch(function(err) {
-console.log(err)
-})
-}
-*/
 
 module.exports = {
   clone: clone,

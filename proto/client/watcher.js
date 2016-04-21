@@ -17,7 +17,7 @@ function makeDir(path) {
   try {
     fs.mkdirSync(path)
   } catch (e) {
-    console.error("ignore " + path)
+    console.error("2: ignore " + path + " (" + e + ")")
   }
 }
 
@@ -41,10 +41,11 @@ function syncDirs(filename, pathFrom, pathToUpdate, isGit) {
       try {
         fs.unlinkSync(pathToUpdate + filename)
 
-        if (isGit) {
+        if (!isGit) {
           putFileInGit(filename, "rm")
         }
       } catch(e) {
+        console.error("1: ignore " + filename + " " + e)
       }
     }
     return
@@ -66,7 +67,7 @@ function syncDirs(filename, pathFrom, pathToUpdate, isGit) {
 function putFileInGit(filename, action) {
 
   if (action == "rm") {
-    gitutil.commit(filename)
+    gitutil.commit(filename, action)
   } else {
 
     ipfs.hostFile(gitutil.getUserPath() + filename, function(hash) {
