@@ -1,0 +1,7 @@
+{
+    "srcs": "./src",
+    "dest": "./dist",
+    "main": "app.js",
+    "scripts": "./src/**/*.js",
+    "data": "./src/data/**"
+}

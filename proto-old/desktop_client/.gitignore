@@ -1,0 +1,4 @@
+dist
+.gulp/env.json
+node_modules
+npm-debug.log

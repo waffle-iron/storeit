@@ -1,0 +1,15 @@
+{
+    "disallowAnonymousFunctions": true,
+    "disallowEmptyBlocks": true,
+    "disallowImplicitTypeConversion": ["numeric", "boolean", "binary", "string"],
+    "disallowMixedSpacesAndTabs": true,
+    "disallowMultiLineTernary": true,
+    "disallowQuotedKeysInObjects": true,
+    "maximumLineLength": 80,
+    "requireCamelCaseOrUpperCaseIdentifiers": true,
+    "requireCapitalizedConstructors": true,
+    "requireDotNotation": true,
+    "requireFunctionDeclarations": true,
+    "validateIndentation": 4,
+    "validateQuoteMarks": "'"
+}
