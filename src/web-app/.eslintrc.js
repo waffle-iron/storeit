@@ -29,6 +29,7 @@ module.exports = {
     'no-with': ['error'],
     'valid-typeof': ['error'],
     /* good-practices */
+    'eqeqeq': ['warn', 'allow-null'],
     'func-style': ['warn', 'declaration', {'allowArrowFunctions': true}],
     'no-cond-assign': ['warn', 'except-parens'],
     'no-duplicate-case': ['warn'],
