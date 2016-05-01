@@ -4,6 +4,7 @@
   "main": "main.js",
   "scripts": {},
   "dependencies": {
+    "commander": "^2.9.0",
     "idb-plus-blob-store": "^1.0.0",
     "ipfs": "^0.4.5",
     "ipfs-api": "^3.0.0",
