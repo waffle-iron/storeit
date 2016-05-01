@@ -1,3 +1,3 @@
-var git = require('./gitutil.js')
+import git from './gitutil.js'
 
 git.makeUser('tom')
