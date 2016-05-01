@@ -17,8 +17,10 @@ Structure:
 
 Les sources de l'application sont organisées en `Modules` Angular.
 L'application contient 2 types de modules:
-1. Components: Route + Controlleur + Vue (Template et Style). Un component est intimement lié à ça vue, mais peut être composé à partir de component plus petits.
-2. Core: Contient de la logique réutilisable (principalement des services et models)
+
+1. **Components**: Route + Controlleur + Vue (Template et Style). Un component est intimement lié à ça vue, mais peut être composé à partir de component plus petits.
+
+2. **Core**: Contient de la logique réutilisable (principalement des services et models)
 
 Example de component:
 ```
