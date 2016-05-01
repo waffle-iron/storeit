@@ -35,5 +35,8 @@ home
 
 Développement:
 --------------
+Suivre les instructions d'installation, puis utilisez:
 
-`npm run dev`
+```
+npm run dev
+```
