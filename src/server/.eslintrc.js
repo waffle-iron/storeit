@@ -6,6 +6,9 @@ module.exports = {
   'parserOptions': {
     'sourceType': 'module'
   },
+  'plugins': [
+    'import'
+  ],
   'rules': {
     /* errors */
     'constructor-super': ['error'],
@@ -28,6 +31,10 @@ module.exports = {
     'no-var': ['error'],
     'no-with': ['error'],
     'valid-typeof': ['error'],
+    'import/no-amd': ['error'],
+    'import/no-commonjs': ['error'],
+    'import/no-duplicates': ['error'],
+    'import/no-named-as-default': ['error'],
     /* good-practices */
     'eqeqeq': ['warn', 'allow-null'],
     'func-style': ['warn', 'declaration', {'allowArrowFunctions': true}],
@@ -44,6 +51,7 @@ module.exports = {
     'prefer-rest-params': ['warn'],
     'prefer-spread': ['warn'],
     'use-isnan': ['warn'],
+    'import/no-named-as-default-member': ['warn'],
     /* coding style */
     'brace-style': ['warn', 'stroustrup'],
     'camelcase': ['warn', {'properties': 'always'}],
