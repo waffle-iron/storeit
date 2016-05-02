@@ -7,77 +7,90 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-
-import com.squareup.otto.Bus;
-import com.storeit.storeit.protocol.StoreItProtocol;
+import com.google.gson.Gson;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketExtension;
+import com.neovisionaries.ws.client.WebSocketFactory;
+import com.storeit.storeit.protocol.CommandManager;
 import com.storeit.storeit.protocol.StoreitFile;
-import com.storeit.storeit.protocol.IStoreitClient;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.util.ArrayList;
 
 /*
-* This service handle the tcp connection
+* This service handle the websocket connection
 * It communicate with the ui of the app
 */
 public class SocketService extends Service {
 
     private final IBinder myBinder = new LocalBinder();
 
-    public static final String SERVERIP = "51.254.99.47"; //your computer IP address should be written here
-    public static final int SERVERPORT = 7641;
+    public static final String SERVER = "ws://192.168.0.102:8001";
+    private static final int TIMEOUT = 5000;
     public static final String LOGTAG = "SocketService";
-    private Bus bus = OttoManager.getBus();
 
-    PrintWriter mSocketWriter;
-    Socket mSocket;
     private boolean mConnected = false;
-    private StoreItProtocol mProtocol = new StoreItProtocol();
-    Handler handler = new Handler(Looper.getMainLooper());
 
-    public ArrayList<String> dataBuffer = new ArrayList<>();
 
-    IStoreitClient storeitClient = null;
 
-    public void setStoreitClient(IStoreitClient storeitClient){
-        this.storeitClient = storeitClient;
-        mProtocol.setStoreitClient(storeitClient);
-    }
-
-    private String getCmdFromBuffer(){
-        String cmd = "";
-
-        for (String data : dataBuffer){
-            cmd += data;
-        }
-
-        return cmd;
-    }
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private WebSocket webSocket = null;
 
     private class SocketManager implements Runnable {
         @Override
         public void run() {
-            mSocket = new Socket();
 
             // Loop on connection
-            mConnected = connectToServer(mSocket, SERVERIP, SERVERPORT);
-            while (!mConnected) {
-                mConnected = connectToServer(mSocket, SERVERIP, SERVERPORT);
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException ignored) {
-                }
+            mConnected = false;
+
+            try {
+                webSocket = new WebSocketFactory()
+                        .setConnectionTimeout(TIMEOUT)
+                        .createSocket(SERVER)
+                        .addListener(new WebSocketAdapter() {
+
+                            public void onTextMessage(WebSocket websocket, String message) {
+                                int cmdType = CommandManager.getCommandType(message);
+
+                                switch (cmdType){
+                                    case CommandManager.JOIN:
+                                        Log.v(LOGTAG, "Join command received :)");
+                                        break;
+                                    case CommandManager.QUIT:
+                                        break;
+                                    case CommandManager.FDEL:
+                                        break;
+                                    case CommandManager.FADD:
+                                        break;
+                                    case CommandManager.FUPT:
+                                        break;
+                                    default:
+                                        Log.v(LOGTAG, "Invalid command received :/");
+                                        break;
+                                }
+
+                            }
+                        })
+                        .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE)
+                        .connect();
+                mConnected = true;
+            } catch (WebSocketException | IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+
+    public  void sendJOIN(String username, String password, StoreitFile file){
+        Gson gson = new Gson();
+
+        String jsonFile = gson.toJson(file);
+        String hashes = "None";
+        String cmd = "JOIN ";
+        String params =  username + " " + jsonFile + "\r\n";
+        cmd += params.length() + " " + params;
+
+        webSocket.sendText(cmd);
     }
 
     @Override
@@ -103,110 +116,18 @@ public class SocketService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-
         return START_STICKY;
     }
 
-    void sendJoin(String username, String password, StoreitFile file) {
-        String cmd = mProtocol.createJoinCommand(username, password, 7642, file);
-
-        if (mSocketWriter != null && !mSocketWriter.checkError()) {
-            mSocketWriter.print(cmd);
-            mSocketWriter.flush();
-        }
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
         Log.v(LOGTAG, "On destroy :o");
-
-        try {
-            mSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mSocket = null;
     }
 
-    boolean connectToServer(Socket socket, String ip, int port) {
-        InetAddress addr;
-        try {
-            addr = InetAddress.getByName(ip);
-            SocketAddress sockaddr = new InetSocketAddress(addr, port);
-            socket.connect(sockaddr, 5000);
-        } catch (IOException e) {
-            Log.e(LOGTAG, "Error while connecting socket");
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    bus.post("Error while connecting to socket...");
-                }
-            });
-            return false;
-        }
-
-        mConnected = true;
-
-        BufferedReader mSocketReader;
-        try {
-            mSocketWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-            mSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            Log.e(LOGTAG, "Error while getting stream from socket");
-            return false;
-        }
-
-        while (mConnected) {
-            if (!socket.isBound() || socket.isClosed() || !socket.isConnected()) {
-                mConnected = false;
-                break;
-            }
-
-            try {
-                char[] buffer = new char[2048];
-
-                for (int i = 0; i < 2048; i++)
-                    buffer[i] = '\0';
-
-                int ret = mSocketReader.read(buffer);
-
-                if (ret  == -1){
-                    mConnected = false;
-                    return false;
-                }
-
-                String data = new String(buffer, 0, ret);
-                dataBuffer.add(data);
-
-                Log.v(LOGTAG, "Received data : " + data);
-            } catch (IOException e) {
-                mConnected = false;
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        bus.post("Connection Lost :(");
-                    }
-                });
-            }
-
-            final String cmd = getCmdFromBuffer();
-            if (cmd.split("[\\s+\\t+]").length >= 3)
-            {
-                dataBuffer.clear();
-                mProtocol.commandReceived(cmd);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        bus.post(cmd);
-                    }
-                });
-            }
-        }
-        return true;
-    }
-    public boolean isConnected(){
+    public boolean isConnected() {
         return mConnected;
     }
 }
