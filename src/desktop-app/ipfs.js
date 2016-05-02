@@ -22,7 +22,8 @@ function getFile(hash, path) {
 
   var file = fs.createWriteStream(path);
   var request = http.get("http://localhost:8080/ipfs/" + hash, function(response) {
-    response.pipe(file);
+    console.log(response)
+    response.pipe(file)
   })
 }
 
