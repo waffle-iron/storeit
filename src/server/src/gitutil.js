@@ -1,7 +1,7 @@
 import git from 'nodegit'
 import fs from 'fs'
 
-function makeUser(username) {
+let makeUser = function(username) {
   try {
     fs.mkdirSync(username)
   }

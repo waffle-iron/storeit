@@ -37,7 +37,6 @@ module.exports = {
     'import/no-named-as-default': ['error'],
     /* good-practices */
     'eqeqeq': ['warn', 'allow-null'],
-    'func-style': ['warn', 'declaration', {'allowArrowFunctions': true}],
     'no-cond-assign': ['warn', 'except-parens'],
     'no-duplicate-case': ['warn'],
     'no-extra-parens': ['warn'],
@@ -55,9 +54,10 @@ module.exports = {
     /* coding style */
     'brace-style': ['warn', 'stroustrup'],
     'camelcase': ['warn', {'properties': 'always'}],
+    'func-style': ['warn', 'expression', {'allowArrowFunctions': true}],
     'indent': ['warn', 2],
-    'linebreak-style': ['warn', 'unix'],
     'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
+    'no-spaced-func': ['warn'],
     'object-curly-spacing': ['error', 'never'],
     'quotes': ['warn', 'single'],
     'semi': ['warn', 'never'],
