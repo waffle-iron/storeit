@@ -26,11 +26,17 @@ SystemJS.config({
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
     "crypto": "github:jspm/nodelibs-crypto@0.2.0-alpha",
+    "css": "github:systemjs/plugin-css@0.1.21",
     "events": "github:jspm/nodelibs-events@0.2.0-alpha",
     "express": "npm:express@4.13.4",
     "fs": "github:jspm/nodelibs-fs@0.2.0-alpha",
     "http": "github:jspm/nodelibs-http@0.2.0-alpha",
+    "https": "github:jspm/nodelibs-https@0.2.0-alpha",
+    "jade": "github:johnsoftek/plugin-jade@1.1.2",
+    "module": "github:jspm/nodelibs-module@0.2.0-alpha",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
+    "ngComponentRouter": "npm:ngcomponentrouter@2.1.0",
+    "os": "github:jspm/nodelibs-os@0.2.0-alpha",
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
     "plugin-babel": "npm:systemjs-plugin-babel@0.0.9",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
@@ -44,6 +50,158 @@ SystemJS.config({
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha"
   },
   packages: {
+    "github:johnsoftek/plugin-jade@1.1.2": {
+      "map": {
+        "jade-compiler": "npm:jade@1.11.0"
+      }
+    },
+    "github:jspm/nodelibs-os@0.2.0-alpha": {
+      "map": {
+        "os-browserify": "npm:os-browserify@0.2.1"
+      }
+    },
+    "npm:acorn-globals@1.0.9": {
+      "map": {
+        "acorn": "npm:acorn@2.7.0"
+      }
+    },
+    "npm:align-text@0.1.4": {
+      "map": {
+        "kind-of": "npm:kind-of@3.0.3",
+        "longest": "npm:longest@1.0.1",
+        "repeat-string": "npm:repeat-string@1.5.4"
+      }
+    },
+    "npm:center-align@0.1.3": {
+      "map": {
+        "align-text": "npm:align-text@0.1.4",
+        "lazy-cache": "npm:lazy-cache@1.0.4"
+      }
+    },
+    "npm:clean-css@3.4.12": {
+      "map": {
+        "commander": "npm:commander@2.8.1",
+        "source-map": "npm:source-map@0.4.4"
+      }
+    },
+    "npm:cliui@2.1.0": {
+      "map": {
+        "center-align": "npm:center-align@0.1.3",
+        "right-align": "npm:right-align@0.1.3",
+        "wordwrap": "npm:wordwrap@0.0.2"
+      }
+    },
+    "npm:commander@2.8.1": {
+      "map": {
+        "graceful-readlink": "npm:graceful-readlink@1.0.1"
+      }
+    },
+    "npm:constantinople@3.0.2": {
+      "map": {
+        "acorn": "npm:acorn@2.7.0"
+      }
+    },
+    "npm:css@1.0.8": {
+      "map": {
+        "css-parse": "npm:css-parse@1.0.4",
+        "css-stringify": "npm:css-stringify@1.0.5"
+      }
+    },
+    "npm:jade@1.11.0": {
+      "map": {
+        "character-parser": "npm:character-parser@1.2.1",
+        "clean-css": "npm:clean-css@3.4.12",
+        "commander": "npm:commander@2.6.0",
+        "constantinople": "npm:constantinople@3.0.2",
+        "jstransformer": "npm:jstransformer@0.0.2",
+        "mkdirp": "npm:mkdirp@0.5.1",
+        "transformers": "npm:transformers@2.1.0",
+        "uglify-js": "npm:uglify-js@2.6.2",
+        "void-elements": "npm:void-elements@2.0.1",
+        "with": "npm:with@4.0.3"
+      }
+    },
+    "npm:jstransformer@0.0.2": {
+      "map": {
+        "is-promise": "npm:is-promise@2.1.0",
+        "promise": "npm:promise@6.1.0"
+      }
+    },
+    "npm:kind-of@3.0.3": {
+      "map": {
+        "is-buffer": "npm:is-buffer@1.1.3"
+      }
+    },
+    "npm:mkdirp@0.5.1": {
+      "map": {
+        "minimist": "npm:minimist@0.0.8"
+      }
+    },
+    "npm:optimist@0.3.7": {
+      "map": {
+        "wordwrap": "npm:wordwrap@0.0.2"
+      }
+    },
+    "npm:promise@2.0.0": {
+      "map": {
+        "is-promise": "npm:is-promise@1.0.1"
+      }
+    },
+    "npm:promise@6.1.0": {
+      "map": {
+        "asap": "npm:asap@1.0.0"
+      }
+    },
+    "npm:right-align@0.1.3": {
+      "map": {
+        "align-text": "npm:align-text@0.1.4"
+      }
+    },
+    "npm:source-map@0.1.43": {
+      "map": {
+        "amdefine": "npm:amdefine@1.0.0"
+      }
+    },
+    "npm:source-map@0.4.4": {
+      "map": {
+        "amdefine": "npm:amdefine@1.0.0"
+      }
+    },
+    "npm:transformers@2.1.0": {
+      "map": {
+        "css": "npm:css@1.0.8",
+        "promise": "npm:promise@2.0.0",
+        "uglify-js": "npm:uglify-js@2.2.5"
+      }
+    },
+    "npm:uglify-js@2.2.5": {
+      "map": {
+        "optimist": "npm:optimist@0.3.7",
+        "source-map": "npm:source-map@0.1.43"
+      }
+    },
+    "npm:uglify-js@2.6.2": {
+      "map": {
+        "async": "npm:async@0.2.10",
+        "source-map": "npm:source-map@0.5.6",
+        "uglify-to-browserify": "npm:uglify-to-browserify@1.0.2",
+        "yargs": "npm:yargs@3.10.0"
+      }
+    },
+    "npm:with@4.0.3": {
+      "map": {
+        "acorn": "npm:acorn@1.2.2",
+        "acorn-globals": "npm:acorn-globals@1.0.9"
+      }
+    },
+    "npm:yargs@3.10.0": {
+      "map": {
+        "camelcase": "npm:camelcase@1.2.1",
+        "cliui": "npm:cliui@2.1.0",
+        "decamelize": "npm:decamelize@1.2.0",
+        "window-size": "npm:window-size@0.1.0"
+      }
+    },
     "github:capaj/systemjs-hot-reloader@0.5.8": {
       "map": {
         "debug": "npm:debug@2.2.0",
