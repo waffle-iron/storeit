@@ -1,7 +1,7 @@
 {
   "jspm": {
     "name": "storeIt-webapp",
-    "main": "storeIt-webapp.js",
+    "main": "server.js",
     "devDependencies": {
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
@@ -31,6 +31,9 @@
         ]
       }
     }
+  },
+  "scripts": {
+    "start": "jspm run server.js"
   },
   "devDependencies": {
     "eslint": "^2.9.0",
