@@ -24,6 +24,7 @@ SystemJS.config({
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
+    "connect-livereload": "npm:connect-livereload@0.5.4",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
     "crypto": "github:jspm/nodelibs-crypto@0.2.0-alpha",
     "css": "github:systemjs/plugin-css@0.1.21",

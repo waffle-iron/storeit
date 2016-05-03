@@ -10,6 +10,8 @@
       "ngcomponentrouter": "npm:ngcomponentrouter@^2.1.0"
     },
     "devDependencies": {
+      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
+      "connect-livereload": "npm:connect-livereload@^0.5.4",
       "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
       "crypto": "github:jspm/nodelibs-crypto@^0.2.0-alpha",
       "express": "npm:express@^4.13.4",
@@ -21,7 +23,6 @@
     },
     "peerDependencies": {
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
-      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
       "events": "github:jspm/nodelibs-events@^0.2.0-alpha",
       "fs": "github:jspm/nodelibs-fs@^0.2.0-alpha",
@@ -55,10 +56,19 @@
     }
   },
   "scripts": {
-    "start": "jspm run server.js"
+    "build": "gulp build",
+    "start": "concurrently -r -k \"npm run serve\" \"npm run watch\"",
+    "test": "echo 'to do' && exit 1",
+    "watch": "gulp watch",
+    "serve": "jspm run server.js",
+    "postinstall": "jspm install"
   },
   "devDependencies": {
+    "browser-sync": "^2.12.5",
+    "coffee-script": "^1.10.0",
+    "concurrently": "^2.0.0",
     "eslint": "^2.9.0",
+    "gulp": "^3.9.1",
     "jspm": "^0.17.0-beta.14"
   }
 }

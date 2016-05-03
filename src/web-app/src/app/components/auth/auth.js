@@ -1,5 +1,4 @@
 import angular from 'angular'
-import 'ngComponentRouter'
 import {html as template} from './auth.jade!'
 import './auth.css!'
 
