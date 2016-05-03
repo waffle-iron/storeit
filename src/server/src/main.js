@@ -1,3 +1,6 @@
-import git from './gitutil.js'
+const commander = require('commander')
 
-git.makeUser('tom')
+commander.version('0.0.1')
+  .option('-p', '--port <port>', 'set the port to listen to')
+  .option('-a', '--addr <ip>', 'set the address to listen on')
+  .parse(process.argv)
