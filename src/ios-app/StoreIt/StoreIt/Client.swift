@@ -7,53 +7,28 @@
 //
 
 import Foundation
-import TCPIP
+import Starscream
 
 class Client {
     
-    private let host: String
-    private let port: Int
-    private let requestBuilder: RequestBuilder
+    let host: String
+    let port: Int
     
-    private var ip: IP?
-    private var clientSocket: TCPClientSocket?
-    
-    var isRunning: Bool = false
+    private let WSManager: WebSocketManager
     
     init(host: String, port: Int) {
         self.host = host
         self.port = port
-        self.requestBuilder = RequestBuilder()
-        
-        do {
-            self.ip = try IP(address: host, port: port)
-            self.clientSocket = try TCPClientSocket(ip: ip!)
-            self.isRunning = true
-        } catch {
-            print("[NetworkManager.Client] Error while initializing socket: the server might not be runnning or the connexion is not established yet.");
-        }
-    }
-  
-    func start()  {
-        let queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
-
-        dispatch_async(queue) {
-            while (!self.clientSocket!.closed) {
-                // read
-                usleep(500)
-            }
-        }
+        self.WSManager = WebSocketManager(host: host, port: port)
     }
     
-    func join(username: String, hosted_hashes: [String], file: File) {
-        let request = requestBuilder.join(username, port: self.port, hosted_hashes: hosted_hashes,file: file)
-        
-        do {
-            try self.clientSocket!.sendString(request)
-            try self.clientSocket!.flush()
-        } catch {
-            print("[NetworkManager.Client] JOIN: Error while writing on socket.")
-        }
+    func isConnected() -> Bool {
+        return WSManager.ws.isConnected
+    }
+    
+    func join() {
+        //let request = requestBuilder.join(username, port: self.port, hosted_hashes: hosted_hashes,file: file)
+        self.WSManager.sendRequest("insert_join_request_here")
     }
 
 }

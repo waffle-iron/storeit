@@ -11,16 +11,11 @@ import ObjectMapper
 
 class ViewController: UIViewController {
 
-    let nm = NetworkManager(host: "0.0.0.0", port: 7641);
+    let nm = NetworkManager(host: "localhost", port: 8001);
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        if (nm.client.isRunning) {
-        	nm.client.start();
-        }
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,12 +25,16 @@ class ViewController: UIViewController {
 
     @IBAction func login(sender: AnyObject) {
         
-        let path = "/Users/gjura_r/Desktop/aaa/"
+        if (nm.client.isConnected()) {
+        	nm.client.join()
+        }
+        
+        /*let path = "/Users/gjura_r/Desktop/aaa/"
         let fm = FileManager(path: path)
         
         let toto: File = File(path: path, unique_hash: "0", metadata: "0", chunks_hashes: [""], kind: 0, files: fm.buildTree("aaa/"))
         nm.client.join("cli1", hosted_hashes: [], file: toto)
-        
+        */
         //NSLog(Mapper().toJSONString(test, prettyPrint: true)!)
     }
 
