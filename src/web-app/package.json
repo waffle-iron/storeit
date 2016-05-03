@@ -1,0 +1,39 @@
+{
+  "jspm": {
+    "name": "storeIt-webapp",
+    "main": "storeIt-webapp.js",
+    "devDependencies": {
+      "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
+      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
+      "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
+      "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
+      "crypto": "github:jspm/nodelibs-crypto@^0.2.0-alpha",
+      "events": "github:jspm/nodelibs-events@^0.2.0-alpha",
+      "express": "npm:express@^4.13.4",
+      "fs": "github:jspm/nodelibs-fs@^0.2.0-alpha",
+      "http": "github:jspm/nodelibs-http@^0.2.0-alpha",
+      "net": "github:jspm/nodelibs-net@^0.2.0-alpha",
+      "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
+      "plugin-babel": "npm:systemjs-plugin-babel@^0.0.9",
+      "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
+      "querystring": "github:jspm/nodelibs-querystring@^0.2.0-alpha",
+      "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
+      "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
+      "tty": "github:jspm/nodelibs-tty@^0.2.0-alpha",
+      "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
+      "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
+      "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha"
+    },
+    "overrides": {
+      "npm:inherits@2.0.1": {
+        "ignore": [
+          "test.js"
+        ]
+      }
+    }
+  },
+  "devDependencies": {
+    "eslint": "^2.9.0",
+    "jspm": "^0.17.0-beta.14"
+  }
+}
