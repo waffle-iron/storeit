@@ -81,8 +81,14 @@ Hello, this is the documentation for the StoreIt protocol. It is used to communi
 \paragraph{JOIN}
 
 This is the first request to make whenever a client wants to get online.\\
-\begin{center}JOIN username json\_file\end{center}
-Json\_file is the json tree described in the second section.
+\begin{center}JOIN gg/fb email token json\_file\end{center}
+
+  \begin{itemize}
+    \item gg/fb is for either facebook or google authentication of the client
+    \item email is the email the user identify itself with
+    \item token is a OAuth token that will be used to check that the user logged in
+    \item Json\_file is the json tree described in the second section.
+  \end{itemize}
 
 \paragraph{QUIT}
 
@@ -113,6 +119,11 @@ Tell the server to update a file, or receive the order to update a file. Like FA
 
 \section{Numeric responses}
 
-Just send '0' if everything went well. Send '1' 'error message' if something wrong occured and you could not complete the command.
+Just send '0 CMDNAME' if everything went well. Send '1 CMDNAME error\_message' if something wrong occured and you could not complete the command. For example :
+\begin{itemize}
+  \item 0 JOIN
+  \item 1 JOIN Bad credentials
+  \item 1 FADD No space left on user account
+\end{itemize}
 
 \end{document}
