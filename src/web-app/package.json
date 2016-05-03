@@ -2,6 +2,9 @@
   "jspm": {
     "name": "storeIt-webapp",
     "main": "server.js",
+    "dependencies": {
+      "angular": "github:angular/bower-angular@^1.5.5"
+    },
     "devDependencies": {
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
@@ -19,12 +22,22 @@
       "querystring": "github:jspm/nodelibs-querystring@^0.2.0-alpha",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
+      "systemjs-hot-reloader": "github:capaj/systemjs-hot-reloader@^0.5.8",
       "tty": "github:jspm/nodelibs-tty@^0.2.0-alpha",
       "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
       "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha"
     },
     "overrides": {
+      "github:angular/bower-angular@1.5.5": {
+        "main": "angular",
+        "meta": {
+          "angular.js": {
+            "exports": "angular",
+            "format": "global"
+          }
+        }
+      },
       "npm:inherits@2.0.1": {
         "ignore": [
           "test.js"
