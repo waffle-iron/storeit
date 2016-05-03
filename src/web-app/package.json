@@ -59,12 +59,13 @@
     "start": "jspm run server.js"
   },
   "devDependencies": {
+    "browser-sync": "^2.12.5",
     "coffee-script": "^1.10.0",
     "eslint": "^2.9.0",
     "gulp": "^3.9.1",
     "gulp-cached": "^1.1.0",
-    "gulp-livereload": "^3.8.1",
     "jspm": "^0.17.0-beta.14",
+    "run-sequence": "^1.1.5",
     "shelljs-nodecli": "^0.1.1"
   }
 }
