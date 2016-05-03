@@ -3,15 +3,17 @@ import 'ngComponentRouter'
 import {html as template} from './app.jade!'
 import './app.css!'
 
-let appConfig = () => {}
+let appConfig = ($locationProvider) => {
+  'ngInject'
 
-let appRun = () => {}
+  $locationProvider.html5Mode(false) // TODO
+}
 
 class AppController {}
 
-export default angular.module('app', [])
+export default angular.module('app', ['ngComponentRouter'])
   .config(appConfig)
-  .run(appRun)
+  .value('$routerRootComponent', 'app')
   .component('app', {
     template,
     controller: AppController,
