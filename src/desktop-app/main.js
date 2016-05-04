@@ -1,26 +1,13 @@
-var gitutil = require('./gitutil.js')
 var fs = require('fs')
-var watcher = require('./watcher.js')
 var commander = require('commander')
-var path = require('path')
+var userfile = require('./user-file.js')
 
 commander
   .version('0.0.1')
-  .option('-d, --store <name>', 'set the user synced directory')
+  .option('-d, --store <name>', 'set the user synced directory (default is ./storeit')
   .parse(process.argv)
 
 if (commander.store) {
-  gitutil.setRepo(path.resolve(__dirname, commander.store + "_git"))
-  gitutil.setUserPath(path.resolve(__dirname, commander.store))
-}
+  userfile.store_dir = commander.store
+} else {
 
-watcher.poll()
-
-  /*
-var access = fs.createWriteStream(gitutil.getRepo() + '.log', { flags: 'a' })
-      , error = fs.createWriteStream(gitutil.getRepo() + '.log', { flags: 'a' });
-
-// redirect stdout / stderr
-process.stdout.pipe(access);
-process.stderr.pipe(error);
-*/
