@@ -24,6 +24,8 @@
 		853AD04A1C99A8230036A7FF /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD0491C99A8230036A7FF /* Server.swift */; };
 		853AD04C1C99A8400036A7FF /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD04B1C99A8400036A7FF /* Client.swift */; };
 		853B29011CD8B33000742F8D /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B29001CD8B33000742F8D /* WebSocketManager.swift */; };
+		856EAED61CDCC86E00F69148 /* 2017_logo_storeit.png in Resources */ = {isa = PBXBuildFile; fileRef = 856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */; };
+		856EAED81CDD0B6D00F69148 /* AppDataManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */; };
 		857987301CDCBE300062B8F8 /* OAuth2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579872F1CDCBE300062B8F8 /* OAuth2.swift */; };
 		857987321CDCBE4D0062B8F8 /* OAuth2Google.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857987311CDCBE4D0062B8F8 /* OAuth2Google.swift */; };
 		8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */; };
@@ -74,6 +76,8 @@
 		853AD04B1C99A8400036A7FF /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		853B29001CD8B33000742F8D /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		85588BFF1CD7687300BDE41F /* StoreIt-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StoreIt-Bridging-Header.h"; sourceTree = "<group>"; };
+		856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2017_logo_storeit.png; sourceTree = "<group>"; };
+		856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDataManagers.swift; sourceTree = "<group>"; };
 		8579872F1CDCBE300062B8F8 /* OAuth2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2.swift; sourceTree = "<group>"; };
 		857987311CDCBE4D0062B8F8 /* OAuth2Google.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2Google.swift; sourceTree = "<group>"; };
 		8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnexionManager.swift; sourceTree = "<group>"; };
@@ -158,6 +162,7 @@
 				8500F6E41C970F1C00C69875 /* Assets.xcassets */,
 				8500F6E61C970F1C00C69875 /* LaunchScreen.storyboard */,
 				8500F6E91C970F1C00C69875 /* Info.plist */,
+				856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */,
 			);
 			path = StoreIt;
 			sourceTree = "<group>";
@@ -191,6 +196,7 @@
 		85074AAC1CA1A77A00047CB5 /* img */ = {
 			isa = PBXGroup;
 			children = (
+				856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */,
 			);
 			name = img;
 			sourceTree = "<group>";
@@ -340,6 +346,7 @@
 				8500F6E81C970F1C00C69875 /* LaunchScreen.storyboard in Resources */,
 				8500F6E51C970F1C00C69875 /* Assets.xcassets in Resources */,
 				8500F6E31C970F1C00C69875 /* Main.storyboard in Resources */,
+				856EAED61CDCC86E00F69148 /* 2017_logo_storeit.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,6 +422,7 @@
 				8500F6E01C970F1C00C69875 /* LoginView.swift in Sources */,
 				853B29011CD8B33000742F8D /* WebSocketManager.swift in Sources */,
 				857987321CDCBE4D0062B8F8 /* OAuth2Google.swift in Sources */,
+				856EAED81CDD0B6D00F69148 /* AppDataManagers.swift in Sources */,
 				853AD04C1C99A8400036A7FF /* Client.swift in Sources */,
 				857987301CDCBE300062B8F8 /* OAuth2.swift in Sources */,
 				8500F70C1C97103E00C69875 /* File.swift in Sources */,

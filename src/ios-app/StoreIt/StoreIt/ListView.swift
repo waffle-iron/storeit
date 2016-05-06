@@ -10,6 +10,8 @@ import UIKit
 
 class ListView: UITableViewController {
     
+    var managers: AppDataManagers?
+    
     let itemIdentifier = "Item"
     
     var items: [Int] = []
@@ -52,7 +54,7 @@ class ListView: UITableViewController {
         self.items.append(i)
         
         print("SIZE: \(items.count)")
- 
+
         self.tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
     }
 }

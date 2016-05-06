@@ -12,7 +12,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var connexionManger: ConnexionManager? = nil
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -20,7 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        connexionManger?.handleRedirectUrl(url)
+        // check url before !!!
+        let rootView = self.window?.rootViewController as! UINavigationController
+        let loginView = rootView.viewControllers[0] as! LoginView
+        
+        loginView.managers.connexionManager?.handleRedirectUrl(url)
+        
         return true
     }
     

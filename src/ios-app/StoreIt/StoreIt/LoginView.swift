@@ -12,11 +12,13 @@ import p2_OAuth2
 
 class LoginView: UIViewController {
 
-    //let nm = NetworkManagervarst: "localhost", port: 8001);
+    var managers: AppDataManagers = AppDataManagers()
     var isLogged: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        managers.networkManager = NetworkManager(host: "localhost", port: 8001);
+        managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/aaa/") // Path to synch dir
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -32,30 +34,19 @@ class LoginView: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let listView = (segue.destinationViewController as! ListView)
+        listView.managers = self.managers
+    }
+    
     @IBAction func login(sender: AnyObject) {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        if (appDelegate.connexionManger == nil) {
-        	appDelegate.connexionManger = ConnexionManager(connexionType: ConnexionType.GOOGLE)
+        if (managers.connexionManager == nil) {
+            managers.connexionManager = ConnexionManager(connexionType: ConnexionType.GOOGLE)
         }
-
-        appDelegate.connexionManger?.forgetTokens() // forget tokens to display authorization screen
         
-        appDelegate.connexionManger?.authorize(self)
-        
-        
-        //if (nm.client.isConnected()) {
-        //    nm.client.join()
-        //}
-        
-        /*let path = "/Users/gjura_r/Desktop/aaa/"
-         let fm = FileManager(path: path)
-         
-         let toto: File = File(path: path, unique_hash: "0", metadata: "0", chunks_hashes: [""], kind: 0, files: fm.buildTree("aaa/"))
-         nm.client.join("cli1", hosted_hashes: [], file: toto)
-         */
-        //NSLog(Mapper().toJSONString(test, prettyPrint: true)!)
+        managers.connexionManager?.forgetTokens() // forget tokens to display authorization screen
+        managers.connexionManager?.authorize(self)
     }
 
 }
