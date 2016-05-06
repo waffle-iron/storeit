@@ -14,14 +14,11 @@ enum ConnexionType {
     case FACEBOOK
 }
 
-typealias OAUTH2 = AnyObject
-
 class ConnexionManager {
     
     let connexionType: ConnexionType
     
-    var oauthGoogle: OAuth2CodeGrant? = nil
-    var oauthFacebook: OAuth2CodeGrantFacebook? = nil
+    let oauth2: OAuth2
     
     init(connexionType: ConnexionType) {
         print("[ConnexionManager] Initializing a connexion of type \(connexionType)")
@@ -30,79 +27,28 @@ class ConnexionManager {
         
         switch connexionType {
             case .GOOGLE:
-                oauthGoogle = OAuth2CodeGrant(settings: [
-                    "client_id": "929129451297-scre09deafvcfip9tvkefoe590uenv9l.apps.googleusercontent.com",
-                    "authorize_uri": "https://accounts.google.com/o/oauth2/auth",
-                    "token_uri": "https://www.googleapis.com/oauth2/v3/token",
-                    "scope": "profile",
-                    "redirect_uris": ["com.googleusercontent.apps.929129451297-scre09deafvcfip9tvkefoe590uenv9l:/oauth-storeit"],
-                    ])
+                oauth2 = OAuth2Google()
             	break
             
             case .FACEBOOK:
-                oauthFacebook = OAuth2CodeGrantFacebook(settings: ["":""])
+                oauth2 = OAuth2Google() // Replace by Facebook later
                 break
     	}
         
-        self.onFailureOrAuthorizeAddEvents()
+        oauth2.onFailureOrAuthorizeAddEvents()
     }
     
-    private func onFailureOrAuthorizeAddEvents() {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let rootController = appDelegate.window?.rootViewController as! UINavigationController
-        let loginView = rootController.viewControllers[0] as! LoginView
-        
-        self.oauthGoogle?.onAuthorize = { parameters in
-            print("[ConnexionManager] Did authorize with parameters: \(parameters)")
-            loginView.isLogged = true
-            loginView.performSegueWithIdentifier("loginSegue", sender: nil)
-        }
-        self.oauthGoogle?.onFailure = { error in
-            if let error = error {
-                print("[ConnexionManager] Authorization failure: \(error)")
-                loginView.isLogged = false
-            }
-        }
-    }
-    
-    private func onFailureAddEvents() {
-
-    }
     
     func forgetTokens() {
-        switch self.connexionType {
-            case .GOOGLE:
-                self.oauthGoogle!.forgetTokens()
-                break
-                
-            case .FACEBOOK:
-                self.oauthFacebook!.forgetTokens()
-                break
-            }
+        oauth2.forgetTokens()
     }
     
     func handleRedirectUrl(url: NSURL) {
-        switch self.connexionType {
-            case .GOOGLE:
-                self.oauthGoogle!.handleRedirectURL(url)
-                break
-                
-            case .FACEBOOK:
-                self.oauthFacebook!.handleRedirectURL(url)
-                break
-            }
+        oauth2.handleRedirectUrl(url)
     }
     
     func authorize(context: AnyObject) {
-        switch self.connexionType {
-            case .GOOGLE:
-                self.oauthGoogle!.authorizeEmbeddedFrom(context)
-                break
-                
-            case .FACEBOOK:
-                self.oauthFacebook!.authorizeEmbeddedFrom(context)
-                break
-        }
+        oauth2.authorize(context)
     }
     
 }
