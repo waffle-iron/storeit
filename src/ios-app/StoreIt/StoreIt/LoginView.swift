@@ -8,14 +8,15 @@
 
 import UIKit
 import ObjectMapper
+import p2_OAuth2
 
 class LoginView: UIViewController {
 
-    let nm = NetworkManager(host: "localhost", port: 8001);
+    //let nm = NetworkManagervarst: "localhost", port: 8001);
+    var isLogged: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -33,7 +34,16 @@ class LoginView: UIViewController {
 
     @IBAction func login(sender: AnyObject) {
         
-        self.performSegueWithIdentifier("loginSegue", sender: nil)
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        if (appDelegate.connexionManger == nil) {
+        	appDelegate.connexionManger = ConnexionManager(connexionType: ConnexionType.GOOGLE)
+        }
+
+        appDelegate.connexionManger?.forgetTokens() // forget tokens to display authorization screen
+        
+        appDelegate.connexionManger?.authorize(self)
+        
         
         //if (nm.client.isConnected()) {
         //    nm.client.join()

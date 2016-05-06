@@ -24,6 +24,7 @@
 		853AD04A1C99A8230036A7FF /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD0491C99A8230036A7FF /* Server.swift */; };
 		853AD04C1C99A8400036A7FF /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853AD04B1C99A8400036A7FF /* Client.swift */; };
 		853B29011CD8B33000742F8D /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B29001CD8B33000742F8D /* WebSocketManager.swift */; };
+		8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */; };
 		85A6F5981C9EC6950018ABDF /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,7 @@
 		853AD04B1C99A8400036A7FF /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		853B29001CD8B33000742F8D /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		85588BFF1CD7687300BDE41F /* StoreIt-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StoreIt-Bridging-Header.h"; sourceTree = "<group>"; };
+		8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnexionManager.swift; sourceTree = "<group>"; };
 		85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -202,6 +204,7 @@
 		853AD0471C99A7D60036A7FF /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */,
 				8500F7101C972B0400C69875 /* NetworkManager.swift */,
 				853B29001CD8B33000742F8D /* WebSocketManager.swift */,
 				853AD04B1C99A8400036A7FF /* Client.swift */,
@@ -409,6 +412,7 @@
 				8500F70C1C97103E00C69875 /* File.swift in Sources */,
 				8531C9D61CDA301500351EF4 /* Item.swift in Sources */,
 				8500F6DE1C970F1C00C69875 /* AppDelegate.swift in Sources */,
+				8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */,
 				8500F70E1C97112800C69875 /* FileManager.swift in Sources */,
 				853AD04A1C99A8230036A7FF /* Server.swift in Sources */,
 				8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */,
@@ -561,7 +565,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = StoreIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = fr.StoreIt;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.storeit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "StoreIt-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -576,7 +580,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = StoreIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = fr.StoreIt;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.storeit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "StoreIt-Bridging-Header.h";
 			};
