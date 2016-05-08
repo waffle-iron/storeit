@@ -5,3 +5,17 @@ html, body {
 [ng-cloak] {
   display: none;
 }
+
+#header {
+  background-color: #AACCD6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#header #logo {
+  width: 220px;
+}
+
+#container {
+  padding-top: 20px;
+}

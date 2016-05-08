@@ -7,6 +7,9 @@ let authComponent = {
   template,
   controller: AuthController,
   controllerAs: 'vm',
+  // require: {
+  //   appCtrl: '^' + 'app'
+  // }
 }
 
 const DEPENDENCIES = []

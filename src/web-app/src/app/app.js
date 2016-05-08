@@ -1,5 +1,6 @@
 import angular from 'angular'
 
+import AppController from './app_controller.js'
 import {html} from './app.jade!'
 import './app.css!'
 
@@ -11,6 +12,8 @@ const DEPENDENCIES = [
 
 let appComponent = {
   template: html,
+  controller: AppController,
+  controllerAs: 'vm',
   $routeConfig: [
     {path: '/auth', name: 'Auth', component: 'auth', useAsDefault: true},
   ],
