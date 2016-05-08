@@ -1,10 +1,30 @@
+import 'angular-material/angular-material.css!'
+
 import angular from 'angular'
+import 'angular-animate'
+import 'angular-aria'
+import 'angular-material'
+import 'ngComponentRouter'
 
 import app from './app/app.js'
 
-let appContainer = document.getElementById('app-container')
+let coreConfig = ($locationProvider) => {
+  'ngInject'
+  $locationProvider.html5Mode(false) // TODO
+}
+
+const DEPENDENCIES = [
+  'ngComponentRouter',
+  'ngMaterial',
+  app
+]
+let storeit = angular.module('storeit', DEPENDENCIES)
+  .config(coreConfig)
+  .value('$routerRootComponent', 'app')
+
 angular.element(document).ready(() => {
-  angular.bootstrap(appContainer, [app.name])
+  let appContainer = document.getElementById('app-container')
+  angular.bootstrap(appContainer, [storeit.name])
 })
 
-export default app
+export default storeit

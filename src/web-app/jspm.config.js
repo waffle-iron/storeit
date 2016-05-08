@@ -21,6 +21,9 @@ SystemJS.config({
   ],
   map: {
     "angular": "github:angular/bower-angular@1.5.5",
+    "angular-animate": "github:angular/bower-angular-animate@1.5.5",
+    "angular-aria": "github:angular/bower-angular-aria@1.5.5",
+    "angular-material": "github:angular/bower-material@1.0.8",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
@@ -51,6 +54,24 @@ SystemJS.config({
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha"
   },
   packages: {
+    "github:angular/bower-angular-animate@1.5.5": {
+      "map": {
+        "angular": "github:angular/bower-angular@1.5.5"
+      }
+    },
+    "github:angular/bower-angular-aria@1.5.5": {
+      "map": {
+        "angular": "github:angular/bower-angular@1.5.5"
+      }
+    },
+    "github:angular/bower-material@1.0.8": {
+      "map": {
+        "angular": "github:angular/bower-angular@1.5.5",
+        "angular-animate": "github:angular/bower-angular-animate@1.5.5",
+        "angular-aria": "github:angular/bower-angular-aria@1.5.5",
+        "css": "github:systemjs/plugin-css@0.1.21"
+      }
+    },
     "github:johnsoftek/plugin-jade@1.1.2": {
       "map": {
         "jade-compiler": "npm:jade@1.11.0"
