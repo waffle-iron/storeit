@@ -6,6 +6,7 @@ import 'angular-aria'
 import 'angular-material'
 import 'ngComponentRouter'
 
+import constants from './app/core/constants.js'
 import app from './app/app.js'
 
 let coreConfig = ($locationProvider) => {
@@ -20,6 +21,7 @@ let run = () => {
 const DEPENDENCIES = [
   'ngComponentRouter',
   'ngMaterial',
+  constants,
   app
 ]
 let storeit = angular.module('storeit', DEPENDENCIES)

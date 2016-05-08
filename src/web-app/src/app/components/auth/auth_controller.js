@@ -1,11 +1,9 @@
 export default class AuthController
 {
-  constructor() {
+  constructor(Facebook) {
     'ngInject'
 
-    this.sidebar = {
-      title: 'foo'
-    }
+    this.fb = Facebook
   }
 
   // $onInit() {
