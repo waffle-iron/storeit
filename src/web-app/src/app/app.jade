@@ -1,3 +1,8 @@
-#header
+md-toolbar
   img#logo(src="assets/images/logo.png")
-ng-outlet
+
+.container(layout="row" flex)
+  md-sidenav(md-is-locked-open="true" flex style="background:lightgreen")
+    h3 sidenav
+  md-content#content(flex style="background:lightblue")
+    ng-outlet

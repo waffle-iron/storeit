@@ -13,6 +13,10 @@ let coreConfig = ($locationProvider) => {
   $locationProvider.html5Mode(false) // TODO
 }
 
+let run = () => {
+  'ngInject'
+}
+
 const DEPENDENCIES = [
   'ngComponentRouter',
   'ngMaterial',
@@ -20,6 +24,7 @@ const DEPENDENCIES = [
 ]
 let storeit = angular.module('storeit', DEPENDENCIES)
   .config(coreConfig)
+  .run(run)
   .value('$routerRootComponent', 'app')
 
 angular.element(document).ready(() => {
