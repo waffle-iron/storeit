@@ -1,16 +1,22 @@
 PODS:
   - CryptoSwift (0.2.3)
   - ObjectMapper (1.1.5)
-  - TCPIP (0.1)
+  - p2.OAuth2 (2.2.6):
+    - SwiftKeychain (~> 1.0)
+  - Starscream (1.1.3)
+  - SwiftKeychain (1.0.0)
 
 DEPENDENCIES:
   - CryptoSwift
   - ObjectMapper (~> 1.1)
-  - TCPIP (~> 0.1)
+  - p2.OAuth2 (~> 2.2)
+  - Starscream (~> 1.1.3)
 
 SPEC CHECKSUMS:
   CryptoSwift: b2bf37b8e7cc6d682ef3365cb966bc5ae5174aa5
   ObjectMapper: 528b1a6677a6acac7747edd508576983e76a9148
-  TCPIP: fbb5c669e3a63f944294be647c0d8f4d01ca3ade
+  p2.OAuth2: a89edc5660aca8a5349882ee9008de793bbbbcd0
+  Starscream: d662732354b40dd19ed1ece3e3c44c80b536b83c
+  SwiftKeychain: fd9ad69f7b3ff7a0c7ba579da508bbaa89a395b2
 
 COCOAPODS: 0.39.0
