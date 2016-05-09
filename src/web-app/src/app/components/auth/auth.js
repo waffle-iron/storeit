@@ -2,11 +2,15 @@ import angular from 'angular'
 import hello from 'hellojs'
 
 import AuthController from './auth_controller.js'
+import AuthService from './auth_service.js'
 import {html as template} from './auth.jade!'
 import './auth.css!'
 
 let authComponent = {
   template,
+  bindings: {
+    $router: '<'
+  },
   controller: AuthController,
   controllerAs: 'vm',
 }
@@ -31,5 +35,6 @@ export default angular.module('storeit.app.components.auth', DEPENDENCIES)
   .config(authConfig)
   .value('Facebook', hello('facebook'))
   .value('Google', hello('google'))
+  .service('Auth', AuthService)
   .component('auth', authComponent)
   .name

@@ -1,12 +1,27 @@
+import hello from 'hellojs'
+
 export default class AuthController
 {
-  constructor(Facebook) {
+  constructor(Facebook, Auth) {
     'ngInject'
 
-    this.fb = Facebook
+    this.facebook = Facebook
+    this.auth = Auth
+    hello.on('auth.login', () => this.getProfile('facebook'))
   }
 
-  // $onInit() {
-  //   this.appCtrl.sidebar.title = 'foo'
-  // }
+  login(profile) {
+    console.log(profile) // TODO
+    this.auth.login()
+      .then(() => this.$router.navigate(['Files']))
+      .catch(err => console.error(err))
+  }
+
+  oauth(network) {
+    this[network].login()
+  }
+
+  getProfile(network) {
+    this[network].api('/me').then((res) => this.login(res))
+  }
 }
