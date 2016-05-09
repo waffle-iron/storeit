@@ -3,10 +3,12 @@ import angular from 'angular'
 import {html} from './app.jade!'
 import './app.css!'
 
-import components from './core/components.js'
+import auth from './auth/auth_module.js'
+import files from './files/files_module.js'
 
 const DEPENDENCIES = [
-  components,
+  auth,
+  files,
 ]
 
 let appComponent = {
