@@ -4,13 +4,16 @@
     "main": "server.js",
     "dependencies": {
       "angular": "github:angular/bower-angular@^1.5.5",
+      "angular-animate": "github:angular/bower-angular-animate@^1.5.5",
+      "angular-aria": "github:angular/bower-angular-aria@^1.5.5",
+      "angular-material": "github:angular/bower-material@^1.0.8",
       "css": "github:systemjs/plugin-css@^0.1.21",
+      "hellojs": "npm:hellojs@^1.12.0",
       "jade": "github:johnsoftek/plugin-jade@^1.1.2",
       "ngComponentRouter": "npm:ngcomponentrouter@^2.1.0",
       "ngcomponentrouter": "npm:ngcomponentrouter@^2.1.0"
     },
     "devDependencies": {
-      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "connect-livereload": "npm:connect-livereload@^0.5.4",
       "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
       "crypto": "github:jspm/nodelibs-crypto@^0.2.0-alpha",
@@ -23,6 +26,7 @@
     },
     "peerDependencies": {
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
+      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
       "events": "github:jspm/nodelibs-events@^0.2.0-alpha",
       "fs": "github:jspm/nodelibs-fs@^0.2.0-alpha",
@@ -39,11 +43,62 @@
       "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha"
     },
     "overrides": {
+      "github:angular/bower-angular-animate@1.5.5": {
+        "main": "angular-animate",
+        "registry": "jspm",
+        "dependencies": {
+          "angular": "^1.3.0"
+        },
+        "meta": {
+          "angular-animate.js": {
+            "deps": [
+              "angular"
+            ],
+            "format": "global"
+          }
+        }
+      },
+      "github:angular/bower-angular-aria@1.5.5": {
+        "main": "angular-aria",
+        "registry": "jspm",
+        "dependencies": {
+          "angular": "^1.3.0"
+        },
+        "meta": {
+          "angular-aria.js": {
+            "deps": [
+              "angular"
+            ],
+            "format": "global"
+          }
+        }
+      },
       "github:angular/bower-angular@1.5.5": {
         "main": "angular",
         "meta": {
           "angular.js": {
             "exports": "angular",
+            "format": "global"
+          }
+        }
+      },
+      "github:angular/bower-material@1.0.8": {
+        "main": "angular-material",
+        "registry": "jspm",
+        "dependencies": {
+          "angular": "^1.5.0",
+          "angular-animate": "^1.5.0",
+          "angular-aria": "^1.5.0",
+          "css": "^0.1.0"
+        },
+        "meta": {
+          "angular-material.js": {
+            "deps": [
+              "./angular-material.css!",
+              "angular",
+              "angular-animate",
+              "angular-aria"
+            ],
             "format": "global"
           }
         }

@@ -8,9 +8,9 @@
     <script src="jspm.browser.js"></script>
     <script src="jspm.config.js"></script>
   </head>
-  <body>
-    <div id="app-container">
-      <app></app>
+  <body layout="column">
+    <div id="app-container" ng-cloak layout="column" flex>
+      <app layout="column" flex></app>
     </div>
     <script>SystemJS.import('main.js')</script>
   </body>

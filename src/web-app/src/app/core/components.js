@@ -1,7 +1,11 @@
 import angular from 'angular'
 
 import auth from '../components/auth/auth.js'
+import files from '../components/files/files.js'
 
-export default angular.module('app.components', [
-  auth.name,
-])
+const COMPONENTS = [
+  auth,
+  files,
+]
+
+export default angular.module('storeit.app.components', COMPONENTS).name
