@@ -31,7 +31,7 @@ let authConfig = (STOREIT) => {
 }
 
 const DEPENDENCIES = []
-export default angular.module('storeit.app.components.auth', DEPENDENCIES)
+export default angular.module('storeit.app.auth', DEPENDENCIES)
   .config(authConfig)
   .value('Facebook', hello('facebook'))
   .value('Google', hello('google'))

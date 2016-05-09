@@ -13,7 +13,7 @@ export default class AuthController
   login(profile) {
     console.log(profile) // TODO
     this.auth.login()
-      .then(() => this.$router.navigate(['Files']))
+      .then(() => this.$router.navigate(['FileExplorer']))
       .catch(err => console.error(err))
   }
 
