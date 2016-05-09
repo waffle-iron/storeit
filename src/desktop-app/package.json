@@ -8,6 +8,7 @@
     "idb-plus-blob-store": "^1.0.0",
     "ipfs": "^0.4.5",
     "ipfs-api": "^3.0.0",
-    "recursive-readdir": "^2.0.0"
+    "recursive-readdir": "^2.0.0",
+    "ws": "^1.1.0"
   }
 }
