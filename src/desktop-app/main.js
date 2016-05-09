@@ -1,4 +1,3 @@
-var fs = require('fs')
 var commander = require('commander')
 var userfile = require('./user-file.js')
 
@@ -10,4 +9,7 @@ commander
 if (commander.store) {
   userfile.store_dir = commander.store
 } else {
+  userfile.store_dir = "./storeit"
+}
 
+console.log(JSON.stringify(userfile.makeUserTree()))
