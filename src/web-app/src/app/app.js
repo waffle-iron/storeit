@@ -4,11 +4,11 @@ import {html} from './app.jade!'
 import './app.css!'
 
 import auth from './auth/auth_module.js'
-import file_explorer from './file_explorer/file_explorer_module.js'
+import fileExplorer from './file_explorer/file_explorer_module.js'
 
 const DEPENDENCIES = [
   auth,
-  file_explorer,
+  fileExplorer,
 ]
 
 let appComponent = {
