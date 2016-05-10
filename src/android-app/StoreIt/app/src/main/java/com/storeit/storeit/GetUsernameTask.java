@@ -1,0 +1,69 @@
+package com.storeit.storeit;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.util.Log;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import java.io.IOException;
+
+/**
+ * Created by loulo on 10/05/2016.
+ */
+public class GetUsernameTask extends AsyncTask<Void, Void, Void> {
+    Activity mActivity;
+    String mScope;
+    String mEmail;
+
+    GetUsernameTask(Activity activity, String name, String scope) {
+        this.mActivity = activity;
+        this.mScope = scope;
+        this.mEmail = name;
+    }
+
+    /**
+     * Executes the asynchronous job. This runs when you call execute()
+     * on the AsyncTask instance.
+     */
+    @Override
+    protected Void doInBackground(Void... params) {
+        try {
+            String token = fetchToken();
+            if (token != null) {
+                // **Insert the good stuff here.**
+                // Use the token to access the user's Google data.
+                //...
+
+                Log.v("GetUsernameTask", "token : " + token);
+
+            }
+        } catch (IOException e) {
+            // The fetchToken() method handles Google-specific exceptions,
+            // so this indicates something went wrong at a higher level.
+            // TIP: Check for network connectivity before starting the AsyncTask.
+            //...
+        }
+        return null;
+    }
+
+    /**
+     * Gets an authentication token from Google and handles any
+     * GoogleAuthException that may occur.
+     */
+    protected String fetchToken() throws IOException {
+        try {
+            return GoogleAuthUtil.getToken(mActivity, mEmail, mScope);
+        } catch (UserRecoverableAuthException userRecoverableException) {
+
+
+            LoginActivity activity = (LoginActivity)mActivity;
+            activity.handleException(userRecoverableException);
+            
+//            Log.e("GetUsernameTask", userRecoverableException.getMessage());
+
+        } catch (GoogleAuthException fatalException) {
+        }
+        return null;
+    }
+}
