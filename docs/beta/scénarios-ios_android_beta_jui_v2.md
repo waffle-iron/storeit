@@ -1,6 +1,6 @@
-# iOS - Android
+# iOS - Android - Web
 
-_Les deux clients mobiles, bien qu'étant différents au niveau de l'interface utilisateur, possèdent les mêmes fonctionnalités et bénéficieront des mêmes tests lors des scénarios de démonstration._
+_Les deux clients mobiles et le client web, bien qu'étant différents au niveau de l'interface utilisateur, possèdent les mêmes fonctionnalités et bénéficieront des mêmes tests lors des scénarios de démonstration._
 
 ### Scénarios de démonstration
 
@@ -34,8 +34,8 @@ __Les tests suivants seront réalisés pour les deux plateformes :__
 
 __4. Importation de fichiers__
 
-L'utilisateur possède un bouton permettant d'importer des fichiers. Par exemple, il peut importer une photo présente sur son appareil mobile ou prendre une photo grâce à celui-ci pour l'importer directement.
+L'utilisateur possède un bouton permettant d'importer des fichiers. Par exemple, il peut importer une photo présente sur son appareil ou prendre une photo grâce à celui-ci pour l'importer directement.
 
 __Les tests suivants seront réalisés pour les deux plateformes :__
-- Importer une photo depuis présente sur l'appareil mobile.
-- Importer immédiatement une photo prise grâce à l'appareil photo.
+- Importer une photo présente sur l'appareil.
+- Importer immédiatement une photo prise grâce à l'appareil photo (Android/iOS).
