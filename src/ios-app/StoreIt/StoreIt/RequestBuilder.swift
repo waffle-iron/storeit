@@ -15,11 +15,10 @@ class RequestBuilder {
         
     // REQUESTS
     
-    func join(username: String, port: Int, hosted_hashes: [String], file: File) -> String {
-        let args: String = "\(username) \(port) \(chunkHashesToStr(hosted_hashes, separator: ":")) \(fileObjectToJSON(file))"
-		return "JOIN \(size(args)) \(args)"
+    func join(connexionType: ConnexionType, email: String, token: String, file: File) -> String {
+        return "JOIN \(connexionType.rawValue) \(email) \(token) \(fileObjectToJSON(file))"
     }
-    
+ 
     // TOOLS
     
     private func fileObjectToJSON(file: File) -> String {
