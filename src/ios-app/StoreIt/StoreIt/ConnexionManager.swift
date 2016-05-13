@@ -9,9 +9,9 @@
 import Foundation
 import p2_OAuth2
 
-enum ConnexionType {
-    case GOOGLE
-    case FACEBOOK
+enum ConnexionType: String {
+    case GOOGLE = "gg"
+    case FACEBOOK = "fb"
 }
 
 class ConnexionManager {
