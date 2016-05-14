@@ -31,8 +31,6 @@ public class SocketService extends Service {
 
     private boolean mConnected = false;
 
-
-
     private Handler handler = new Handler(Looper.getMainLooper());
     private WebSocket webSocket = null;
 
@@ -42,7 +40,7 @@ public class SocketService extends Service {
 
             // Loop on connection
             mConnected = false;
-
+/*
             try {
                 webSocket = new WebSocketFactory()
                         .setConnectionTimeout(TIMEOUT)
@@ -76,10 +74,9 @@ public class SocketService extends Service {
                 mConnected = true;
             } catch (WebSocketException | IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
-
 
     public  void sendJOIN(String username, String password, StoreitFile file){
         Gson gson = new Gson();

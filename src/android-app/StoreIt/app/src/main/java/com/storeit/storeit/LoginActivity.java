@@ -1,8 +1,9 @@
 package com.storeit.storeit;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -11,6 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.storeit.storeit.protocol.LoginHandler;
 import com.storeit.storeit.protocol.StoreitFile;
 
@@ -22,6 +28,67 @@ public class LoginActivity extends Activity implements LoginHandler {
 
     private boolean mIsBound = false;
     private SocketService mBoundService = null;
+
+    private String mEmail;
+    String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
+
+    static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
+    static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
+
+    private void pickUserAccount(){
+        String[] accountTypes = new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE};
+        Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+                accountTypes, true, "Please choose account", null, null, null);
+        startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
+    }
+
+    private void getUsername(){
+        if (mEmail == null){
+            pickUserAccount();
+        } else{
+            new GetUsernameTask(LoginActivity.this, mEmail, SCOPE).execute();
+        }
+
+    }
+
+    public void tokenReceived(String token){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void handleException(final Exception e) {
+        // Because this call comes from the AsyncTask, we must ensure that the following
+        // code instead executes on the UI thread.
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (e instanceof GooglePlayServicesAvailabilityException) {
+                    // The Google Play services APK is old, disabled, or not present.
+                    // Show a dialog created by Google Play services that allows
+                    // the user to update the APK
+                    int statusCode = ((GooglePlayServicesAvailabilityException)e)
+                            .getConnectionStatusCode();
+                    Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode,
+                            LoginActivity.this,
+                            REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+                    dialog.show();
+                } else if (e instanceof UserRecoverableAuthException) {
+                    // Unable to authenticate, such as when the user has not yet granted
+                    // the app access to the account, but the user can fix this.
+                    // Forward the user to an activity in Google Play services.
+                    Intent intent = ((UserRecoverableAuthException)e).getIntent();
+                    startActivityForResult(intent,
+                            REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+                }
+            }
+        });
+    }
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -37,13 +104,30 @@ public class LoginActivity extends Activity implements LoginHandler {
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == REQUEST_CODE_PICK_ACCOUNT){
+            if (resultCode == RESULT_OK){
+                mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                getUsername();
+            }
+            else if (resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "Error while obtaining account", Toast.LENGTH_SHORT).show();
+            }
+        } else if ((
+                requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR)
+                && resultCode == RESULT_OK) {
+            // Receiving a result that follows a GoogleAuthException, try auth again
+            getUsername();
+        }
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        Intent intent = new Intent(this, SocketService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+     //   Intent intent = new Intent(this, SocketService.class);
+     //   bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -64,8 +148,28 @@ public class LoginActivity extends Activity implements LoginHandler {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        filesManager = new FilesManager(this);
+//        filesManager = new FilesManager(this);
 
+        /*
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://192.168.0.102:5001/api/v0/swarm/peers";
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.v("toto", response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v("toto", error.toString());
+            }
+        });
+
+        queue.add(stringRequest);
+        */
 
         final EditText email = (EditText) findViewById(R.id.login_input_email);
         final EditText password = (EditText) findViewById(R.id.login_input_password);
@@ -74,6 +178,10 @@ public class LoginActivity extends Activity implements LoginHandler {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                pickUserAccount();
+
+                /*
                 if (mBoundService != null) {
                     if (!mBoundService.isConnected()) {
                         Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
@@ -93,7 +201,7 @@ public class LoginActivity extends Activity implements LoginHandler {
                     file = filesManager.makeTree();
 
                     mBoundService.sendJOIN(email.getText().toString(), "", file);
-                }
+                }*/
             }
         });
     }
@@ -110,7 +218,7 @@ public class LoginActivity extends Activity implements LoginHandler {
             success = Integer.parseInt(tokens[1]);
 
         if (success == 1) {
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
