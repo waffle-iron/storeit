@@ -13,14 +13,15 @@ export default class FileExplorerController {
   }
 
   action(index) {
-    if (this.cwd.files[index].kind === 'dir') {
-      this.cd(index)
+    let target = this.cwd.files[index]
+    if (target.kind === 'dir') {
+      this.cd(target)
     }
   }
 
-  cd(index) {
+  cd(dest) {
     this.path.push(this.cwd)
-    this.cwd = this.cwd.files[index]
+    this.cwd = dest
     console.log('path', this.path)
   }
 
