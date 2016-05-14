@@ -16,3 +16,23 @@ div(layout="row" flex)
         md-icon(ng-if="file.kind === 'dir'" md-font-set="material-icons") folder
         md-icon(ng-if="file.kind === 'file'" md-font-set="material-icons") insert_drive_file
         p {{file.path.split('/').slice(-1)[0]}}
+        md-menu
+          md-button(ng-click="$mdOpenMenu($event)")
+            md-icon(md-font-set="material-icons") more_vert
+          md-menu-content(width="6")
+            md-menu-item
+              md-button
+                md-icon(md-font-set="material-icons") file_download
+                | Download
+            md-menu-item
+              md-button
+                md-icon(md-font-set="material-icons") assignment_return
+                | Move To
+            md-menu-item
+              md-button
+                md-icon(md-font-set="material-icons") mode_edit
+                | Rename
+            md-menu-item
+              md-button
+                md-icon(md-font-set="material-icons") delete
+                | Delete
