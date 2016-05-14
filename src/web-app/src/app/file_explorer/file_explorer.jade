@@ -2,4 +2,11 @@ div(layout="row" flex)
   md-sidenav.md-whiteframe-4dp(md-is-locked-open="true" flex)
     h1.md-toolbar-tools My Files
   md-content#content(flex)
-    h1 Files
+    md-list
+      md-list-item(ng-if="vm.path.length" ng-click="vm.parent()")
+        md-icon(md-font-set="material-icons") folder
+        p ..
+      md-list-item(ng-repeat="file in vm.cwd" ng-click="vm.action($index)")
+        md-icon(ng-if="file.kind === 'dir'" md-font-set="material-icons") folder
+        md-icon(ng-if="file.kind === 'file'" md-font-set="material-icons") insert_drive_file
+        p {{file.path.split('/').slice(-1)[0]}}
