@@ -44,7 +44,7 @@ class OAuth2Google : OAuth2 {
         oauth2.onAuthorize = { parameters in
             print("[ConnexionManager] Did authorize with parameters: \(parameters)")
             loginView.isLogged = true
-            loginView.performSegueWithIdentifier("loginSegue", sender: nil)
+            loginView.performSegueWithIdentifier("storeitSynchDirSegue", sender: nil)
         }
         oauth2.onFailure = { error in
             if let error = error {

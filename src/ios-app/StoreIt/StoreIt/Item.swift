@@ -10,6 +10,7 @@ import UIKit
 
 class Item: UITableViewCell {
 
+    @IBOutlet weak var test2: UILabel!
     @IBOutlet weak var test: UILabel!
     
 }

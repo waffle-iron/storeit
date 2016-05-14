@@ -18,7 +18,7 @@ class LoginView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         managers.networkManager = NetworkManager(host: "localhost", port: 8001);
-        managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/aaa/") // Path to synch dir
+        managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -35,8 +35,17 @@ class LoginView: UIViewController {
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let listView = (segue.destinationViewController as! ListView)
-        listView.managers = self.managers
+        let listView = (segue.destinationViewController as! StoreItSynchDirectoryView)
+        
+        let allItems : [String: File] = (self.managers.fileManager?.getSyncDirTree())!
+        let currentItems : [String] = Array(allItems.keys)
+         
+        listView.lastDir = allItems
+        listView.currentDir = allItems
+        listView.items = currentItems
+        listView.navigationItem.title = "StoreIt"
+        
+        //listView.managers = self.managers
     }
     
     @IBAction func login(sender: AnyObject) {
@@ -45,7 +54,7 @@ class LoginView: UIViewController {
             managers.connexionManager = ConnexionManager(connexionType: ConnexionType.GOOGLE)
         }
         
-        managers.connexionManager?.forgetTokens() // forget tokens to display authorization screen
+        //managers.connexionManager?.forgetTokens() // forget tokens to display authorization screen
         managers.connexionManager?.authorize(self)
     }
 

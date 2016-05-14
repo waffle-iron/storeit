@@ -28,6 +28,11 @@ class FileManager {
         let url: NSURL = NSURL(fileURLWithPath: path)
         self.rootDirPath = url.lastPathComponent!
         self.absoluteRootDirPath = url.path!
+        
+    }
+    
+    func getSyncDirTree() -> [String: File] {
+        return self.buildTree("demo/")
     }
     
     // Build recursively the tree of the root directory into a dictionnary
