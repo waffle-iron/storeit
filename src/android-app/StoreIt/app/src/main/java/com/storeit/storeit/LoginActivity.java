@@ -17,6 +17,7 @@ import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.SignInButton;
 import com.storeit.storeit.protocol.LoginHandler;
 import com.storeit.storeit.protocol.StoreitFile;
 
@@ -48,7 +49,6 @@ public class LoginActivity extends Activity implements LoginHandler {
         } else{
             new GetUsernameTask(LoginActivity.this, mEmail, SCOPE).execute();
         }
-
     }
 
     public void tokenReceived(String token){
@@ -175,7 +175,8 @@ public class LoginActivity extends Activity implements LoginHandler {
         final EditText password = (EditText) findViewById(R.id.login_input_password);
         Button btn = (Button) findViewById(R.id.login_btn);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        SignInButton button = (SignInButton)findViewById(R.id.google_login);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

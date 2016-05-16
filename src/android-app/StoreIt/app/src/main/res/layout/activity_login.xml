@@ -50,7 +50,15 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="Login with Google+"/>
+            android:text="Login"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"/>
 
         <TextView android:id="@+id/link_signup"
             android:layout_width="fill_parent"
@@ -59,13 +67,6 @@
             android:text="No account yet?\nCreate one"
             android:gravity="center"
             android:textSize="16dip"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_setting_dark" />
 
     </LinearLayout>
 </ScrollView>
