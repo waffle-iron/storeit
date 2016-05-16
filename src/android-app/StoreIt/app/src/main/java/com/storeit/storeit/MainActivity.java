@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     static int FILE_CODE_RESULT = 1005;
+
+    static final int HOME_FRAGMENT = 1, FILES_FRAGMENT = 2, ACCOUNT_FRAGMENT = 3, SETTINGS_FRAGMENT = 4;
 
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
@@ -80,10 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
                     Drawer.closeDrawers();
-                    Toast.makeText(MainActivity.this,"The Item Clicked is: "+recyclerView.getChildPosition(child),Toast.LENGTH_SHORT).show();
-
+                    onTouchDrawer(recyclerView.getChildLayoutPosition(child));
                     return true;
-
                 }
 
                 return false;
@@ -139,6 +139,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(i, FILE_CODE_RESULT);
             }
         });
+    }
+
+    public void onTouchDrawer(final int position){
+
+        switch (position)
+        {
+            case HOME_FRAGMENT:
+                openFragment(new HomeFragment());
+                break;
+            case FILES_FRAGMENT:
+                break;
+            case ACCOUNT_FRAGMENT:
+                break;
+            case SETTINGS_FRAGMENT:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void openFragment(final Fragment fragment){
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_container,fragment);
+        ft.commit();
     }
 
     @Override
