@@ -31,18 +31,13 @@ public class GetUsernameTask extends AsyncTask<Void, Void, Void> {
         try {
             String token = fetchToken();
             if (token != null) {
-                // **Insert the good stuff here.**
-                // Use the token to access the user's Google data.
-                //...
-
                 Log.v("GetUsernameTask", "token : " + token);
+
+                LoginActivity activity = (LoginActivity)mActivity;
+                activity.tokenReceived(token);
 
             }
         } catch (IOException e) {
-            // The fetchToken() method handles Google-specific exceptions,
-            // so this indicates something went wrong at a higher level.
-            // TIP: Check for network connectivity before starting the AsyncTask.
-            //...
         }
         return null;
     }

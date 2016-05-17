@@ -4,27 +4,20 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.SignInButton;
 import com.storeit.storeit.protocol.LoginHandler;
 import com.storeit.storeit.protocol.StoreitFile;
 
@@ -56,7 +49,17 @@ public class LoginActivity extends Activity implements LoginHandler {
         } else{
             new GetUsernameTask(LoginActivity.this, mEmail, SCOPE).execute();
         }
+    }
 
+    public void tokenReceived(String token){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     public void handleException(final Exception e) {
@@ -172,7 +175,8 @@ public class LoginActivity extends Activity implements LoginHandler {
         final EditText password = (EditText) findViewById(R.id.login_input_password);
         Button btn = (Button) findViewById(R.id.login_btn);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        SignInButton button = (SignInButton)findViewById(R.id.google_login);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -215,7 +219,7 @@ public class LoginActivity extends Activity implements LoginHandler {
             success = Integer.parseInt(tokens[1]);
 
         if (success == 1) {
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
