@@ -1,5 +1,6 @@
 var fs = require('fs')
   path = require('path')
+var log = require('../common/log.js')
 
 function mkdirUser() {
   fs.mkdir(exports.store_dir, function(err) {

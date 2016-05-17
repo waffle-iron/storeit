@@ -1,6 +1,7 @@
 var commander = require('commander')
 var userfile = require('./user-file.js')
 var ws = require('./ws.js')
+var log = require('../common/log.js')
 
 commander
   .version('0.0.1')
@@ -12,4 +13,3 @@ if (commander.store) {
 } else {
   userfile.store_dir = "./storeit"
 }
-//ws.send_cmd('JOIN foobar')

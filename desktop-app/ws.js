@@ -1,5 +1,6 @@
 var WebSocket = require("ws")
 const userfile = require('./user-file.js')
+const log = require('../common/log.js')
 
 var reco_time = 1
 var server_coo = 'ws://localhost:7641'
@@ -9,7 +10,7 @@ function co() {
   ws = new WebSocket(server_coo)
 
 ws.on('error', function(error) {
-    console.log("server is not reachable. attempting to reconnect in " + reco_time + " seconds")
+    log.error("server is not reachable. attempting to reconnect in " + reco_time + " seconds")
     setTimeout(co, reco_time++ * 1000)
 });
 
