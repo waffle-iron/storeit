@@ -81,7 +81,6 @@
 		853AD0491C99A8230036A7FF /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		853AD04B1C99A8400036A7FF /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		853B29001CD8B33000742F8D /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
-		85588BFF1CD7687300BDE41F /* StoreIt-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StoreIt-Bridging-Header.h"; sourceTree = "<group>"; };
 		856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2017_logo_storeit.png; sourceTree = "<group>"; };
 		856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDataManagers.swift; sourceTree = "<group>"; };
 		8579872F1CDCBE300062B8F8 /* OAuth2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2.swift; sourceTree = "<group>"; };
@@ -136,7 +135,6 @@
 		8500F6D11C970F1C00C69875 = {
 			isa = PBXGroup;
 			children = (
-				85588BFF1CD7687300BDE41F /* StoreIt-Bridging-Header.h */,
 				85074AAB1CA1A76100047CB5 /* resources */,
 				8500F6DC1C970F1C00C69875 /* StoreIt */,
 				8500F6F11C970F1C00C69875 /* StoreItTests */,
@@ -595,7 +593,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.storeit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "StoreIt-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -610,7 +607,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.storeit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "StoreIt-Bridging-Header.h";
 			};
 			name = Release;
 		};
