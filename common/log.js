@@ -2,7 +2,7 @@ var winston = require('../desktop-app/node_modules/winston');
 
 var logger = new (winston.Logger)({
   transports: [
-    new (winston.transports.Console)({ json: false, timestamp: false, colorize: 'all' }),
+    new (winston.transports.Console)({ json: false, timestamp: false, colorize: 'all'}),
     //new winston.transports.File({ filename: __dirname + '/debug.log', json: false })
   ],
   exceptionHandlers: [
@@ -13,4 +13,3 @@ var logger = new (winston.Logger)({
 });
 
 module.exports = logger;
-
