@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
 
         }; // Drawer Toggle Object Made
         Drawer.addDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
-        mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
+        mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
         FloatingActionButton fbtn = (FloatingActionButton)findViewById(R.id.add_file_button);
         assert fbtn != null;
@@ -139,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(i, FILE_CODE_RESULT);
             }
         });
+
+        openFragment(new HomeFragment());
     }
 
     public void onTouchDrawer(final int position){
