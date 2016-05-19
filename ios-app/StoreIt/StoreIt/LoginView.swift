@@ -37,21 +37,18 @@ class LoginView: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let listView = (segue.destinationViewController as! StoreItSynchDirectoryView)
         
-        let allItems : [String: File] = (self.managers.fileManager?.getSyncDirTree())!
-        let currentItems : [String] = Array(allItems.keys)
-         
-        listView.lastDir = allItems
-        listView.currentDir = allItems
-        listView.items = currentItems
-        listView.navigationItem.title = "StoreIt"
-        
-        //listView.managers = self.managers
+        listView.navigationItem.title = self.managers.navigationManager!.rootDirTitle
+        listView.managers = self.managers
     }
     
     @IBAction func login(sender: AnyObject) {
         
         if (managers.connexionManager == nil) {
             managers.connexionManager = ConnexionManager(connexionType: ConnexionType.GOOGLE)
+        }
+        
+        if (managers.navigationManager == nil) {
+            managers.navigationManager = NavigationManager(rootDirTitle: "StoreIt", allItems: (self.managers.fileManager?.getSyncDirTree())!)
         }
         
         //managers.connexionManager?.forgetTokens() // forget tokens to display authorization screen

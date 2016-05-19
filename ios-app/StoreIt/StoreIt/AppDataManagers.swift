@@ -12,4 +12,5 @@ struct AppDataManagers {
     var networkManager: NetworkManager? = nil
     var connexionManager: ConnexionManager? = nil
     var fileManager: FileManager? = nil
+    var navigationManager: NavigationManager? = nil
 }
