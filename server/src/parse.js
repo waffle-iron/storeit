@@ -1,22 +1,20 @@
-const log = require('../../common/log.js')
-const S = require('string')
+import * as log from '../../common/log.js'
+import * as S from 'string'
 
-function parse(msg) {
-  const msg_arr = S(msg).splitLeft(' ', 1)
-
-  var hmap = {
-    'JOIN': join
-  }
-
-  const cmd = msg_arr.shift()
-  // TODO: catch the goddam exception
-  hmap[cmd](msg_arr[0])
-}
-
-function join(arg) {
+const join = function(arg) {
 
   const args = S(arg).splitLeft(' ', 2)
   log.info('join with parameters ' + args[1])
 }
 
-exports.parse = parse
+export const parse = function(msg) {
+  const msgArr = S(msg).splitLeft(' ', 1)
+
+  const hmap = {
+    'JOIN': join
+  }
+
+  const cmd = msgArr.shift()
+  // TODO: catch the goddam exception
+  hmap[cmd](msgArr[0])
+}

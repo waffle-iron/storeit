@@ -1,24 +1,32 @@
-var WebSocketServer = require('ws').Server
-var wss = WebSocketServer({ port: 7641 })
-var log = require('../../common/log.js')
-var proto = require('./parse.js')
+import * as ws from 'ws'
+import * as log from '../../common/log.js'
+import * as proto from './parse.js'
 
-var ClientStatus = {
+const PORT = 7641
+
+const wss = ws.Server({port: PORT})
+
+const ClientStatus = {
   LOGGED: 1,
   UNLOGGED: 2
 }
 
-function Client(ws) {
-  this.ws = ws
+class Client {
 
-  ws.on('message', function(mess) {
-    proto.parse(mess)
-  })
+  constructor(ws) {
+    this.ws = ws
+
+    ws.on('message', (mess) => {
+      proto.parse(mess)
+    })
+  }
 }
 
-var clients = []
+let clients = []
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', (ws) => {
   clients.push(new Client(ws))
   log.info(clients)
-});
+})
+
+log.info(`listening on ${PORT}`)
