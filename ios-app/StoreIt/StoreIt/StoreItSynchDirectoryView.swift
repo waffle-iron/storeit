@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var list: UITableView!
     
@@ -25,7 +25,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         self.list.delegate = self
         self.list.dataSource = self
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: nil)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(uploadFile))
         
         // if we're at root dir, we can't go back to login view with back navigation controller button
         if (self.navigationItem.title == managers?.navigationManager!.rootDirTitle) {
@@ -33,6 +33,42 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         } else {
             self.navigationItem.hidesBackButton = false
         }
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+        print("Image as been picked: \(image)")
+        self.dismissViewControllerAnimated(true, completion: nil);
+    }
+    
+    // clean this function !!
+    func uploadFile() {
+        let actionSheet = UIAlertController(title: "Importer un fichier", message: "Importez une photo ou une vidéo depuis votre appareil ou prenez une photo ou une vidéo directement avec celui-ci", preferredStyle: .ActionSheet)
+
+        let cancelActionButton = UIAlertAction(title: "Annuler", style: .Cancel) { action -> Void in
+            print("Annuler")
+        }
+        
+        let uploadFromLibrary = UIAlertAction(title: "Depuis mes photos et vidéos", style: .Default) { action -> Void in
+            if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)) {
+                let imagePicker = UIImagePickerController()
+                
+                imagePicker.delegate = self
+                imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+                imagePicker.allowsEditing = false
+                
+                self.presentViewController(imagePicker, animated: true, completion: nil)
+            }
+        }
+        
+        let uploadFromCamera = UIAlertAction(title: "Depuis l'appareil photo", style: .Default) { action -> Void in
+            print("Upload from Caméra")
+        }
+        
+        actionSheet.addAction(cancelActionButton)
+        actionSheet.addAction(uploadFromLibrary)
+        actionSheet.addAction(uploadFromCamera)
+        
+        self.presentViewController(actionSheet, animated: true, completion: nil)
     }
     
     // function triggered when back button of navigation bar is pressed
@@ -49,7 +85,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     }
     
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        return false // segues triggered manually
+        return false // segues are triggered manually
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
