@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 openFragment(new HomeFragment());
                 break;
             case FILES_FRAGMENT:
+                openFragment(new FileViewerFragment());
                 break;
             case ACCOUNT_FRAGMENT:
                 break;
