@@ -8,11 +8,15 @@
 
 import UIKit
 
+// TODO: separate file functions with markdowns (how to ?)
+// TODO: maybe import interface texts from a file for different languages ?
+
 class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var list: UITableView!
     
     var managers: AppDataManagers?
+    var alertControllerManager = AlertControllerManager(title: "Importer un fichier", message: nil)
     
     enum CellIdentifiers: String {
         case Directory = "directoryCell"
@@ -25,7 +29,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         self.list.delegate = self
         self.list.dataSource = self
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(uploadFile))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(uploadOptions))
         
         // if we're at root dir, we can't go back to login view with back navigation controller button
         if (self.navigationItem.title == managers?.navigationManager!.rootDirTitle) {
@@ -33,42 +37,8 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         } else {
             self.navigationItem.hidesBackButton = false
         }
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        print("Image as been picked: \(image)")
-        self.dismissViewControllerAnimated(true, completion: nil);
-    }
-    
-    // clean this function !!
-    func uploadFile() {
-        let actionSheet = UIAlertController(title: "Importer un fichier", message: "Importez une photo ou une vidéo depuis votre appareil ou prenez une photo ou une vidéo directement avec celui-ci", preferredStyle: .ActionSheet)
-
-        let cancelActionButton = UIAlertAction(title: "Annuler", style: .Cancel) { action -> Void in
-            print("Annuler")
-        }
         
-        let uploadFromLibrary = UIAlertAction(title: "Depuis mes photos et vidéos", style: .Default) { action -> Void in
-            if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)) {
-                let imagePicker = UIImagePickerController()
-                
-                imagePicker.delegate = self
-                imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-                imagePicker.allowsEditing = false
-                
-                self.presentViewController(imagePicker, animated: true, completion: nil)
-            }
-        }
-        
-        let uploadFromCamera = UIAlertAction(title: "Depuis l'appareil photo", style: .Default) { action -> Void in
-            print("Upload from Caméra")
-        }
-        
-        actionSheet.addAction(cancelActionButton)
-        actionSheet.addAction(uploadFromLibrary)
-        actionSheet.addAction(uploadFromCamera)
-        
-        self.presentViewController(actionSheet, animated: true, completion: nil)
+        self.addActionsToActionSheet()
     }
     
     // function triggered when back button of navigation bar is pressed
@@ -150,10 +120,42 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
                 cell.itemName.text = "\(items[indexPath.row])"
             	return cell
         	default:
-                return UITableViewCell() // TODO: create some kind of default cell
+                // TODO: create some kind of default cell
+                return UITableViewCell()
             }
     }
     
     /* ** */
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+        print("Image as been picked: \(image)") // Do some funny stuff here with ipfs
+        self.dismissViewControllerAnimated(true, completion: nil);
+    }
+    
+    func pickImageFromLibrary(action: UIAlertAction) -> Void {
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)) {
+            let imagePicker = UIImagePickerController()
+            
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            imagePicker.allowsEditing = false
+            
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func takeImageWithCamera(action: UIAlertAction) -> Void {
+        // TODO: take image with camera
+    }
+    
+    func addActionsToActionSheet() {
+        self.alertControllerManager.addActionToUploadActionSheet("Annuler", style: .Cancel, handler: nil)
+        self.alertControllerManager.addActionToUploadActionSheet("Depuis mes photos et vidéos", style: .Default, handler: pickImageFromLibrary)
+        self.alertControllerManager.addActionToUploadActionSheet("Depuis l'appareil photo", style: .Default, handler: takeImageWithCamera)
+    }
+    
+    func uploadOptions() {
+        self.presentViewController(self.alertControllerManager.uploadActionSheet, animated: true, completion: nil)
+    }
 }
