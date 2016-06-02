@@ -7,7 +7,7 @@ html, body {
 }
 
 #header {
-  background-color: #AACCD6;
+  background-color: #79B1C2;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -20,7 +20,7 @@ html, body {
   padding-top: 20px;
 }
 
-#container files-view {
+#container file-explorer {
   display:flex;
   height: 100%;
   flex-basis:0%;

@@ -3,17 +3,19 @@ import angular from 'angular'
 import {html} from './app.jade!'
 import './app.css!'
 
-import components from './core/components.js'
+import auth from './auth/auth_module.js'
+import fileExplorer from './file_explorer/file_explorer_module.js'
 
 const DEPENDENCIES = [
-  components,
+  auth,
+  fileExplorer,
 ]
 
 let appComponent = {
   template: html,
   $routeConfig: [
     {path: '/auth', name: 'Auth', component: 'auth', useAsDefault: true},
-    {path: '/files', name: 'Files', component: 'filesView'},
+    {path: '/files', name: 'FileExplorer', component: 'fileExplorer'},
   ],
 }
 

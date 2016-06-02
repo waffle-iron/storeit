@@ -14,8 +14,10 @@ let coreConfig = ($locationProvider) => {
   $locationProvider.html5Mode(false) // TODO
 }
 
-let run = () => {
+let run = ($rootScope) => {
   'ngInject'
+  /* eslint no-unused-vars:"off" */
+  // Promise.setScheduler(cb => $rootScope.$evalAsync(cb)) // FIXME
 }
 
 const DEPENDENCIES = [
