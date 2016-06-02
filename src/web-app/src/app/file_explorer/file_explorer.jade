@@ -1,12 +1,20 @@
 div(layout="row" flex)
   md-sidenav.md-whiteframe-4dp(md-is-locked-open="true" flex)
-    md-toolbar#files-tree
-      h1.md-toolbar-tools My Files
+    md-toolbar#files-tree(layout="column" layout-align="center center")
+      .md-toolbar-tools
+        md-button.md-raised(
+          flex layout="row" layout-align="center center"
+          ng-click="vm.oauth('facebook')"
+        )
+          | Import new file
     md-list
-      md-list-item(ng-repeat="folder in vm.path" ng-if="folder.path")
-        p {{folder.path}}
-      md-list-item
-        p {{vm.cwd.path}}
+      md-list-item(
+        ng-repeat="folder in vm.cwd.files"
+        ng-if="folder.kind === 'dir'"
+      )
+        p
+          md-icon(md-font-set="material-icons") folder
+          | {{folder.path}}
   md-content#content(flex)
     md-list
       md-list-item(ng-if="vm.path.length" ng-click="vm.parent()")

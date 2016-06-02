@@ -7,12 +7,9 @@ SystemJS.config({
       "meta": {
         "*.js": {
           "loader": "plugin-babel",
-          babelOptions: {
-            plugins: [
-              ["transform-async-to-module-method", {
-                "module": "bluebird",
-                "method": "coroutine"
-              }]
+          "babelOptions": {
+            "plugins": [
+              ["babel-plugin-transform-async-to-module-method"]
             ]
           }
         }
@@ -34,6 +31,7 @@ SystemJS.config({
     "angular-material": "github:angular/bower-material@1.0.8",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "babel-plugin-transform-async-to-module-method": "npm:babel-plugin-transform-async-to-module-method@6.8.0",
+    "bluebird": "npm:bluebird@3.4.0",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "connect-livereload": "npm:connect-livereload@0.5.4",
@@ -66,7 +64,7 @@ SystemJS.config({
   packages: {
     "npm:babel-code-frame@6.8.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1",
+        "babel-runtime": "npm:babel-runtime@6.9.0",
         "chalk": "npm:chalk@1.1.3",
         "esutils": "npm:esutils@2.0.2",
         "js-tokens": "npm:js-tokens@1.0.3"
@@ -75,85 +73,84 @@ SystemJS.config({
     "npm:babel-helper-function-name@6.8.0": {
       "map": {
         "babel-helper-get-function-arity": "npm:babel-helper-get-function-arity@6.8.0",
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-template": "npm:babel-template@6.8.0",
-        "babel-traverse": "npm:babel-traverse@6.8.0",
-        "babel-types": "npm:babel-types@6.8.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-template": "npm:babel-template@6.9.0",
+        "babel-traverse": "npm:babel-traverse@6.9.0",
+        "babel-types": "npm:babel-types@6.9.0"
       }
     },
     "npm:babel-helper-get-function-arity@6.8.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-types": "npm:babel-types@6.8.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-types": "npm:babel-types@6.9.0"
       }
     },
     "npm:babel-helper-remap-async-to-generator@6.8.0": {
       "map": {
         "babel-helper-function-name": "npm:babel-helper-function-name@6.8.0",
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-template": "npm:babel-template@6.8.0",
-        "babel-traverse": "npm:babel-traverse@6.8.0",
-        "babel-types": "npm:babel-types@6.8.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-template": "npm:babel-template@6.9.0",
+        "babel-traverse": "npm:babel-traverse@6.9.0",
+        "babel-types": "npm:babel-types@6.9.0"
       }
     },
     "npm:babel-messages@6.8.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0"
       }
     },
     "npm:babel-plugin-syntax-async-functions@6.8.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0"
       }
     },
     "npm:babel-plugin-transform-async-to-module-method@6.8.0": {
       "map": {
         "babel-helper-remap-async-to-generator": "npm:babel-helper-remap-async-to-generator@6.8.0",
         "babel-plugin-syntax-async-functions": "npm:babel-plugin-syntax-async-functions@6.8.0",
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-types": "npm:babel-types@6.8.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-types": "npm:babel-types@6.9.0"
       }
     },
-    "npm:babel-runtime@6.6.1": {
+    "npm:babel-runtime@6.9.0": {
       "map": {
         "core-js": "npm:core-js@2.4.0"
       }
     },
-    "npm:babel-template@6.8.0": {
+    "npm:babel-template@6.9.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-traverse": "npm:babel-traverse@6.8.0",
-        "babel-types": "npm:babel-types@6.8.1",
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-traverse": "npm:babel-traverse@6.9.0",
+        "babel-types": "npm:babel-types@6.9.0",
         "babylon": "npm:babylon@6.8.0",
-        "lodash": "npm:lodash@3.10.1"
+        "lodash": "npm:lodash@4.13.1"
       }
     },
-    "npm:babel-traverse@6.8.0": {
+    "npm:babel-traverse@6.9.0": {
       "map": {
         "babel-code-frame": "npm:babel-code-frame@6.8.0",
         "babel-messages": "npm:babel-messages@6.8.0",
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-types": "npm:babel-types@6.8.1",
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-types": "npm:babel-types@6.9.0",
         "babylon": "npm:babylon@6.8.0",
         "debug": "npm:debug@2.2.0",
         "globals": "npm:globals@8.18.0",
         "invariant": "npm:invariant@2.2.1",
-        "lodash": "npm:lodash@3.10.1",
-        "repeating": "npm:repeating@1.1.3"
+        "lodash": "npm:lodash@4.13.1"
       }
     },
-    "npm:babel-types@6.8.1": {
+    "npm:babel-types@6.9.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1",
-        "babel-traverse": "npm:babel-traverse@6.8.0",
+        "babel-runtime": "npm:babel-runtime@6.9.0",
+        "babel-traverse": "npm:babel-traverse@6.9.0",
         "esutils": "npm:esutils@2.0.2",
-        "lodash": "npm:lodash@3.10.1",
+        "lodash": "npm:lodash@4.13.1",
         "to-fast-properties": "npm:to-fast-properties@1.0.2"
       }
     },
     "npm:babylon@6.8.0": {
       "map": {
-        "babel-runtime": "npm:babel-runtime@6.6.1"
+        "babel-runtime": "npm:babel-runtime@6.9.0"
       }
     },
     "npm:chalk@1.1.3": {
@@ -172,22 +169,23 @@ SystemJS.config({
     },
     "npm:invariant@2.2.1": {
       "map": {
-        "loose-envify": "npm:loose-envify@1.1.0"
+        "loose-envify": "npm:loose-envify@1.2.0"
       }
     },
-    "npm:is-finite@1.0.1": {
-      "map": {
-        "number-is-nan": "npm:number-is-nan@1.0.0"
-      }
-    },
-    "npm:loose-envify@1.1.0": {
+    "npm:loose-envify@1.2.0": {
       "map": {
         "js-tokens": "npm:js-tokens@1.0.3"
       }
     },
-    "npm:repeating@1.1.3": {
+    "npm:readable-stream@2.1.4": {
       "map": {
-        "is-finite": "npm:is-finite@1.0.1"
+        "buffer-shims": "npm:buffer-shims@1.0.0",
+        "core-util-is": "npm:core-util-is@1.0.2",
+        "inherits": "npm:inherits@2.0.1",
+        "isarray": "npm:isarray@1.0.0",
+        "process-nextick-args": "npm:process-nextick-args@1.0.7",
+        "string_decoder": "npm:string_decoder@0.10.31",
+        "util-deprecate": "npm:util-deprecate@1.0.2"
       }
     },
     "npm:strip-ansi@3.0.1": {
@@ -625,16 +623,6 @@ SystemJS.config({
         "randombytes": "npm:randombytes@2.0.3"
       }
     },
-    "npm:readable-stream@2.1.2": {
-      "map": {
-        "core-util-is": "npm:core-util-is@1.0.2",
-        "inherits": "npm:inherits@2.0.1",
-        "isarray": "npm:isarray@1.0.0",
-        "process-nextick-args": "npm:process-nextick-args@1.0.7",
-        "string_decoder": "npm:string_decoder@0.10.31",
-        "util-deprecate": "npm:util-deprecate@1.0.2"
-      }
-    },
     "npm:send@0.13.1": {
       "map": {
         "debug": "npm:debug@2.2.0",
@@ -666,14 +654,14 @@ SystemJS.config({
     "npm:stream-browserify@2.0.1": {
       "map": {
         "inherits": "npm:inherits@2.0.1",
-        "readable-stream": "npm:readable-stream@2.1.2"
+        "readable-stream": "npm:readable-stream@2.1.4"
       }
     },
     "npm:stream-http@2.3.0": {
       "map": {
         "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
         "inherits": "npm:inherits@2.0.1",
-        "readable-stream": "npm:readable-stream@2.1.2",
+        "readable-stream": "npm:readable-stream@2.1.4",
         "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
         "xtend": "npm:xtend@4.0.1"
       }

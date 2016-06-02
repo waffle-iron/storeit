@@ -7,6 +7,7 @@ export default class FileExplorerController {
       .then((files) => {
         console.log(files)
         this.path = []
+        this.root = {files}
         this.cwd = {files}
         this.scope.$apply()
       })
