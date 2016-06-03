@@ -7,7 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +28,7 @@ public class FileViewerFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
+    RecyclerView explorersRecyclerView;
 
     public FileViewerFragment() {
 
@@ -52,8 +56,6 @@ public class FileViewerFragment extends Fragment {
             mParam2 = "param2";
 
         }
-
-
     }
 
     @Override
@@ -62,16 +64,49 @@ public class FileViewerFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_file_viewer, container, false);
 
-        RecyclerView explorersRecyclerView = (RecyclerView)rootView.findViewById(R.id.explorer_recycler_view);
+        explorersRecyclerView = (RecyclerView)rootView.findViewById(R.id.explorer_recycler_view);
         explorersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
         FilesManager manager = new FilesManager(getContext());
         StoreitFile file = manager.makeTree();
 
-        ExplorerAdapter adapter = new ExplorerAdapter(file, getContext());
+        final ExplorerAdapter adapter = new ExplorerAdapter(file, getContext());
         explorersRecyclerView.setAdapter(adapter);
         explorersRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+
+        final GestureDetector mGestureDetector = new GestureDetector(rootView.getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
+
+
+        explorersRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+                View child = explorersRecyclerView.findChildViewUnder(e.getX(), e.getY());
+                if(child!=null && mGestureDetector.onTouchEvent(e)) {
+                    Log.v("FILE_FRAGMENT", "file fragment clicked : " + explorersRecyclerView.getChildLayoutPosition(child));
+                    adapter.fileClicked(explorersRecyclerView.getChildLayoutPosition(child));
+                    return  true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
         return rootView;
     }

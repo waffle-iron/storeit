@@ -52,6 +52,18 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
         this.context = passedContext;
     }
 
+    public void fileClicked(int position){
+
+        ArrayList<StoreitFile> files = new ArrayList<>();
+
+        for (Map.Entry<String, StoreitFile> entry : mFiles[position].getFiles().entrySet()) { // list all files from current folder
+            files.add(entry.getValue());
+        }
+        mFiles = files.toArray(new StoreitFile[files.size()]); // Store file list
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public ExplorerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_item_row, parent, false);
@@ -66,7 +78,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
         } else { // File, we use file icon
             holder.fileTypeImageView.setImageResource(R.drawable.ic_insert_drive_file_black_24dp);
         }
-
     }
 
     @Override
