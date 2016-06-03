@@ -1,0 +1,18 @@
+#StoreIt server
+
+##Install
+
+```
+npm install
+npm start
+```
+
+##Development
+```
+npm run dev
+```
+
+##Testing
+```
+npm test
+```
