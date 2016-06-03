@@ -146,7 +146,15 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     }
     
     func takeImageWithCamera(action: UIAlertAction) -> Void {
-        // TODO: take image with camera
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
+            let camera = UIImagePickerController()
+            
+            camera.allowsEditing = false
+            camera.sourceType = UIImagePickerControllerSourceType.Camera
+            camera.delegate = self
+            
+            self.presentViewController(camera, animated: true, completion: nil)
+        }
     }
     
     func addActionsToActionSheet() {
