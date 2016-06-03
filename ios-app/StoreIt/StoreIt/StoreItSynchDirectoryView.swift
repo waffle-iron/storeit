@@ -54,6 +54,8 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: segues management
+    
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         return false // segues are triggered manually
     }
@@ -76,25 +78,8 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
             fileView.navigationItem.title = self.managers?.navigationManager!.getTargetName(target!)
         }
     }
-    
-    // Function triggered when a cell is selected
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-         let selectedFile: File = (managers?.navigationManager!.getSelectedFileAtRow(indexPath))!
-         let fileType: FileType = (managers?.navigationManager!.getSelectedFileTypeAtRow(indexPath))!
-         
-         switch fileType {
-             case .RegularFile:
-                self.performSegueWithIdentifier("showFileSegue", sender: selectedFile)
-             	break
-             case .Directory:
-             	self.performSegueWithIdentifier("nextDirSegue", sender: selectedFile)
-             default:
-             	break
-         }
-     
-     }
 
-	/* Creation of table cells */
+	// MARK: Creation and management of table cells
     
    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (managers?.navigationManager!.items.count)!
@@ -102,6 +87,23 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         return createItemCellAtIndexPath(indexPath)
+    }
+    
+    // Function triggered when a cell is selected
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let selectedFile: File = (managers?.navigationManager!.getSelectedFileAtRow(indexPath))!
+        let fileType: FileType = (managers?.navigationManager!.getSelectedFileTypeAtRow(indexPath))!
+        
+        switch fileType {
+        case .RegularFile:
+            self.performSegueWithIdentifier("showFileSegue", sender: selectedFile)
+            break
+        case .Directory:
+            self.performSegueWithIdentifier("nextDirSegue", sender: selectedFile)
+        default:
+            break
+        }
+        
     }
     
     // Return a specific type of cell regarding the type of File object (directory, file...)
@@ -125,7 +127,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
             }
     }
     
-    /* ** */
+    // MARK: Action sheet creation and management
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
         print("Image as been picked: \(image)") // Do some funny stuff here with ipfs
@@ -144,7 +146,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         }
         
     }
-    
+
     func takeImageWithCamera(action: UIAlertAction) -> Void {
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
             let camera = UIImagePickerController()
