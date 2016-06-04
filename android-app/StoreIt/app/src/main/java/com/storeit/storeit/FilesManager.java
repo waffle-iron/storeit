@@ -46,7 +46,7 @@ public class FilesManager {
         }
     }
 
-    private String toLocalPath(String path){
+    public String toLocalPath(String path){
         return path.replace(mDataDir.getPath(), ".");
     }
 

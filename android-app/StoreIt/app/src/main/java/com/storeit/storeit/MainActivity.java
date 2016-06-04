@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -141,17 +141,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         openFragment(new HomeFragment());
+        ActionBar bar = getSupportActionBar();
+        if (bar != null)
+            bar.setTitle("Home");
     }
 
     public void onTouchDrawer(final int position){
+
+        ActionBar actionBar = getSupportActionBar();
 
         switch (position)
         {
             case HOME_FRAGMENT:
                 openFragment(new HomeFragment());
+                if (actionBar != null)
+                    actionBar.setTitle("Home");
                 break;
             case FILES_FRAGMENT:
                 openFragment(new FileViewerFragment());
+                if (actionBar != null)
+                    actionBar.setTitle("My Files");
                 break;
             case ACCOUNT_FRAGMENT:
                 break;
