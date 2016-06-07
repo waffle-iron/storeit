@@ -52,7 +52,13 @@ class LoginView: UIViewController {
         }
         
         //managers.connexionManager?.forgetTokens() // forget tokens to display authorization screen
-        managers.connexionManager?.authorize(self)
+        //managers.connexionManager?.authorize(self)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let rootController = appDelegate.window?.rootViewController as! UINavigationController
+        let loginView = rootController.viewControllers[0] as! LoginView
+        
+        loginView.performSegueWithIdentifier("storeitSynchDirSegue", sender: nil)
     }
 
 }
