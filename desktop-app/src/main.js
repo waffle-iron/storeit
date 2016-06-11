@@ -1,5 +1,6 @@
 import commander from 'commander'
 import * as userfile from './user-file.js'
+import './ws.js'
 
 commander
   .version('0.0.1')

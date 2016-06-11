@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws'
+import WebSocket from 'ws'
 import * as userfile from './user-file.js'
 import * as log from '../../common/log.js'
 
