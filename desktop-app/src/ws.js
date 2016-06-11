@@ -7,10 +7,12 @@ let serverCoo = 'ws://localhost:7641'
 let ws = undefined
 
 export let sendCmd = (name, params) => {
-  ws.send(name + ' ' + params)
+  const cmd = name + ' ' + params
+  log.info('sending command ' + cmd)
+  ws.send(cmd)
 }
 
-let co = () => {
+export let co = (accessToken) => {
   ws = new WebSocket(serverCoo)
 
   ws.on('error', () => {
@@ -20,7 +22,7 @@ let co = () => {
 
   ws.on('open', function open() {
     const tree = JSON.stringify(userfile.makeUserTree())
-    sendCmd('JOIN', 'fb adrien.morel@me.com ' + tree)
+    sendCmd('JOIN', 'fb adrien.morel@me.com ' + accessToken + ' ' + tree)
   })
 
   ws.on('message', (data) => {
@@ -31,5 +33,3 @@ let co = () => {
 let sendCmdArr = (name, params) => {
   sendCmd(name, params.join(' '))
 }
-
-co()
