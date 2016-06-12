@@ -1,5 +1,5 @@
 import * as ws from 'ws'
-import * as log from '../../common/log.js'
+import * as log from '../../common/src/log.js'
 import * as proto from './parse.js'
 
 const PORT = 7641
