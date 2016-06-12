@@ -1,4 +1,4 @@
-import * as log from '../../common/log.js'
+import * as log from './log.js'
 import * as S from 'string'
 
 const join = function(arg) {
