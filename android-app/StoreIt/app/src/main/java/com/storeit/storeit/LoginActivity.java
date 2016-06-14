@@ -6,8 +6,10 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -143,39 +145,35 @@ public class LoginActivity extends Activity implements LoginHandler {
     FilesManager filesManager;
     StoreitFile file;
 
+
+    class IpfsPost extends AsyncTask<Void, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            IPFS ipfs = new IPFS("toto");
+
+            byte[] array = new byte[] {'H', 'E', 'L', 'L', 'O', '!'};
+            Log.v("Main activity", ipfs.sendBytes("my_file.txt", array));
+            return null;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//        filesManager = new FilesManager(this);
-
-        /*
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://192.168.0.102:5001/api/v0/swarm/peers";
-
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.v("toto", response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v("toto", error.toString());
-            }
-        });
-
-        queue.add(stringRequest);
-        */
 
         final EditText email = (EditText) findViewById(R.id.login_input_email);
         final EditText password = (EditText) findViewById(R.id.login_input_password);
         Button btn = (Button) findViewById(R.id.login_btn);
 
         SignInButton button = (SignInButton)findViewById(R.id.google_login);
+
+        new IpfsPost().execute();
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
