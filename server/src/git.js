@@ -1,16 +1,46 @@
 import fs from 'fs'
-import * as log from './log.js'
-export let usersDir = '../users/'
+import {logger} from './log.js'
+import * as util from './util.js'
+import path from 'path'
+export let usersDir = path.resolve('./users/')
 
 // could figure out how to ES6 import this
-const git = require('simple-git')()
-
-git.addConfig('user.name', 'StoreIt server')
-.addConfig('user.email', 'admin@storeit.io')
+import git from 'nodegit'
 
 export const setUsersDir = (name) => {
   usersDir = name
 }
+
+export const copyReadme = (where, handlerFn) => {
+  fs.famzoeifjzmeoifjzmeoi()
+  console.log('hello world')
+  fs.copy(path.resolve('./ressource/readme.txt'), handlerFn)
+}
+
+const commit = (repo, filesToAdd) => {
+
+  const author = git.Signature.create('StoreIt Admin',
+  'admin@storeit.io', 123456789, 60)
+
+  return repo.createCommit(filesToAdd, author, author, 'automatic commit')
+}
+
+export const addUser = (name, handlerFn) => {
+  const userRepoPath = `${usersDir}/${name}/`
+  git.Repository.init(userRepoPath, 0).then((repo) => {
+
+    copyReadme(userRepoPath, (err) => {
+      util.logerr(err)
+      commit(repo, 'readme.txt').then(() => {
+        handlerFn(repo)
+      }).catch(util.logerr)
+    })
+  }).catch(util.logerr)
+}
+
+/*
+git.addConfig('user.name', 'StoreIt server')
+.addConfig('user.email', 'admin@storeit.io')
 
 export const addUser = (name, handlerFn) => {
 
@@ -30,3 +60,4 @@ export const addUser = (name, handlerFn) => {
     console.log(err)
   }
 }
+*/
