@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.utils;
 
 import android.content.Context;
 import android.os.Environment;

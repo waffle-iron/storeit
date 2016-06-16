@@ -1,19 +1,14 @@
-package com.storeit.storeit;
+package com.storeit.storeit.activities;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +23,10 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.storeit.storeit.utils.FilesManager;
+import com.storeit.storeit.oauth.GetUsernameTask;
+import com.storeit.storeit.R;
+import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.protocol.LoginHandler;
 import com.storeit.storeit.protocol.StoreitFile;
 

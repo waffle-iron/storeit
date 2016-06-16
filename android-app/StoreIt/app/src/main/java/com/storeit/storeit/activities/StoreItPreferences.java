@@ -1,8 +1,10 @@
-package com.storeit.storeit;
+package com.storeit.storeit.activities;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+
+import com.storeit.storeit.R;
 
 /**
  * Created by loulo on 16/06/2016.

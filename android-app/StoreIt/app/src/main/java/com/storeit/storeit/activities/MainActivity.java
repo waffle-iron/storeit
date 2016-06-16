@@ -1,12 +1,9 @@
-package com.storeit.storeit;
+package com.storeit.storeit.activities;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,9 +22,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import com.nononsenseapps.filepicker.FilePickerActivity;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import com.storeit.storeit.fragments.FileViewerFragment;
+import com.storeit.storeit.fragments.HomeFragment;
+import com.storeit.storeit.adapters.MyAdapter;
+import com.storeit.storeit.R;
+import com.storeit.storeit.ipfs.UploadAsync;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -149,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         if (bar != null)
             bar.setTitle("Home");
 
-//        new com.storeit.storeit.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
+//        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
     }
 
     public void onTouchDrawer(final int position) {

@@ -1,9 +1,12 @@
-package com.storeit.storeit;
+package com.storeit.storeit.ipfs;
 
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.NotificationCompat;
+
+import com.storeit.storeit.R;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.services;
 
 import android.app.Service;
 import android.content.Intent;

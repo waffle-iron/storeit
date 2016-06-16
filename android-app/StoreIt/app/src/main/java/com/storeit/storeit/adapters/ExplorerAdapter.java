@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.storeit.storeit.R;
 import com.storeit.storeit.protocol.StoreitFile;
 import java.util.ArrayList;
 import java.util.Map;

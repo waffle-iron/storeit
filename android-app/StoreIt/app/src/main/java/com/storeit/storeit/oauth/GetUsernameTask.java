@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.oauth;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.storeit.storeit.activities.LoginActivity;
+
 import java.io.IOException;
 
 /**

@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -14,9 +14,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.storeit.storeit.adapters.ExplorerAdapter;
+import com.storeit.storeit.utils.FilesManager;
+import com.storeit.storeit.R;
 import com.storeit.storeit.protocol.StoreitFile;
-
-import java.io.File;
 
 public class FileViewerFragment extends Fragment {
 
