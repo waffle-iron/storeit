@@ -25,13 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.nononsenseapps.filepicker.FilePickerActivity;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -152,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         if (bar != null)
             bar.setTitle("Home");
 
-//        new DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
+//        new com.storeit.storeit.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
     }
 
     public void onTouchDrawer(final int position) {
@@ -224,119 +221,9 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Uri uri = data.getData();
                 Log.v("MainActivity", "icici " + uri.toString());
-                new UploadAsync().execute(uri.getPath());
+                new UploadAsync(this).execute(uri.getPath());
 
             }
-        }
-    }
-
-    class DownloadAsync extends AsyncTask<String, Void, Boolean> {
-        private NotificationManager mNotifyManager;
-        private android.support.v4.app.NotificationCompat.Builder mBuilder;
-        private int id = 1;
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mBuilder = new NotificationCompat.Builder(MainActivity.this)
-                    .setContentTitle("StoreIt")
-                    .setContentText("Download in progress")
-                    .setSmallIcon(R.drawable.ic_insert_drive_file_black_24dp);
-            mBuilder.setProgress(0, 0, true);
-
-            mNotifyManager.notify(id, mBuilder.build());
-        }
-
-        @Override
-        protected void onPostExecute(Boolean response) {
-            if (!response) {
-                mBuilder.setContentText("Error while downloading...")
-                        .setProgress(0, 0, false);
-            } else {
-                mBuilder.setContentText("Download finished")
-                        .setProgress(0, 0, false);
-            }
-            mNotifyManager.notify(id, mBuilder.build());
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            String fileName = params[0];
-            String hash = params[1];
-            IPFS ipfs = new IPFS("toto");
-
-            File path[] = getExternalFilesDirs(null);
-            File file = new File(path[1], fileName);
-
-            FileOutputStream outputStream;
-            try {
-                outputStream = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            /*            if (!file.exists()){
-                try {
-                    if (!file.createNewFile())
-                        return false;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-            else{
-                if (!file.delete())
-                    return false;
-            }
-            */
-
-            return ipfs.downloadFile(outputStream, hash);
-        }
-    }
-
-    class UploadAsync extends AsyncTask<String, Void, String> {
-
-        private NotificationManager mNotifyManager;
-        private android.support.v4.app.NotificationCompat.Builder mBuilder;
-        private int id = 1;
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mBuilder = new NotificationCompat.Builder(MainActivity.this)
-                    .setContentTitle("StoreIt")
-                    .setContentText("Upload in progress")
-                    .setSmallIcon(R.drawable.ic_insert_drive_file_black_24dp);
-            mBuilder.setProgress(0, 0, true);
-
-            mNotifyManager.notify(id, mBuilder.build());
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-
-
-            if (response.equals("")) {
-                mBuilder.setContentText("Upload failed...")
-                        .setProgress(0, 0, false);
-            } else {
-                mBuilder.setContentText(response)
-                        .setProgress(0, 0, false);
-                Log.v("IPFS", response);
-            }
-
-            mNotifyManager.notify(id, mBuilder.build());
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String fileName = params[0];
-            IPFS ipfs = new IPFS("toto");
-            return ipfs.sendFile(new File(fileName));
         }
     }
 }
