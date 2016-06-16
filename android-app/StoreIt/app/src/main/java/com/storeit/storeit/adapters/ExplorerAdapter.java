@@ -42,7 +42,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
         }
     }
 
-    ExplorerAdapter(StoreitFile file, Context passedContext) {
+    public ExplorerAdapter(StoreitFile file, Context passedContext) {
 
         ArrayList<StoreitFile> files = new ArrayList<>();
 

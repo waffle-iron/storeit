@@ -18,7 +18,7 @@ public class GetUsernameTask extends AsyncTask<Void, Void, Void> {
     String mScope;
     String mEmail;
 
-    GetUsernameTask(Activity activity, String name, String scope) {
+    public GetUsernameTask(Activity activity, String name, String scope) {
         this.mActivity = activity;
         this.mScope = scope;
         this.mEmail = name;
