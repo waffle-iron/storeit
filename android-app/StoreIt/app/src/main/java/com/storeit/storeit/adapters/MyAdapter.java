@@ -75,7 +75,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
 
-    MyAdapter(String Titles[],int Icons[],String Name,String Email, int Profile,Context passedContext){ // MyAdapter Constructor with titles and icons parameter
+    public MyAdapter(String Titles[],int Icons[],String Name,String Email, int Profile,Context passedContext){ // MyAdapter Constructor with titles and icons parameter
         // titles, icons, name, email, profile pic are passed from the main activity as we
         mNavTitles = Titles;                //have seen earlier
         mIcons = Icons;
