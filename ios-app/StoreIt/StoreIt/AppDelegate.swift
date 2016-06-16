@@ -18,8 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        let loginView = self.window?.rootViewController as! LoginView
-        
+        let navigationController = self.window?.rootViewController as! UINavigationController
+        let loginView = navigationController.viewControllers[0] as! LoginView
+
         if (loginView.managers.connexionType != nil
             && loginView.managers.connexionType! == ConnexionType.GOOGLE) {
             loginView.managers.connexionManager?.handleRedirectUrl(url)

@@ -38,17 +38,16 @@ class OAuth2Google : OAuth2 {
     
     func onFailureOrAuthorizeAddEvents() {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let loginView =  appDelegate.window?.rootViewController as! LoginView
-        
+        let navigationController = appDelegate.window?.rootViewController as! UINavigationController
+        let loginView = navigationController.viewControllers[0] as! LoginView
+
         oauth2.onAuthorize = { parameters in
-            print("[ConnexionManager] Did authorize with parameters: \(parameters)")
-            loginView.isLogged = true
-            loginView.performSegueWithIdentifier("storeitSynchDirSegue", sender: nil)
+            //print("[ConnexionManager] Did authorize with parameters: \(parameters)")
+            loginView.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
         }
         oauth2.onFailure = { error in
             if let error = error {
                 print("[ConnexionManager] Authorization failure: \(error)")
-                loginView.isLogged = false
             }
         }
     }

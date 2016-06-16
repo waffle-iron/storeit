@@ -15,16 +15,11 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var list: UITableView!
     
     var managers: AppDataManagers?
-    var alertControllerManager = AlertControllerManager(title: "Importer un fichier", message: nil)
+    var alertControllerManager: AlertControllerManager?
     
     enum CellIdentifiers: String {
         case Directory = "directoryCell"
         case File = "fileCell"
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.tabBarItem = UITabBarItem(title: "toto", image: nil, tag: 0)
     }
     
     override func viewDidLoad() {
@@ -34,14 +29,16 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         self.list.dataSource = self
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(uploadOptions))
-        
+
         // if we're at root dir, we can't go back to login view with back navigation controller button
+        
         if (self.navigationItem.title == managers?.navigationManager!.rootDirTitle) {
             self.navigationItem.hidesBackButton = true
         } else {
             self.navigationItem.hidesBackButton = false
         }
         
+        self.alertControllerManager = AlertControllerManager(title: "Importer un fichier", message: nil)
         self.addActionsToActionSheet()
     }
     
@@ -67,7 +64,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let target: File? = sender as? File
-        
+
         if (segue.identifier == "nextDirSegue") {
         
             let listView = (segue.destinationViewController as! StoreItSynchDirectoryView)
@@ -164,12 +161,12 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     }
     
     func addActionsToActionSheet() {
-        self.alertControllerManager.addActionToUploadActionSheet("Annuler", style: .Cancel, handler: nil)
-        self.alertControllerManager.addActionToUploadActionSheet("Depuis mes photos et vidéos", style: .Default, handler: pickImageFromLibrary)
-        self.alertControllerManager.addActionToUploadActionSheet("Depuis l'appareil photo", style: .Default, handler: takeImageWithCamera)
+        self.alertControllerManager!.addActionToUploadActionSheet("Annuler", style: .Cancel, handler: nil)
+        self.alertControllerManager!.addActionToUploadActionSheet("Depuis mes photos et vidéos", style: .Default, handler: pickImageFromLibrary)
+        self.alertControllerManager!.addActionToUploadActionSheet("Depuis l'appareil photo", style: .Default, handler: takeImageWithCamera)
     }
     
     func uploadOptions() {
-        self.presentViewController(self.alertControllerManager.uploadActionSheet, animated: true, completion: nil)
+        self.presentViewController(self.alertControllerManager!.uploadActionSheet, animated: true, completion: nil)
     }
 }

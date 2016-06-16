@@ -12,7 +12,6 @@ import ObjectMapper
 class LoginView: UIViewController, FBSDKLoginButtonDelegate {
 
     var managers: AppDataManagers = AppDataManagers()
-    var isLogged: Bool = false
     
     @IBOutlet weak var FBLoginButton: FBSDKLoginButton!
     
@@ -21,18 +20,11 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         super.viewDidLoad()
         
         // TODO: If token exists, maybe move to the next view
-        
-        // log out if connected with FB - for tests/demo purpose
-        if (FBSDKAccessToken.currentAccessToken() != nil) {
-            let loginManager = FBSDKLoginManager()
-            loginManager.logOut()
+		
+        if (FBSDKAccessToken.currentAccessToken() == nil) {
+        	self.configureFacebook()
         }
-        managers.connexionManager?.forgetTokens()
-        
-        self.configureFacebook()
-        
-        managers.networkManager = NetworkManager(host: "localhost", port: 8001);
-        managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -47,6 +39,28 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         
         listView.navigationItem.title = self.managers.navigationManager!.rootDirTitle
         listView.managers = self.managers
+    }
+    
+    func moveToTabBarController() {
+        let tabBarController = self.storyboard?.instantiateViewControllerWithIdentifier("tabBarController") as! UITabBarController
+        self.presentViewController(tabBarController, animated: true, completion: nil)
+    }
+    
+    @IBAction func logoutSegue(segue: UIStoryboardSegue) {
+        if (managers.connexionType! == ConnexionType.FACEBOOK) {
+            let loginManager = FBSDKLoginManager()
+            loginManager.logOut()
+        } else if (managers.connexionType! == ConnexionType.GOOGLE) {
+            managers.connexionManager?.forgetTokens()
+        }
+        
+        // TODO: send logout request
+        
+        self.managers.connexionType = nil
+        self.managers.networkManager = nil
+        self.managers.connexionManager = nil
+        self.managers.fileManager = nil
+        self.managers.navigationManager = nil
     }
     
     // MARK: Login with Facebook
@@ -65,12 +79,18 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         }
         else {
             if result.grantedPermissions.contains("email"){
+                if (managers.networkManager == nil) {
+                    managers.networkManager = NetworkManager(host: "localhost", port: 8001);
+                }
+                
+                if (managers.fileManager == nil) {
+                	managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
+                }
+                
                 if (managers.navigationManager == nil) {
                     managers.navigationManager = NavigationManager(rootDirTitle: "StoreIt", allItems: (self.managers.fileManager?.getSyncDirTree())!)
                 }
-                
-                self.isLogged = true
-                self.performSegueWithIdentifier("storeitSynchDirSegue", sender: nil)
+                self.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
             }
         }
     }
@@ -86,9 +106,17 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     // MARK: Login with Google
     
     @IBAction func login(sender: AnyObject) {
+        if (managers.networkManager == nil) {
+            managers.networkManager = NetworkManager(host: "localhost", port: 8001);
+        }
+        
         if (managers.connexionManager == nil) {
-            self.managers.connexionType = ConnexionType.GOOGLE
+            managers.connexionType = ConnexionType.GOOGLE
             managers.connexionManager = ConnexionManager(connexionType: ConnexionType.GOOGLE)
+        }
+        
+        if (managers.fileManager == nil) {
+            managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
         }
         
         if (managers.navigationManager == nil) {
