@@ -20,7 +20,7 @@ public class FilesManager {
     private File mDataDir;
 
     public FilesManager(Context ctx) {
-        File path[] = ctx.getExternalFilesDirs(Environment.DIRECTORY_DOCUMENTS);
+        File path[] = ctx.getExternalFilesDirs(null);
 
         File storeitFolder = new File(path[1].getAbsolutePath() + "/storeit");
         if (!storeitFolder.exists()) {

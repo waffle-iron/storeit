@@ -1,8 +1,6 @@
 package com.storeit.storeit.protocol;
 
 import android.net.Uri;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

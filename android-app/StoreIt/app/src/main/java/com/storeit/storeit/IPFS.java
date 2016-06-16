@@ -3,27 +3,28 @@ package com.storeit.storeit;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.security.cert.CRL;
 
 import static java.lang.System.currentTimeMillis;
 
 /**
- * Created by loulo on 03/05/2016.
+ * IPFS gateway wrapper
+ * allows to upload files via http post request
+ * and download files via http get request
  */
 public class IPFS {
 
@@ -33,25 +34,30 @@ public class IPFS {
     private static final int CONNECT_TIMEOUT = 15000;
     private static final int READ_TIMEOUT = 10000;
 
-
+    /**
+     * @param url The url of the ipfs gateway
+     */
     public IPFS(String url){
         m_nodeUrl = url;
     }
 
-    public String sendBytes(File uploadFile){
-
+    /**
+     * @param uploadFile the file to be uploaded
+     * @return the response of the ipfs gateway or empty string if error
+     */
+    public String sendFile(File uploadFile){
         HttpURLConnection connection;
         OutputStream outputStream;
         PrintWriter writer;
         String boundary;
+        URL url;
 
-        URL url = null;
-        long start;
-
+        m_nodeUrl = "http://192.168.0.102";
 
         try {
-            url = new URL("http://192.168.0.102:5001/api/v0/add?stream-cannels=true");
+            url = new URL(m_nodeUrl + ":5001/api/v0/add?stream-cannels=true");
 
+            // Create request
             boundary = "---------------------------" + currentTimeMillis();
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(CONNECT_TIMEOUT);
@@ -67,26 +73,24 @@ public class IPFS {
             writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET),
                     true);
 
-            /*
-            curl 'http://192.168.0.102:5001/api/v0/add?stream-cannels=true'
-            -H 'content-type: multipart/form-data; boundary=a831rwxi1a3gzaorw1w2z49dlsor'
-            -H 'Connection: keep-alive'
-            \--data-binary $'--a831rwxi1a3gzaorw1w2z49dlsor\r\nContent-Type: application/octet-stream\r\nContent-Disposition: file; name="file"; filename="Hello.txt"\r\n\r\nhello--a831rwxi1a3gzaorw1w2z49dlsor--'
-            --compressed
-             */
-
+            // Content of the request
             writer.append("--").append(boundary).append(CRLF)
-                    .append("Content-Type: application/octet-stream").append(CRLF)
-                    .append("Content-Disposition : file; name=\"file\"; filename=\"" + uploadFile.getName() + "\"").append(CRLF)
-                    .append("Content-Transfer-Encoding: binary").append(CRLF)
+                    .append("Content-Type: application/octet-stream")
+                    .append(CRLF)
+                    .append("Content-Disposition : file; name=\"file\"; filename=\"")
+                    .append(uploadFile.getName())
+                    .append("\"")
+                    .append(CRLF)
+                    .append("Content-Transfer-Encoding: binary")
+                    .append(CRLF)
                     .append(CRLF);
 
             writer.flush();
             outputStream.flush();
 
-
-            try (final FileInputStream inputStream = new FileInputStream(uploadFile);) {
-                final byte[] buffer = new byte[4096];
+            // Read file and write binary
+            try (final FileInputStream inputStream = new FileInputStream(uploadFile)) {
+                final byte[] buffer = new byte[4096]; // read up to 4096 bytes each time
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
@@ -94,39 +98,62 @@ public class IPFS {
                 outputStream.flush();
             }
             writer.append(CRLF);
-
             writer.append(CRLF).append("--").append(boundary).append("--")
                     .append(CRLF);
             writer.close();
 
-            final int status = connection.getResponseCode();
-
+            int status = connection.getResponseCode();
             if (status != HttpURLConnection.HTTP_OK) {
-                Log.v("IPFS", "HTTP PAS OK");
+                Log.v("IPFS", "IPFS http error");
                 return "";
             }
 
+            // Read request response
             InputStream is = connection.getInputStream();
-
-            final ByteArrayOutputStream response = new ByteArrayOutputStream();
-            final byte[] buffer = new byte[4096];
+            ByteArrayOutputStream response = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = is.read(buffer)) != -1) {
                 response.write(buffer, 0, bytesRead);
             }
-
             return response.toString(CHARSET);
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "";
     }
 
+    public boolean downloadFile(FileOutputStream downloadFile, String hash){
 
+        HttpURLConnection connection;
+        URL url;
+
+        m_nodeUrl = "http://192.168.0.102";
+        try {
+            url = new URL(m_nodeUrl + ":8080/ipfs/" + hash);
+            connection = (HttpURLConnection)url.openConnection();
+
+            connection.setRequestMethod("GET"); // Create the get request
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK)
+                return  false;
+
+            // Get connection stream
+            InputStream is = connection.getInputStream();
+            // Byte wich will contain the response byte
+            byte[] buffer = new byte[4096];
+
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                downloadFile.write(buffer, 0, bytesRead);
+            }
+            downloadFile.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }
