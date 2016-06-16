@@ -1,17 +1,21 @@
 package com.storeit.storeit.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.UriMatcher;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.storeit.storeit.R;
 import com.storeit.storeit.utils.StoreitFile;
 
+import java.io.File;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -22,8 +26,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     private StoreitFile[] mFiles;
     private Deque<StoreitFile> historyStack = new ArrayDeque<>();
     private Context context;
-
-
+    private String storeitPath;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView fileNameTextView;
@@ -45,7 +48,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
         }
     }
 
-    public ExplorerAdapter(StoreitFile file, Context passedContext) {
+    public ExplorerAdapter(StoreitFile file, Context passedContext, String path) {
 
         ArrayList<StoreitFile> files = new ArrayList<>();
 
@@ -57,13 +60,14 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
 
         mFiles = files.toArray(new StoreitFile[files.size()]); // Store file list
         this.context = passedContext;
+        storeitPath = path;
     }
 
     public void backPressed() {
 
          if (historyStack.size() <= 1) // Check if this is not the root
             return;
-        
+
         ArrayList<StoreitFile> files = new ArrayList<>();
         historyStack.pop();
         StoreitFile parentDir = historyStack.peek();
@@ -77,10 +81,22 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
 
     public void fileClicked(int position){
 
-        ArrayList<StoreitFile> files = new ArrayList<>();
-
         if (mFiles[position].getKind() == 1) // Check if is a directory or a file
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            File file = new File(storeitPath + File.separator + mFiles[position].getPath());
+
+            String extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString());
+            String mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            intent.setDataAndType(Uri.fromFile(file), mimetype);
+
+            context.startActivity(intent);
+
             return;
+        }
+
+
+        ArrayList<StoreitFile> files = new ArrayList<>();
 
         historyStack.push(mFiles[position]);
 

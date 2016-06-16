@@ -66,11 +66,10 @@ public class FileViewerFragment extends Fragment {
         explorersRecyclerView = (RecyclerView)rootView.findViewById(R.id.explorer_recycler_view);
         explorersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         FilesManager manager = new FilesManager(getContext());
         StoreitFile file = manager.makeTree();
 
-        adapter = new ExplorerAdapter(file, getContext());
+        adapter = new ExplorerAdapter(file, getContext(), manager.getFolderPath());
         explorersRecyclerView.setAdapter(adapter);
         explorersRecyclerView.setItemAnimator(new DefaultItemAnimator());
 

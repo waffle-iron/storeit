@@ -58,6 +58,10 @@ public class FilesManager {
         return mDataDir + recursiveSearch(hash, file);
     }
 
+    public String getFolderPath(){
+        return mDataDir.getPath();
+    }
+
     public StoreitFile makeTree() {
         StoreitFile rootFile = new StoreitFile(toLocalPath(mDataDir.getPath() + "/storeit"), "0", 0);
         listDir(new File(mDataDir + "/storeit"), rootFile);
