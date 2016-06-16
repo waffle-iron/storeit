@@ -22,9 +22,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import com.nononsenseapps.filepicker.FilePickerActivity;
+import com.storeit.storeit.adapters.MainAdapter;
 import com.storeit.storeit.fragments.FileViewerFragment;
 import com.storeit.storeit.fragments.HomeFragment;
-import com.storeit.storeit.adapters.MyAdapter;
 import com.storeit.storeit.R;
 import com.storeit.storeit.ipfs.UploadAsync;
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new MyAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE, this);
+        mAdapter = new MainAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE, this);
         mRecyclerView.setAdapter(mAdapter);
 
 

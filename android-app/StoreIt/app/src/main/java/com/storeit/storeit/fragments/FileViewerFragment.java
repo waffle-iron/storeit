@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.storeit.storeit.adapters.ExplorerAdapter;
 import com.storeit.storeit.utils.FilesManager;
 import com.storeit.storeit.R;
@@ -26,7 +25,6 @@ public class FileViewerFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-
 
     private OnFragmentInteractionListener mListener;
     RecyclerView explorersRecyclerView;
