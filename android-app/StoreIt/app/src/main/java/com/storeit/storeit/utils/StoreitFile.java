@@ -1,6 +1,8 @@
-package com.storeit.storeit.protocol;
+package com.storeit.storeit.utils;
 
 import android.net.Uri;
+
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -25,6 +27,11 @@ public class StoreitFile {
 
     public String getPath() {
         return path;
+    }
+
+    public String getFileName(){
+        File file = new File(path);
+        return file.getName();
     }
 
     public HashMap<String, StoreitFile> getFiles() {

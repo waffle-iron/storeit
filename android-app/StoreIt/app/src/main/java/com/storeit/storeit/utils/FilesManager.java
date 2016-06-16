@@ -1,22 +1,15 @@
 package com.storeit.storeit.utils;
 
 import android.content.Context;
-import android.os.Environment;
-
-import com.storeit.storeit.protocol.StoreitFile;
+import android.widget.Toast;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
  * Handle file creation and deletion
  */
 public class FilesManager {
-
-    private static final String LOGTAG = "FileManager";
-
-    private Context mContext; // Used for getting file path to data
     private File mDataDir;
 
     public FilesManager(Context ctx) {
@@ -24,9 +17,10 @@ public class FilesManager {
 
         File storeitFolder = new File(path[1].getAbsolutePath() + "/storeit");
         if (!storeitFolder.exists()) {
-            storeitFolder.mkdirs();
+            if (!storeitFolder.mkdirs()){
+                Toast.makeText(ctx, "An error occured while creating storeit folder...", Toast.LENGTH_LONG).show();
+            }
         }
-
         mDataDir = new File(path[1].getAbsolutePath());
     }
 
@@ -61,9 +55,7 @@ public class FilesManager {
     }
 
     public String getFileByHash(String hash, StoreitFile file){
-
-        String path = mDataDir + recursiveSearch(hash, file);
-        return path;
+        return mDataDir + recursiveSearch(hash, file);
     }
 
     public StoreitFile makeTree() {

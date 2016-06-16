@@ -8,15 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.storeit.storeit.R;
-import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.utils.StoreitFile;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by loulo on 24/05/2016.
- */
 public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHolder> {
 
     private StoreitFile[] mFiles;
@@ -74,7 +70,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ExplorerAdapter.ViewHolder holder, int position) {
-        holder.fileNameTextView.setText(mFiles[position].getPath()); // Get file name
+        holder.fileNameTextView.setText(mFiles[position].getFileName()); // Get file name
         if (mFiles[position].getKind() == 0) { // Directory, we use folder icon
             holder.fileTypeImageView.setImageResource(R.drawable.ic_folder_black_24dp);
         } else { // File, we use file icon

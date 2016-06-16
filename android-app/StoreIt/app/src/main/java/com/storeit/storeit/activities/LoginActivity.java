@@ -28,7 +28,7 @@ import com.storeit.storeit.oauth.GetUsernameTask;
 import com.storeit.storeit.R;
 import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.protocol.LoginHandler;
-import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.utils.StoreitFile;
 
 /*
 * Login Activity
