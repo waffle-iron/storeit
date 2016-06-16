@@ -24,11 +24,7 @@
                                     <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fIL-dp-pS8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e8Z-63-NHs">
-                                <rect key="frame" x="234" y="435" width="133" height="30"/>
-                                <state key="normal" title="Login with Facbook"/>
-                            </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2017_logo_storeit" translatesAutoresizingMaskIntoConstraints="NO" id="1DX-0P-UCc">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="2017_logo_storeit" translatesAutoresizingMaskIntoConstraints="NO" id="1DX-0P-UCc">
                                 <rect key="frame" x="193" y="150" width="215" height="147"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="147" id="5FP-jS-phL"/>
@@ -39,10 +35,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Nnp-nM-lMx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="89" id="3au-MV-J8B"/>
-                            <constraint firstItem="e8Z-63-NHs" firstAttribute="top" secondItem="Nnp-nM-lMx" secondAttribute="bottom" constant="31" id="61q-Rs-NJh"/>
                             <constraint firstItem="1DX-0P-UCc" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="86" id="AT0-RQ-uDa"/>
-                            <constraint firstItem="1DX-0P-UCc" firstAttribute="centerX" secondItem="e8Z-63-NHs" secondAttribute="centerX" id="efs-dP-8iA"/>
-                            <constraint firstItem="e8Z-63-NHs" firstAttribute="leading" secondItem="Nnp-nM-lMx" secondAttribute="leading" id="h9C-9b-dYy"/>
                             <constraint firstItem="Nnp-nM-lMx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-4" id="qxE-LY-fho"/>
                         </constraints>
                     </view>
