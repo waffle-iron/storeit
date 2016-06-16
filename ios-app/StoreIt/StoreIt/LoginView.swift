@@ -14,32 +14,25 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     var managers: AppDataManagers = AppDataManagers()
     var isLogged: Bool = false
     
+    @IBOutlet weak var FBLoginButton: FBSDKLoginButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // TODO: If token exists, maybe move to the next view
         
-        // forget tokens / logout to display authorization screen (for demonstration purpose)
-        managers.connexionManager?.forgetTokens()
-        
+        // log out if connected with FB - for tests/demo purpose
         if (FBSDKAccessToken.currentAccessToken() != nil) {
             let loginManager = FBSDKLoginManager()
             loginManager.logOut()
         }
-        //
+        managers.connexionManager?.forgetTokens()
         
-        self.addFBStylizedButton()
+        self.configureFacebook()
         
         managers.networkManager = NetworkManager(host: "localhost", port: 8001);
         managers.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
-    }
-
-    override func viewDidAppear(animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
-    override func viewDidDisappear(animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func didReceiveMemoryWarning() {
@@ -48,7 +41,9 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let listView = (segue.destinationViewController as! StoreItSynchDirectoryView)
+        let tabBarController = segue.destinationViewController as! UITabBarController
+        let navigationController = tabBarController.viewControllers![0] as! UINavigationController
+        let listView = navigationController.viewControllers[0] as! StoreItSynchDirectoryView
         
         listView.navigationItem.title = self.managers.navigationManager!.rootDirTitle
         listView.managers = self.managers
@@ -56,14 +51,9 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     
     // MARK: Login with Facebook
     
-    func addFBStylizedButton() {
-        let FB_Button : FBSDKLoginButton = FBSDKLoginButton()
-        
-        self.view.addSubview(FB_Button)
-        FB_Button.center = self.view.center
-        FB_Button.readPermissions = ["public_profile", "email", "user_friends"]
-        FB_Button.delegate = self
-
+    func configureFacebook() {
+        FBLoginButton.readPermissions = ["public_profile", "email"]
+        FBLoginButton.delegate = self
     }
     
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
@@ -74,10 +64,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
             managers.connexionType = nil
         }
         else {
-            // If you ask for multiple permissions at once, you
-            // should check if specific permissions missing
-            if result.grantedPermissions.contains("email")
-            {
+            if result.grantedPermissions.contains("email"){
                 if (managers.navigationManager == nil) {
                     managers.navigationManager = NavigationManager(rootDirTitle: "StoreIt", allItems: (self.managers.fileManager?.getSyncDirTree())!)
                 }
@@ -99,7 +86,6 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     // MARK: Login with Google
     
     @IBAction func login(sender: AnyObject) {
-        
         if (managers.connexionManager == nil) {
             self.managers.connexionType = ConnexionType.GOOGLE
             managers.connexionManager = ConnexionManager(connexionType: ConnexionType.GOOGLE)

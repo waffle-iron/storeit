@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2ie-nq-pmo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="Emf-yy-ayG">
+            <objects>
+                <tabBarController id="grJ-Ff-90b" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="1X8-CH-ZPO">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="2ie-nq-pmo" kind="relationship" relationship="viewControllers" id="iRc-kz-PuB"/>
+                        <segue destination="zL8-JJ-jPb" kind="relationship" relationship="viewControllers" id="VI2-ga-jDO"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BQn-tR-hnG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-858" y="-428"/>
+        </scene>
         <!--Login View-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -24,29 +42,28 @@
                                     <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fIL-dp-pS8"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="2017_logo_storeit" translatesAutoresizingMaskIntoConstraints="NO" id="1DX-0P-UCc">
-                                <rect key="frame" x="193" y="150" width="215" height="147"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="147" id="5FP-jS-phL"/>
-                                    <constraint firstAttribute="width" constant="215" id="WyN-tw-QG3"/>
-                                </constraints>
-                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ujj-Uy-4AQ" customClass="FBSDKLoginButton">
+                                <rect key="frame" x="226" y="427" width="141" height="30"/>
+                                <state key="normal" title="Login with Facebook"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Nnp-nM-lMx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="89" id="3au-MV-J8B"/>
-                            <constraint firstItem="1DX-0P-UCc" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="86" id="AT0-RQ-uDa"/>
+                            <constraint firstItem="Ujj-Uy-4AQ" firstAttribute="top" secondItem="Nnp-nM-lMx" secondAttribute="bottom" constant="23" id="Y2a-Ed-C1g"/>
+                            <constraint firstItem="Ujj-Uy-4AQ" firstAttribute="centerX" secondItem="Nnp-nM-lMx" secondAttribute="centerX" id="pXe-I4-ggR"/>
                             <constraint firstItem="Nnp-nM-lMx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-4" id="qxE-LY-fho"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="y7k-Zm-JRx"/>
                     <connections>
-                        <segue destination="8WT-j1-5R7" kind="show" identifier="storeitSynchDirSegue" animates="NO" id="qbE-32-IdV"/>
+                        <outlet property="FBLoginButton" destination="Ujj-Uy-4AQ" id="0xS-v1-Ulj"/>
+                        <segue destination="grJ-Ff-90b" kind="show" identifier="storeitSynchDirSegue" id="Hct-hd-pH7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="123" y="-204"/>
+            <point key="canvasLocation" x="-858" y="-1252"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="pHm-sz-Zt4">
@@ -64,12 +81,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LbT-YO-25I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1646" y="-215"/>
+            <point key="canvasLocation" x="1352" y="-428"/>
         </scene>
-        <!--Store It Synch Directory View-->
+        <!--StoreIt-->
         <scene sceneID="EEj-j6-03W">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="8WT-j1-5R7" customClass="StoreItSynchDirectoryView" customModule="StoreIt" sceneMemberID="viewController">
+                <viewController title="StoreIt" automaticallyAdjustsScrollViewInsets="NO" id="8WT-j1-5R7" customClass="StoreItSynchDirectoryView" customModule="StoreIt" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8og-Uk-HRO"/>
                         <viewControllerLayoutGuide type="bottom" id="tg8-Or-8oJ"/>
@@ -127,20 +144,24 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="LZY-Ty-zno"/>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="HQx-ay-pcj"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="list" destination="2DC-Ug-Ua6" id="lqj-Ff-fXJ"/>
+                        <outlet property="tabBarItem" destination="LZY-Ty-zno" id="kVQ-J3-WoE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J0l-OA-TyR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="878" y="-204"/>
+            <point key="canvasLocation" x="614" y="-428"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Item-->
         <scene sceneID="5Ar-8L-6OL">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2ie-nq-pmo" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2ie-nq-pmo" customClass="StoreItNavigationController" customModule="StoreIt" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="7OQ-AH-5mL"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="EXb-fo-DGY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -148,18 +169,34 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="iRN-9O-Kj7"/>
+                        <segue destination="8WT-j1-5R7" kind="relationship" relationship="rootViewController" id="E4V-Sy-n7z"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gTf-0n-x96" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-676" y="-204"/>
+            <point key="canvasLocation" x="-124" y="-428"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="olJ-HI-K1r">
+            <objects>
+                <viewController id="zL8-JJ-jPb" customClass="ParametersView" customModule="StoreIt" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4d1-aK-buf"/>
+                        <viewControllerLayoutGuide type="bottom" id="txG-p3-hzO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yv4-vG-jc9">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="FMe-TU-7wG"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hXx-U8-KGa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-118" y="349"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="2017_logo_storeit" width="293" height="232"/>
-    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qbE-32-IdV"/>
+        <segue reference="E4V-Sy-n7z"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -38,8 +38,7 @@ class OAuth2Google : OAuth2 {
     
     func onFailureOrAuthorizeAddEvents() {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let rootController = appDelegate.window?.rootViewController as! UINavigationController
-        let loginView = rootController.viewControllers[0] as! LoginView
+        let loginView =  appDelegate.window?.rootViewController as! LoginView
         
         oauth2.onAuthorize = { parameters in
             print("[ConnexionManager] Did authorize with parameters: \(parameters)")

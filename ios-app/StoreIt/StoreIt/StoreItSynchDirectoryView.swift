@@ -8,7 +8,6 @@
 
 import UIKit
 
-// TODO: separate file functions with markdowns (how to ?)
 // TODO: maybe import interface texts from a file for different languages ?
 
 class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -23,12 +22,17 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         case File = "fileCell"
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.tabBarItem = UITabBarItem(title: "toto", image: nil, tag: 0)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.list.delegate = self
         self.list.dataSource = self
-        
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(uploadOptions))
         
         // if we're at root dir, we can't go back to login view with back navigation controller button

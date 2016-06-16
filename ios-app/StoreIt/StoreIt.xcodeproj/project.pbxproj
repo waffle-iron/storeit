@@ -29,6 +29,8 @@
 		854E27E91CF5C795007DA015 /* AlertControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854E27E81CF5C795007DA015 /* AlertControllerManager.swift */; };
 		856EAED61CDCC86E00F69148 /* 2017_logo_storeit.png in Resources */ = {isa = PBXBuildFile; fileRef = 856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */; };
 		856EAED81CDD0B6D00F69148 /* AppDataManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */; };
+		85708E821D130ED5001B7415 /* ParametersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85708E811D130ED5001B7415 /* ParametersView.swift */; };
+		85708E841D1310EA001B7415 /* StoreItNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85708E831D1310EA001B7415 /* StoreItNavigationController.swift */; };
 		857987301CDCBE300062B8F8 /* OAuth2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579872F1CDCBE300062B8F8 /* OAuth2.swift */; };
 		857987321CDCBE4D0062B8F8 /* OAuth2Google.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857987311CDCBE4D0062B8F8 /* OAuth2Google.swift */; };
 		8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */; };
@@ -86,6 +88,8 @@
 		854E27E81CF5C795007DA015 /* AlertControllerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllerManager.swift; sourceTree = "<group>"; };
 		856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2017_logo_storeit.png; sourceTree = "<group>"; };
 		856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDataManagers.swift; sourceTree = "<group>"; };
+		85708E811D130ED5001B7415 /* ParametersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParametersView.swift; sourceTree = "<group>"; };
+		85708E831D1310EA001B7415 /* StoreItNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreItNavigationController.swift; sourceTree = "<group>"; };
 		8579872F1CDCBE300062B8F8 /* OAuth2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2.swift; sourceTree = "<group>"; };
 		857987311CDCBE4D0062B8F8 /* OAuth2Google.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2Google.swift; sourceTree = "<group>"; };
 		8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnexionManager.swift; sourceTree = "<group>"; };
@@ -223,6 +227,8 @@
 				850831511CE7332200C11EB5 /* DirectoryCell.swift */,
 				850831531CE7358C00C11EB5 /* FileCell.swift */,
 				854E27E81CF5C795007DA015 /* AlertControllerManager.swift */,
+				85708E811D130ED5001B7415 /* ParametersView.swift */,
+				85708E831D1310EA001B7415 /* StoreItNavigationController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -447,6 +453,7 @@
 				8500F70C1C97103E00C69875 /* File.swift in Sources */,
 				85BA025B1CEDBD7200A8FC6F /* NavigationManager.swift in Sources */,
 				8531C2921CE670F50009B26A /* StoreItSynchDirectoryView.swift in Sources */,
+				85708E841D1310EA001B7415 /* StoreItNavigationController.swift in Sources */,
 				8500F6DE1C970F1C00C69875 /* AppDelegate.swift in Sources */,
 				854E27E91CF5C795007DA015 /* AlertControllerManager.swift in Sources */,
 				8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */,
@@ -455,6 +462,7 @@
 				853AD04A1C99A8230036A7FF /* Server.swift in Sources */,
 				8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */,
 				85A6F5981C9EC6950018ABDF /* RequestBuilder.swift in Sources */,
+				85708E821D130ED5001B7415 /* ParametersView.swift in Sources */,
 				8531C9CF1CD8B97600351EF4 /* RequestResolver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

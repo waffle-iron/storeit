@@ -18,29 +18,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        let rootView = self.window?.rootViewController as! UINavigationController
-        let loginView = rootView.viewControllers[0] as! LoginView
+        let loginView = self.window?.rootViewController as! LoginView
         
-        if (loginView.managers.connexionType != nil && loginView.managers.connexionType! == ConnexionType.GOOGLE) {
+        if (loginView.managers.connexionType != nil
+            && loginView.managers.connexionType! == ConnexionType.GOOGLE) {
             loginView.managers.connexionManager?.handleRedirectUrl(url)
         }
-        else if (loginView.managers.connexionType != nil && loginView.managers.connexionType! == ConnexionType.FACEBOOK) {
+        else if (loginView.managers.connexionType != nil
+            && loginView.managers.connexionType! == ConnexionType.FACEBOOK) {
             return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
         }
         return true
     }
-    
-   /*func application(application: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        
-        let rootView = self.window?.rootViewController as! UINavigationController
-        let loginView = rootView.viewControllers[0] as! LoginView
-        
-        if (loginView.managers.connexionType != nil && loginView.managers.connexionType! == ConnexionType.GOOGLE) {
-            loginView.managers.connexionManager?.handleRedirectUrl(url)
-        }
-        
-        return true
-    }*/
     
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
