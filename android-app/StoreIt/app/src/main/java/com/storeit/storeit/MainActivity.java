@@ -170,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
             case ACCOUNT_FRAGMENT:
                 break;
             case SETTINGS_FRAGMENT:
+                Intent i = new Intent(this, StoreItPreferences.class);
+                startActivity(i);
                 break;
             default:
                 break;
