@@ -1,9 +1,12 @@
 package com.storeit.storeit;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,9 +16,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +29,7 @@ import android.view.View;
 
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
-            @Override public boolean onSingleTapUp(MotionEvent e) {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
 
@@ -77,11 +84,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-                View child = recyclerView.findChildViewUnder(motionEvent.getX(),motionEvent.getY());
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
 
 
-
-                if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
+                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     Drawer.closeDrawers();
                     onTouchDrawer(recyclerView.getChildLayoutPosition(child));
                     return true;
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
-        FloatingActionButton fbtn = (FloatingActionButton)findViewById(R.id.add_file_button);
+        FloatingActionButton fbtn = (FloatingActionButton) findViewById(R.id.add_file_button);
         assert fbtn != null;
         fbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,12 +152,11 @@ public class MainActivity extends AppCompatActivity {
             bar.setTitle("Home");
     }
 
-    public void onTouchDrawer(final int position){
+    public void onTouchDrawer(final int position) {
 
         ActionBar actionBar = getSupportActionBar();
 
-        switch (position)
-        {
+        switch (position) {
             case HOME_FRAGMENT:
                 openFragment(new HomeFragment());
                 if (actionBar != null)
@@ -171,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openFragment(final Fragment fragment){
+    public void openFragment(final Fragment fragment) {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragment_container,fragment);
+        ft.replace(R.id.fragment_container, fragment);
         ft.commit();
     }
 
@@ -204,33 +209,65 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILE_CODE_RESULT && resultCode == Activity.RESULT_OK) {
             if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)) {
-                // For JellyBean and above
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ClipData clip = data.getClipData();
+                ClipData clip = data.getClipData();
 
-                    if (clip != null) {
-                        for (int i = 0; i < clip.getItemCount(); i++) {
-                            Uri uri = clip.getItemAt(i).getUri();
-                            // Do something with the URI
-                        }
-                    }
-                    // For Ice Cream Sandwich
-                } else {
-                    ArrayList<String> paths = data.getStringArrayListExtra
-                            (FilePickerActivity.EXTRA_PATHS);
+                if (clip != null) {
+                    for (int i = 0; i < clip.getItemCount(); i++) {
+                        Uri uri = clip.getItemAt(i).getUri();
 
-                    if (paths != null) {
-                        for (String path: paths) {
-                            Uri uri = Uri.parse(path);
-                            // Do something with the URI
-                        }
+                        Log.v("MainActivity", "lalala " + uri.toString());
                     }
                 }
-
             } else {
                 Uri uri = data.getData();
-                // Do something with the URI
+                Log.v("MainActivity", "icici " + uri.toString());
+                new IpfsPost().execute(uri.getPath());
+
             }
+        }
+    }
+
+    class IpfsPost extends AsyncTask<String, Void, String> {
+
+        private NotificationManager mNotifyManager;
+        private android.support.v4.app.NotificationCompat.Builder mBuilder;
+        private int id = 1;
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mBuilder = new NotificationCompat.Builder(MainActivity.this)
+                    .setContentTitle("StoreIt upload")
+                    .setContentText("Upload in progress")
+                    .setSmallIcon(R.drawable.ic_insert_drive_file_black_24dp);
+            mBuilder.setProgress(0, 0, true);
+
+            mNotifyManager.notify(id, mBuilder.build());
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+
+
+            if (response.equals("")) {
+                mBuilder.setContentText("Upload failed...")
+                        .setProgress(0, 0, false);
+            } else {
+                mBuilder.setContentText(response)
+                        .setProgress(0, 0, false);
+                Log.v("IPFS", response);
+            }
+
+            mNotifyManager.notify(id, mBuilder.build());
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String fileName = params[0];
+            IPFS ipfs = new IPFS("toto");
+            return ipfs.sendBytes(new File(fileName));
         }
     }
 }

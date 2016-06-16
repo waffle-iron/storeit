@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,7 +38,7 @@ public class IPFS {
         m_nodeUrl = url;
     }
 
-    public String sendBytes(String fileName, byte[] bytes){
+    public String sendBytes(File uploadFile){
 
         HttpURLConnection connection;
         OutputStream outputStream;
@@ -48,7 +50,7 @@ public class IPFS {
 
 
         try {
-            url = new URL("http://192.168.0.101:5001/api/v0/add?stream-cannels=true");
+            url = new URL("http://192.168.0.102:5001/api/v0/add?stream-cannels=true");
 
             boundary = "---------------------------" + currentTimeMillis();
             connection = (HttpURLConnection) url.openConnection();
@@ -75,7 +77,7 @@ public class IPFS {
 
             writer.append("--").append(boundary).append(CRLF)
                     .append("Content-Type: application/octet-stream").append(CRLF)
-                    .append("Content-Disposition : file; name=\"file\"; filename=\"" + fileName + "\"").append(CRLF)
+                    .append("Content-Disposition : file; name=\"file\"; filename=\"" + uploadFile.getName() + "\"").append(CRLF)
                     .append("Content-Transfer-Encoding: binary").append(CRLF)
                     .append(CRLF);
 
@@ -83,8 +85,14 @@ public class IPFS {
             outputStream.flush();
 
 
-            outputStream.write(bytes, 0, bytes.length);
-            outputStream.flush();
+            try (final FileInputStream inputStream = new FileInputStream(uploadFile);) {
+                final byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                outputStream.flush();
+            }
             writer.append(CRLF);
 
             writer.append(CRLF).append("--").append(boundary).append("--")
