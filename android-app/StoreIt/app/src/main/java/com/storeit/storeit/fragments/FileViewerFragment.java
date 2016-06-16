@@ -25,9 +25,9 @@ public class FileViewerFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-
+    private ExplorerAdapter adapter;
     private OnFragmentInteractionListener mListener;
-    RecyclerView explorersRecyclerView;
+    private RecyclerView explorersRecyclerView;
 
     public FileViewerFragment() {
 
@@ -70,7 +70,7 @@ public class FileViewerFragment extends Fragment {
         FilesManager manager = new FilesManager(getContext());
         StoreitFile file = manager.makeTree();
 
-        final ExplorerAdapter adapter = new ExplorerAdapter(file, getContext());
+        adapter = new ExplorerAdapter(file, getContext());
         explorersRecyclerView.setAdapter(adapter);
         explorersRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -104,6 +104,10 @@ public class FileViewerFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void backPressed(){
+        adapter.backPressed();
     }
 
     public void onButtonPressed(Uri uri) {

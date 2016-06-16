@@ -2,6 +2,7 @@ package com.storeit.storeit.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.storeit.storeit.R;
 import com.storeit.storeit.utils.StoreitFile;
+
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Map;
 
 public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHolder> {
 
     private StoreitFile[] mFiles;
-    Context context;
+    private Deque<StoreitFile> historyStack = new ArrayDeque<>();
+    private Context context;
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView fileNameTextView;
@@ -46,13 +53,36 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
             files.add(entry.getValue());
         }
 
+        historyStack.push(file);
+
         mFiles = files.toArray(new StoreitFile[files.size()]); // Store file list
         this.context = passedContext;
+    }
+
+    public void backPressed() {
+
+         if (historyStack.size() <= 1) // Check if this is not the root
+            return;
+        
+        ArrayList<StoreitFile> files = new ArrayList<>();
+        historyStack.pop();
+        StoreitFile parentDir = historyStack.peek();
+
+        for (Map.Entry<String, StoreitFile> entry : parentDir.getFiles().entrySet()) { // list all files from current folder
+            files.add(entry.getValue());
+        }
+        mFiles = files.toArray(new StoreitFile[files.size()]); // Store file list
+        notifyDataSetChanged();
     }
 
     public void fileClicked(int position){
 
         ArrayList<StoreitFile> files = new ArrayList<>();
+
+        if (mFiles[position].getKind() == 1) // Check if is a directory or a file
+            return;
+
+        historyStack.push(mFiles[position]);
 
         for (Map.Entry<String, StoreitFile> entry : mFiles[position].getFiles().entrySet()) { // list all files from current folder
             files.add(entry.getValue());

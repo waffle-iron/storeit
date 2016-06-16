@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.storeit.storeit.adapters.MainAdapter;
 import com.storeit.storeit.fragments.FileViewerFragment;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout Drawer;
 
     ActionBarDrawerToggle mDrawerToggle;
+    FloatingActionButton fbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
-        FloatingActionButton fbtn = (FloatingActionButton) findViewById(R.id.add_file_button);
+        fbtn = (FloatingActionButton)findViewById(R.id.add_file_button);
         assert fbtn != null;
+        fbtn.setVisibility(View.INVISIBLE);
+
         fbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,16 +161,19 @@ public class MainActivity extends AppCompatActivity {
 
         switch (position) {
             case HOME_FRAGMENT:
+                fbtn.setVisibility(View.INVISIBLE);
                 openFragment(new HomeFragment());
                 if (actionBar != null)
                     actionBar.setTitle("Home");
                 break;
             case FILES_FRAGMENT:
+                fbtn.setVisibility(View.VISIBLE);
                 openFragment(new FileViewerFragment());
                 if (actionBar != null)
                     actionBar.setTitle("My Files");
                 break;
             case ACCOUNT_FRAGMENT:
+                fbtn.setVisibility(View.INVISIBLE);
                 break;
             case SETTINGS_FRAGMENT:
                 Intent i = new Intent(this, StoreItPreferences.class);
@@ -225,5 +233,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
+        if (currentFragment instanceof FileViewerFragment)
+        {
+            FileViewerFragment fileViewerFragment = (FileViewerFragment)currentFragment;
+            fileViewerFragment.backPressed();
+            return;
+        }
+
+        super.onBackPressed();
     }
 }

@@ -5,14 +5,9 @@
     <string name="google_app_id">storeit-1307</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="login_button">Login</string>
+    <string name="login_acount_create">No account yet?\nCreate one</string>
 
-
-    <string-array name="main_drawer_items">
-        <item>Home</item>
-        <item>My Files</item>
-        <item>My Account</item>
-    </string-array>
-
-    <string name="hello_blank_fragment">File viewer!!</string>
-
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
 </resources>
