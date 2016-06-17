@@ -7,11 +7,15 @@ const join = function(arg) {
   log.info('join with parameters ' + args[1])
 }
 
+const add = (arg) => {
+}
+
 export const parse = function(msg) {
   const msgArr = S(msg).splitLeft(' ', 1)
 
   const hmap = {
-    'JOIN': join
+    'JOIN': join,
+    'ADD': add
   }
 
   const cmd = msgArr.shift()

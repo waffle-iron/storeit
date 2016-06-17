@@ -29,6 +29,7 @@ Everything should be JSON objects.
 	"code": code,
 	"text": response_message,
 	"command_id": command_id,
+	"command": "RESP"
 }
 ```
 TODO: document possible errors.
