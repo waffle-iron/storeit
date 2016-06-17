@@ -32,8 +32,8 @@ import com.storeit.storeit.ipfs.UploadAsync;
 
 public class MainActivity extends AppCompatActivity {
 
-    String TITLES[] = {"Home", "My files", "My account", "Settings"};
-    int ICONS[] = {R.drawable.ic_cloud_black_24dp, R.drawable.ic_folder_black_24dp, R.drawable.ic_account_box_black_24dp, R.drawable.ic_settings_applications_black_24dp};
+    String TITLES[] = {"Home", "My files", "Settings"};
+    int ICONS[] = {R.drawable.ic_cloud_black_24dp, R.drawable.ic_folder_black_24dp, R.drawable.ic_settings_applications_black_24dp};
 
     String NAME = "Louis Mondesir";
     String EMAIL = "louis.mondesir@gmail.com";
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     static int FILE_CODE_RESULT = 1005;
 
-    static final int HOME_FRAGMENT = 1, FILES_FRAGMENT = 2, ACCOUNT_FRAGMENT = 3, SETTINGS_FRAGMENT = 4;
+    static final int HOME_FRAGMENT = 1, FILES_FRAGMENT = 2, SETTINGS_FRAGMENT = 3;
 
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
@@ -171,9 +171,6 @@ public class MainActivity extends AppCompatActivity {
                 openFragment(new FileViewerFragment());
                 if (actionBar != null)
                     actionBar.setTitle("My Files");
-                break;
-            case ACCOUNT_FRAGMENT:
-                fbtn.setVisibility(View.INVISIBLE);
                 break;
             case SETTINGS_FRAGMENT:
                 Intent i = new Intent(this, StoreItPreferences.class);

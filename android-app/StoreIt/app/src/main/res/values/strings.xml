@@ -10,4 +10,6 @@
 
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
+    <string name="menu_settings">Settings</string>
+    <string name="home_welcome_text">Welcome to storeit</string>
 </resources>
