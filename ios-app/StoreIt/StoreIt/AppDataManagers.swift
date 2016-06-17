@@ -11,6 +11,7 @@ import Foundation
 enum ConnexionType: String {
     case GOOGLE = "gg"
     case FACEBOOK = "fb"
+    case NONE = "None"
 }
 
 struct AppDataManagers {

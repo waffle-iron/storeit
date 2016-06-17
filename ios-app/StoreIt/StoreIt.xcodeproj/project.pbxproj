@@ -36,6 +36,7 @@
 		857987321CDCBE4D0062B8F8 /* OAuth2Google.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857987311CDCBE4D0062B8F8 /* OAuth2Google.swift */; };
 		8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */; };
 		85A6F5981C9EC6950018ABDF /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */; };
+		85B154121D140D18003B62FE /* PListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B154111D140D18003B62FE /* PListManager.swift */; };
 		85B337041D12BE2C00336FEC /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B337031D12BE2C00336FEC /* FBSDKLoginKit.framework */; };
 		85BA025B1CEDBD7200A8FC6F /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BA025A1CEDBD7200A8FC6F /* NavigationManager.swift */; };
 /* End PBXBuildFile section */
@@ -96,6 +97,7 @@
 		857987311CDCBE4D0062B8F8 /* OAuth2Google.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2Google.swift; sourceTree = "<group>"; };
 		8596DF0B1CDBDC03008501BD /* ConnexionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnexionManager.swift; sourceTree = "<group>"; };
 		85A6F5971C9EC6950018ABDF /* RequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
+		85B154111D140D18003B62FE /* PListManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PListManager.swift; sourceTree = "<group>"; };
 		85B337031D12BE2C00336FEC /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		85BA025A1CEDBD7200A8FC6F /* NavigationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -255,6 +257,7 @@
 		853AD0481C99A7E30036A7FF /* FileManagement */ = {
 			isa = PBXGroup;
 			children = (
+				85B154111D140D18003B62FE /* PListManager.swift */,
 				8500F70B1C97103E00C69875 /* File.swift */,
 				8500F70D1C97112800C69875 /* FileManager.swift */,
 				85BA025A1CEDBD7200A8FC6F /* NavigationManager.swift */,
@@ -456,6 +459,7 @@
 				8500F70C1C97103E00C69875 /* File.swift in Sources */,
 				85BA025B1CEDBD7200A8FC6F /* NavigationManager.swift in Sources */,
 				8531C2921CE670F50009B26A /* StoreItSynchDirectoryView.swift in Sources */,
+				85B154121D140D18003B62FE /* PListManager.swift in Sources */,
 				85708E841D1310EA001B7415 /* StoreItNavigationController.swift in Sources */,
 				8500F6DE1C970F1C00C69875 /* AppDelegate.swift in Sources */,
 				854E27E91CF5C795007DA015 /* AlertControllerManager.swift in Sources */,

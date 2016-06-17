@@ -11,7 +11,7 @@ import p2_OAuth2
 
 class ConnexionManager {
     
-    let oauth2: OAuth2
+    let oauth2: OAuth2?
     
     init(connexionType: ConnexionType) {
         print("[ConnexionManager] Initializing a connexion of type \(connexionType)")
@@ -21,25 +21,25 @@ class ConnexionManager {
                 oauth2 = OAuth2Google()
             	break
             
-            case .FACEBOOK:
-                oauth2 = OAuth2Google() // Replace by Facebook later
+        	default:
+            	oauth2 = nil
                 break
     	}
         
-        oauth2.onFailureOrAuthorizeAddEvents()
+        oauth2?.onFailureOrAuthorizeAddEvents()
     }
     
     
     func forgetTokens() {
-        oauth2.forgetTokens()
+        oauth2?.forgetTokens()
     }
     
     func handleRedirectUrl(url: NSURL) {
-        oauth2.handleRedirectUrl(url)
+        oauth2?.handleRedirectUrl(url)
     }
     
     func authorize(context: AnyObject) {
-        oauth2.authorize(context)
+        oauth2?.authorize(context)
     }
     
 }
