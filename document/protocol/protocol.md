@@ -62,9 +62,10 @@ Delete a file/directory.
 {
 	"uid": 765,
 	"command": "FDEL",
-	"parameters": {
-		"filePath": "/foo/bar/babes.mp4",
-	}
+	"parameters": [
+		{"file": FILEObject}
+		...
+	]
 }
 ```
 
@@ -77,9 +78,10 @@ Add a file to the user three.
 {
 	"uid": 766,
 	"command": "FADD",
-	"parameters": {
-		"filePath": "/foo/bar",
-	}
+	"parameters": [
+		{"file": FILEObject}
+		...
+	]
 }
 ```
 
@@ -92,9 +94,10 @@ Update a file.
 {
 	"uid": 767,
 	"command": "FUPT",
-	"parameters": {
-		"filePath": "/foo/bar/dog.zip",
-	}
+	"parameters": [
+		{"file": FILEObject}
+		...
+	]
 }
 ```
 
@@ -108,8 +111,8 @@ This object describe a file or a directory.
 	"metadata": metadata,
 	"IPFSHash": "IPFS hash of all the data in the file",
 	"isDir": true,
-	"files": {
-		"foo.txt": FILEObject,
-		"someDirectory": FILEObject,
-	}
+	"files": [
+		{"foo.txt": FILEObject},
+		{"someDirectory": FILEObject},
+	]
 }```
