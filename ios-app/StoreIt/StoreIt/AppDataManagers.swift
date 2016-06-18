@@ -8,7 +8,14 @@
 
 import Foundation
 
+enum ConnexionType: String {
+    case GOOGLE = "gg"
+    case FACEBOOK = "fb"
+    case NONE = "None"
+}
+
 struct AppDataManagers {
+    var connexionType: ConnexionType? = nil
     var networkManager: NetworkManager? = nil
     var connexionManager: ConnexionManager? = nil
     var fileManager: FileManager? = nil

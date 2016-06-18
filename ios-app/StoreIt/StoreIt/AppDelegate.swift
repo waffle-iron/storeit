@@ -14,17 +14,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-        return true
+        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
-    func application(application: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        // check url before !!!
-        let rootView = self.window?.rootViewController as! UINavigationController
-        let loginView = rootView.viewControllers[0] as! LoginView
-        
-        loginView.managers.connexionManager?.handleRedirectUrl(url)
-        
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        let navigationController = self.window?.rootViewController as! UINavigationController
+        let loginView = navigationController.viewControllers[0] as! LoginView
+
+        if (loginView.managers.connexionType != nil
+            && loginView.managers.connexionType! == ConnexionType.GOOGLE) {
+            loginView.managers.connexionManager?.handleRedirectUrl(url)
+        }
+        else if (loginView.managers.connexionType != nil
+            && loginView.managers.connexionType! == ConnexionType.FACEBOOK) {
+            return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+        }
         return true
     }
     
