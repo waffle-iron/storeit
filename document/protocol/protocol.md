@@ -16,8 +16,8 @@ Everything should be JSON objects.
 	"uid": unique_command_id,
 	"command": command_name,
 	"parameters": {
-		"parameter1-name": parameter1,
-		"parameter2-name": parameter2,
+		"parameter1Name": parameter1,
+		"parameter2Name": parameter2,
 	}
 }
 ```
@@ -28,7 +28,7 @@ Everything should be JSON objects.
 {
 	"code": code,
 	"text": response_message,
-	"command_id": command_id,
+	"commandUid": command_id,
 	"command": "RESP",
 	(optional) "parameters": {
 		...
