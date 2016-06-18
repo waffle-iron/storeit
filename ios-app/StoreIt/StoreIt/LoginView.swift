@@ -8,6 +8,7 @@
 
 import UIKit
 import ObjectMapper
+import FBSDKLoginKit
 
 // TODO: try to merged initGoogle and initFacebook
 
