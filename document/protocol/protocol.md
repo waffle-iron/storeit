@@ -48,10 +48,11 @@ This is the first request to make whenever a client wants to get online.
 	"parameters": {
 		"authType": "fb",
 		"accessToken": "34j8b4jhb343hbKJH54",
-		"home": FILEObject,
 	}
 }
 ```
+
+The response will contain a FILE object.
 
 ##### FDEL
 
