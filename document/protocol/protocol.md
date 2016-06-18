@@ -52,7 +52,7 @@ This is the first request to make whenever a client wants to get online.
 }
 ```
 
-The response will contain a FILE object.
+The response will contain a FILE object named "home".
 
 ##### FDEL
 
