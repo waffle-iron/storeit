@@ -32,11 +32,11 @@ class FileManager {
     }
     
     func getSyncDirTree() -> [String: File] {
-        return self.buildTree("demo/")
+        return self.buildTree(self.rootDirPath)
     }
     
     // Build recursively the tree of the root directory into a dictionnary
-    func buildTree(path: String) -> [String: File] {
+    private func buildTree(path: String) -> [String: File] {
         let files: [String] = getDirectoryContent(path)
         var nestedFiles: [String: File] = [String:File]()
         
@@ -47,17 +47,15 @@ class FileManager {
             switch type {
                 case .RegularFile :
                     nestedFiles[file] = File(path: filePath,
-                                             unique_hash: sha256(filePath),
                                              metadata: "",
-                                             chunks_hashes: [""],
-                                             kind: type.rawValue,
+                                             IPFSHash: "",
+                                             isDir: false,
                                              files: [String:File]())
                 case .Directory :
                     nestedFiles[file] = File(path: filePath,
-                                             unique_hash: "0",
                                              metadata: "",
-                                             chunks_hashes: [""],
-                                             kind: type.rawValue,
+                                             IPFSHash: "",
+                                             isDir: true,
                                              files: buildTree(filePath))
                 default :
                     print("[FileManager] Error while building tree : file type doesn't exist.")

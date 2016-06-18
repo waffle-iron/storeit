@@ -93,39 +93,29 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     // Function triggered when a cell is selected
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let selectedFile: File = (managers?.navigationManager!.getSelectedFileAtRow(indexPath))!
-        let fileType: FileType = (managers?.navigationManager!.getSelectedFileTypeAtRow(indexPath))!
+        let isDir: Bool = (managers?.navigationManager!.isSelectedFileAtRowADir(indexPath))!
         
-        switch fileType {
-        case .RegularFile:
-            self.performSegueWithIdentifier("showFileSegue", sender: selectedFile)
-            break
-        case .Directory:
+        if (isDir) {
             self.performSegueWithIdentifier("nextDirSegue", sender: selectedFile)
-        default:
-            break
+        } else {
+            self.performSegueWithIdentifier("showFileSegue", sender: selectedFile)
         }
-        
     }
     
-    // Return a specific type of cell regarding the type of File object (directory, file...)
     func createItemCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
         
-        let fileType: FileType = (managers?.navigationManager!.getSelectedFileTypeAtRow(indexPath))!
+        let isDir: Bool = (managers?.navigationManager!.isSelectedFileAtRowADir(indexPath))!
         let items: [String] = (managers?.navigationManager!.items)!
         
-        switch fileType {
-            case .Directory:
-                let cell = self.list.dequeueReusableCellWithIdentifier(CellIdentifiers.Directory.rawValue) as! DirectoryCell
-                cell.itemName.text = "\(items[indexPath.row])"
-                return cell
-        	case .RegularFile:
-            	let cell = self.list.dequeueReusableCellWithIdentifier(CellIdentifiers.File.rawValue) as! FillCell
-                cell.itemName.text = "\(items[indexPath.row])"
-            	return cell
-        	default:
-                // TODO: create some kind of default cell
-                return UITableViewCell()
-            }
+        if (isDir) {
+            let cell = self.list.dequeueReusableCellWithIdentifier(CellIdentifiers.Directory.rawValue) as! DirectoryCell
+            cell.itemName.text = "\(items[indexPath.row])"
+            return cell
+        } else {
+            let cell = self.list.dequeueReusableCellWithIdentifier(CellIdentifiers.File.rawValue) as! FillCell
+            cell.itemName.text = "\(items[indexPath.row])"
+            return cell
+        }
     }
     
     // MARK: Action sheet creation and management

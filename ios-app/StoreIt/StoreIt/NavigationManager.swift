@@ -48,11 +48,9 @@ class NavigationManager {
         return selectedFile
     }
     
-    func getSelectedFileTypeAtRow(indexPath: NSIndexPath) -> FileType {
+    func isSelectedFileAtRowADir(indexPath: NSIndexPath) -> Bool {
         let selectedFile: File = self.getSelectedFileAtRow(indexPath)
-        let fileType: FileType = FileType(rawValue: selectedFile.kind)!
-        
-        return fileType
+        return selectedFile.isDir
     }
     
     func getTargetName(target: File) -> String {

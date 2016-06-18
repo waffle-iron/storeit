@@ -28,6 +28,7 @@ class Client {
     
     func join() {
         //let request = requestBuilder.join(username, port: self.port, hosted_hashes: hosted_hashes,file: file)
+        
         self.WSManager.sendRequest("insert_join_request_here")
     }
 
