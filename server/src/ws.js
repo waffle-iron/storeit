@@ -1,5 +1,5 @@
 import * as ws from 'ws'
-import * as log from '../../common/src/log.js'
+import {logger} from './log.js'
 import * as proto from './parse.js'
 
 const PORT = 7641
@@ -26,7 +26,7 @@ let clients = []
 
 wss.on('connection', (ws) => {
   clients.push(new Client(ws))
-  log.info(clients)
+  logger.info(clients)
 })
 
-log.info(`listening on ${PORT}`)
+logger.info(`listening on ${PORT}`)

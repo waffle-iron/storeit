@@ -16,6 +16,9 @@ else {
   userfile.storeDir = './storeit'
 }
 
+ws.co('test')
+
+/*
 if (commander.code) {
   auth.getGoogleToken(commander.code, (tokens) => {
     ws.co(tokens.access_token)
@@ -24,3 +27,4 @@ if (commander.code) {
 else {
   auth.googleAuth()
 }
+*/

@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import * as log from '../../common/log.js'
+import {logger} from './log.js'
 
 export let storeDir = './storeit'
 
@@ -31,7 +31,7 @@ let dirToJson = (filename) => {
 let mkdirUser = () => {
   fs.mkdir(storeDir, (err) => {
     if (err) {
-      log.warn('cannot mkdir user dir')
+      logger.warn('cannot mkdir user dir')
     }
   })
 }

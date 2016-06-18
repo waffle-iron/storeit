@@ -1,6 +1,6 @@
 import google from 'googleapis'
 import openurl from 'openurl'
-import * as log from '../../common/log.js'
+import {logger} from './log.js'
 
 let OAuth2 = google.auth.OAuth2
 
@@ -23,7 +23,7 @@ export let getGoogleToken = (code, callback) => {
       callback(tokens)
     }
     else {
-      log.error(err)
+      logger.error(err)
     }
   })
 }

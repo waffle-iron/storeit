@@ -1,10 +1,10 @@
-import * as log from './log.js'
+import {logger} from './log.js'
 import * as S from 'string'
 import * as git from './git.js'
 
 const join = function(command, arg) {
 
-  log.info('join with parameters ' + arg)
+  logger.info('join with parameters ' + arg)
 }
 
 const add = (command, arg) => {
@@ -23,5 +23,6 @@ export const parse = function(msg) {
   }
 
   // TODO: catch the goddam exception
-  hmap[command.command](command, parameters)
+  logger.info(command)
+  hmap[command.command](command, command.parameters)
 }
