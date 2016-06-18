@@ -1,20 +1,27 @@
 import * as log from './log.js'
 import * as S from 'string'
+import * as git from './git.js'
 
-const join = function(arg) {
+const join = function(command, arg) {
 
-  const args = S(arg).splitLeft(' ', 2)
-  log.info('join with parameters ' + args[1])
+  log.info('join with parameters ' + arg)
+}
+
+const add = (command, arg) => {
+
+  git.add(arg.filePath)
+
 }
 
 export const parse = function(msg) {
-  const msgArr = S(msg).splitLeft(' ', 1)
+
+  const command = JSON.parse(msg)
 
   const hmap = {
-    'JOIN': join
+    'JOIN': join,
+    'ADD': add
   }
 
-  const cmd = msgArr.shift()
   // TODO: catch the goddam exception
-  hmap[cmd](msgArr[0])
+  hmap[command.command](command, parameters)
 }

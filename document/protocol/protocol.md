@@ -13,7 +13,7 @@ Everything should be JSON objects.
 
 ```javascript
 {
-	"id": unique_command_id,
+	"uid": unique_command_id,
 	"command": command_name,
 	"parameters": {
 		"parameter1-name": parameter1,
@@ -27,8 +27,9 @@ Everything should be JSON objects.
 ```javascript
 {
 	"code": code,
-	"human": response_message,
+	"text": response_message,
 	"command_id": command_id,
+	"command": "RESP"
 }
 ```
 TODO: document possible errors.
@@ -42,7 +43,7 @@ This is the first request to make whenever a client wants to get online.
 
 ```javascript
 {
-	"id": 263,
+	"uid": 263,
 	"command": "JOIN",
 	"parameters": {
 		"authType": "fb",
@@ -59,11 +60,12 @@ Delete a file/directory.
 
 ```javascript
 {
-	"id": 765,
+	"uid": 765,
 	"command": "FDEL",
-	"parameters": {
-		"filePath": "/foo/bar/babes.mp4",
-	}
+	"parameters": [
+		{"file": FILEObject}
+		...
+	]
 }
 ```
 
@@ -74,11 +76,12 @@ Add a file to the user three.
 
 ```javascript
 {
-	"id": 766,
+	"uid": 766,
 	"command": "FADD",
-	"parameters": {
-		"filePath": "/foo/bar",
-	}
+	"parameters": [
+		{"file": FILEObject}
+		...
+	]
 }
 ```
 
@@ -89,11 +92,12 @@ Update a file.
 
 ```javascript
 {
-	"id": 767,
+	"uid": 767,
 	"command": "FUPT",
-	"parameters": {
-		"filePath": "/foo/bar/dog.zip",
-	}
+	"parameters": [
+		{"file": FILEObject}
+		...
+	]
 }
 ```
 
@@ -107,8 +111,8 @@ This object describe a file or a directory.
 	"metadata": metadata,
 	"IPFSHash": "IPFS hash of all the data in the file",
 	"isDir": true,
-	"files": {
-		"foo.txt": FILEObject,
-		"someDirectory": FILEObject,
-	}
+	"files": [
+		{"foo.txt": FILEObject},
+		{"someDirectory": FILEObject},
+	]
 }```
