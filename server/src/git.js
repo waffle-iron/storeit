@@ -40,5 +40,4 @@ export const addUser = (name, handlerFn) => {
 
 // what is a file json object
 export const add = (what, handlerFn) => {
-  print(what)
 }
