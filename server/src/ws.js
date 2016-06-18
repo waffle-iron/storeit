@@ -17,8 +17,16 @@ class Client {
     this.ws = ws
 
     ws.on('message', (mess) => {
-      proto.parse(mess)
+      proto.parse(mess, this)
     })
+  }
+
+  sendText(txt) {
+    this.ws.send(txt)
+  }
+
+  sendObj(obj) {
+    this.sendText(JSON.stringify(obj))
   }
 }
 
