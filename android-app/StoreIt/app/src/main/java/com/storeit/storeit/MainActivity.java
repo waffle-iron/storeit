@@ -1,29 +1,34 @@
 package com.storeit.storeit;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.nononsenseapps.filepicker.FilePickerActivity;
-
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
-            @Override public boolean onSingleTapUp(MotionEvent e) {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
 
@@ -76,11 +82,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-                View child = recyclerView.findChildViewUnder(motionEvent.getX(),motionEvent.getY());
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
 
 
-
-                if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
+                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     Drawer.closeDrawers();
                     onTouchDrawer(recyclerView.getChildLayoutPosition(child));
                     return true;
@@ -105,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
         Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -125,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
-        FloatingActionButton fbtn = (FloatingActionButton)findViewById(R.id.add_file_button);
+        FloatingActionButton fbtn = (FloatingActionButton) findViewById(R.id.add_file_button);
         assert fbtn != null;
         fbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,30 +145,43 @@ public class MainActivity extends AppCompatActivity {
         });
 
         openFragment(new HomeFragment());
+        ActionBar bar = getSupportActionBar();
+        if (bar != null)
+            bar.setTitle("Home");
+
+//        new com.storeit.storeit.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
     }
 
-    public void onTouchDrawer(final int position){
+    public void onTouchDrawer(final int position) {
 
-        switch (position)
-        {
+        ActionBar actionBar = getSupportActionBar();
+
+        switch (position) {
             case HOME_FRAGMENT:
                 openFragment(new HomeFragment());
+                if (actionBar != null)
+                    actionBar.setTitle("Home");
                 break;
             case FILES_FRAGMENT:
+                openFragment(new FileViewerFragment());
+                if (actionBar != null)
+                    actionBar.setTitle("My Files");
                 break;
             case ACCOUNT_FRAGMENT:
                 break;
             case SETTINGS_FRAGMENT:
+                Intent i = new Intent(this, StoreItPreferences.class);
+                startActivity(i);
                 break;
             default:
                 break;
         }
     }
 
-    public void openFragment(final Fragment fragment){
+    public void openFragment(final Fragment fragment) {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragment_container,fragment);
+        ft.replace(R.id.fragment_container, fragment);
         ft.commit();
     }
 
@@ -194,32 +211,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILE_CODE_RESULT && resultCode == Activity.RESULT_OK) {
             if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)) {
-                // For JellyBean and above
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ClipData clip = data.getClipData();
+                ClipData clip = data.getClipData();
 
-                    if (clip != null) {
-                        for (int i = 0; i < clip.getItemCount(); i++) {
-                            Uri uri = clip.getItemAt(i).getUri();
-                            // Do something with the URI
-                        }
-                    }
-                    // For Ice Cream Sandwich
-                } else {
-                    ArrayList<String> paths = data.getStringArrayListExtra
-                            (FilePickerActivity.EXTRA_PATHS);
+                if (clip != null) {
+                    for (int i = 0; i < clip.getItemCount(); i++) {
+                        Uri uri = clip.getItemAt(i).getUri();
 
-                    if (paths != null) {
-                        for (String path: paths) {
-                            Uri uri = Uri.parse(path);
-                            // Do something with the URI
-                        }
+                        Log.v("MainActivity", "lalala " + uri.toString());
                     }
                 }
-
             } else {
                 Uri uri = data.getData();
-                // Do something with the URI
+                Log.v("MainActivity", "icici " + uri.toString());
+                new UploadAsync(this).execute(uri.getPath());
+
             }
         }
     }

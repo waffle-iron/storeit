@@ -2,16 +2,11 @@ package com.storeit.storeit;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
-import com.storeit.storeit.protocol.HashManager;
+
 import com.storeit.storeit.protocol.StoreitFile;
-import java.io.BufferedInputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
@@ -25,7 +20,7 @@ public class FilesManager {
     private File mDataDir;
 
     public FilesManager(Context ctx) {
-        File path[] = ctx.getExternalFilesDirs(Environment.DIRECTORY_DOCUMENTS);
+        File path[] = ctx.getExternalFilesDirs(null);
 
         File storeitFolder = new File(path[1].getAbsolutePath() + "/storeit");
         if (!storeitFolder.exists()) {
@@ -44,29 +39,14 @@ public class FilesManager {
                 rootFile.addFile(dir);
                 listDir(file, dir);
             } else {
-                InputStream in ;
-
-                String unique_hash = "";
-
-                try {
-                    in = new BufferedInputStream(new FileInputStream(file));
-                    unique_hash = HashManager.getChecksum(in);
-                    in.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                String unique_hash = "UNIQUE_HASH";
                 StoreitFile stFile = new StoreitFile(toLocalPath(file.getPath()), unique_hash, 1);
                 rootFile.addFile(stFile);
             }
         }
     }
 
-    private String toLocalPath(String path){
+    public String toLocalPath(String path){
         return path.replace(mDataDir.getPath(), ".");
     }
 

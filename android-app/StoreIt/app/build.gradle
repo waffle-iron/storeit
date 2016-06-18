@@ -37,4 +37,5 @@ dependencies {
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'de.hdodenhof:circleimageview:1.2.1'
     compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
 }

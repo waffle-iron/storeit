@@ -84,9 +84,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         this.context = passedContext;
 
         //in adapter
-
-
-
     }
 
 
