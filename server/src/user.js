@@ -16,6 +16,7 @@ export class User {
 
   constructor(email) {
     this.email = email
+    this.sockets = {}
   }
 
   loadHome(handlerFn) {
@@ -31,13 +32,41 @@ export const setUsersDir = (name) => {
 }
 
 export const users = {}
+export const sockets = {}
 
-export const connectUser = (email, handlerFn) => {
+const getStat = () => {
+  return `${Object.keys(users).length} users ${Object.keys(sockets).length} sockets.`
+}
 
-  const user = new User(email)
+export const disconnectSocket = (socket) => {
+
+  const user = sockets[socket]
+
+  delete user.sockets[socket]
+
+  if (Object.keys(user.sockets).length === 0) {
+    delete users[user.email]
+  }
+
+  delete sockets[socket]
+  logger.info(`${user.email} has disconnected. ${getStat()}`)
+}
+
+export const connectUser = (email, socket, handlerFn) => {
+
+  let user = users[email]
+
+  if (user === undefined) {
+    user = new User(email)
+  }
+
+  sockets[socket] = user
   users[email] = user
+  user.sockets[socket] = undefined
 
   user.loadHome((err) => {
     handlerFn(err, user)
   })
+
+  logger.info(`${user.email} has connected. ${getStat()}`)
 }

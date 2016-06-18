@@ -22,16 +22,14 @@ export let co = (accessToken) => {
   })
 
   ws.on('open', function open() {
-    const tree = userfile.makeUserTree()
 
     sendCmd(new Command('JOIN', [
       {authType: 'fb'},
       {accessToken: 'blahblah'},
-      {home: tree}
     ]))
   })
 
   ws.on('message', (data) => {
-    logger.debug('received ' + data)
+    logger.info('received ' + data)
   })
 }

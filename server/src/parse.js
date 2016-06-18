@@ -4,16 +4,16 @@ import * as git from './git.js'
 import * as user from './user.js'
 import * as protoObjs from './protocol-objects'
 
-const join = function(command, arg, client) {
+const join = function(command, arg, socket) {
 
   // TODO: error checking on JSON
 
-  user.connectUser('adrien.morel@me.com', (err, user) => {
+  user.connectUser('adrien.morel@me.com', socket, (err, user) => {
     if (err) {
       return logger.error('could not connect user')
     }
 
-    client.sendObj(new protoObjs.Reponse(0, "welcome", command.uid, {
+    socket.sendObj(new protoObjs.Reponse(0, "welcome", command.uid, {
       home: user.home
     }))
   })
@@ -35,6 +35,5 @@ export const parse = function(msg, client) {
   }
 
   // TODO: catch the goddam exception
-  logger.info(command)
   hmap[command.command](command, command.parameters, client)
 }

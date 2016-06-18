@@ -1,6 +1,7 @@
 import * as ws from 'ws'
 import {logger} from './log.js'
 import * as proto from './parse.js'
+import * as user from './user.js'
 
 const PORT = 7641
 
@@ -19,6 +20,10 @@ class Client {
     ws.on('message', (mess) => {
       proto.parse(mess, this)
     })
+
+    ws.on('close', (connection, closeReason, description) => {
+      user.disconnectSocket(this.ws)
+    })
   }
 
   sendText(txt) {
@@ -30,11 +35,8 @@ class Client {
   }
 }
 
-let clients = []
-
 wss.on('connection', (ws) => {
-  clients.push(new Client(ws))
-  logger.info(clients)
+  new Client(ws)
 })
 
 logger.info(`listening on ${PORT}`)
