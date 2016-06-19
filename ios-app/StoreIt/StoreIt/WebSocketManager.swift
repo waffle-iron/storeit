@@ -33,8 +33,24 @@ class WebSocketManager {
         self.ws.onText = { (request: String) in
             print("[Client.WebSocketManager] Client recieved a request : \(request)")
 			
-            let _: Response? = Mapper<Response>().map(request)
-            // Do funny stuff with response here
+            let command: ResponseResolver? = Mapper<ResponseResolver>().map(request)
+            
+            // Server has responded
+            if (command?.command == "RESP") {
+                let _: Response? = Mapper<Response>().map(request)
+                // Do funny stuff with response here
+            }
+            
+            // Server sent a command (FADD, FUPT, FDEL)
+            else if (command != nil && CommandInfos().SERVER_TO_CLIENT_CMD.contains(command!.command)) {
+                let _: Command? = Mapper<Command<FilesParameters>>().map(request)
+                // Do funny stuff with command here
+            }
+                
+            // We don't know what the server wants
+            else {
+                print("[Client.Client.WebSocketManager] Request cannot be processed")
+            }
         }
         
         self.ws.onData = { (data: NSData) in

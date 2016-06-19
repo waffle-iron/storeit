@@ -9,8 +9,6 @@
 import Foundation
 import ObjectMapper
 
-// TODO: Maybe use generic type for parameters
-
 class Response : Mappable {
     
     var code: String
@@ -25,6 +23,14 @@ class Response : Mappable {
         self.command = ""
         self.commandUid = -1
         self.parameters = nil
+    }
+    
+    init(code: String, text: String, commandUid: Int, command: String, parameters: [String: File]) {
+        self.code = code
+        self.text = text
+        self.commandUid = commandUid
+        self.command = command
+        self.parameters = parameters
     }
     
     required init?(_ map: Map) {

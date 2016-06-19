@@ -27,6 +27,7 @@
 		855AFB2F1D15CCC6009B81D9 /* CommandInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855AFB2E1D15CCC6009B81D9 /* CommandInfos.swift */; };
 		855AFB311D15D081009B81D9 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855AFB301D15D081009B81D9 /* Response.swift */; };
 		855AFB3C1D16D643009B81D9 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855AFB3B1D16D643009B81D9 /* Parameters.swift */; };
+		855AFB3E1D171080009B81D9 /* ResponseResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855AFB3D1D171080009B81D9 /* ResponseResolver.swift */; };
 		856EAED61CDCC86E00F69148 /* 2017_logo_storeit.png in Resources */ = {isa = PBXBuildFile; fileRef = 856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */; };
 		856EAED81CDD0B6D00F69148 /* AppDataManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */; };
 		85708E821D130ED5001B7415 /* ParametersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85708E811D130ED5001B7415 /* ParametersView.swift */; };
@@ -86,6 +87,7 @@
 		855AFB2E1D15CCC6009B81D9 /* CommandInfos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandInfos.swift; sourceTree = "<group>"; };
 		855AFB301D15D081009B81D9 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		855AFB3B1D16D643009B81D9 /* Parameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
+		855AFB3D1D171080009B81D9 /* ResponseResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseResolver.swift; sourceTree = "<group>"; };
 		856EAED51CDCC86E00F69148 /* 2017_logo_storeit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2017_logo_storeit.png; sourceTree = "<group>"; };
 		856EAED71CDD0B6D00F69148 /* AppDataManagers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDataManagers.swift; sourceTree = "<group>"; };
 		85708E811D130ED5001B7415 /* ParametersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParametersView.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				855AFB2E1D15CCC6009B81D9 /* CommandInfos.swift */,
 				855AFB2C1D15CAB4009B81D9 /* Command.swift */,
 				855AFB3B1D16D643009B81D9 /* Parameters.swift */,
+				855AFB3D1D171080009B81D9 /* ResponseResolver.swift */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				8596DF0C1CDBDC03008501BD /* ConnexionManager.swift in Sources */,
 				850831541CE7358C00C11EB5 /* FileCell.swift in Sources */,
 				8500F70E1C97112800C69875 /* FileManager.swift in Sources */,
+				855AFB3E1D171080009B81D9 /* ResponseResolver.swift in Sources */,
 				8500F7111C972B0400C69875 /* NetworkManager.swift in Sources */,
 				85708E821D130ED5001B7415 /* ParametersView.swift in Sources */,
 				855AFB2F1D15CCC6009B81D9 /* CommandInfos.swift in Sources */,
