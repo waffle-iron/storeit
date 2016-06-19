@@ -66,10 +66,7 @@ Delete a file/directory.
 {
 	"uid": 765,
 	"command": "FDEL",
-	"parameters": [
-		{"file": FILEObject}
-		...
-	]
+	"parameters": [FILEObject, ...]
 }
 ```
 
@@ -82,10 +79,7 @@ Add a file to the user three.
 {
 	"uid": 766,
 	"command": "FADD",
-	"parameters": [
-		{"file": FILEObject}
-		...
-	]
+	"parameters": [FILEObject, ...]
 }
 ```
 
@@ -98,10 +92,7 @@ Update a file.
 {
 	"uid": 767,
 	"command": "FUPT",
-	"parameters": [
-		{"file": FILEObject}
-		...
-	]
+	"parameters": [FILEObject, ...]
 }
 ```
 
