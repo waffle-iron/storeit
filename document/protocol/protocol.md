@@ -55,7 +55,19 @@ This is the first request to make whenever a client wants to get online.
 }
 ```
 
-The response will contain a FILE object named "home".
+The response will contain a FILE object named "home". Example :
+
+```javascript
+{
+	"code": 0,
+	"text": "welcome",
+	"commandUid": 42,
+	"command": "JOIN",
+	"parameters": {
+		"home": FILEObject
+	}
+}
+```
 
 ##### FDEL
 
