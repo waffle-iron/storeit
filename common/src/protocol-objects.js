@@ -1,13 +1,15 @@
+let uid = 0
+
 export class Command {
 
   constructor(name, parameters) {
-    this.uid = 42
+    this.uid = uid++
     this.command = name
     this.parameters = parameters
   }
 }
 
-export class Reponse {
+export class Response {
   constructor(code, text, uid, parameters) {
     this.code = code,
     this.text = text,

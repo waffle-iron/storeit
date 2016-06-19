@@ -22,10 +22,14 @@ export let co = (accessToken) => {
 
   ws.on('open', function open() {
 
-    sendCmd(new Command('JOIN', [
-      {authType: 'fb'},
-      {accessToken: 'blahblah'},
-    ]))
+    sendCmd(new Command('JOIN', {
+      authType: 'fb',
+      accessToken: 'blahblah',
+    }))
+
+    sendCmd(new Command('FADD', {
+      'files': [{'name': 'Iam a happy file object'}]
+    }))
   })
 
   ws.on('message', (data) => {

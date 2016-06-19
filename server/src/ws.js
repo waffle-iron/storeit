@@ -2,6 +2,7 @@ import * as ws from 'ws'
 import {logger} from './log.js'
 import * as proto from './parse.js'
 import * as user from './user.js'
+import * as protoObjs from './protocol-objects.js'
 
 const PORT = 7641
 
@@ -29,12 +30,20 @@ class Client {
     })
   }
 
+  getUser() {
+    return user.sockets[this.uid]
+  }
+
   sendText(txt) {
     this.ws.send(txt)
   }
 
   sendObj(obj) {
     this.sendText(JSON.stringify(obj))
+  }
+
+  answerSuccess(commandUid) {
+    this.sendObj(new protoObjs.Response(0, "success", commandUid))
   }
 }
 

@@ -13,16 +13,28 @@ const join = function(command, arg, socket) {
       return logger.error('could not connect user')
     }
 
-    socket.sendObj(new protoObjs.Reponse(0, "welcome", command.uid, {
+    socket.sendObj(new protoObjs.Response(0, "welcome", command.uid, {
       home: user.home
     }))
   })
 }
 
-const add = (command, arg) => {
+const recast = (command, client) => {
 
-  git.add(arg.filePath)
+  const usr = client.getUser()
+  command.uid = ++usr.commandUid
+  for (const sock in usr.sockets) {
+    if (sock == client.uid) {
+      continue
+    }
+    usr.sockets[sock].sendObj(command)
+  }
+}
 
+const add = (command, arg, client) => {
+  const uid = command.uid
+  recast(command, client)
+  client.answerSuccess(uid)
 }
 
 export const parse = function(msg, client) {
@@ -31,7 +43,7 @@ export const parse = function(msg, client) {
 
   const hmap = {
     'JOIN': join,
-    'ADD': add
+    'FADD': add
   }
 
   // TODO: catch the goddam exception

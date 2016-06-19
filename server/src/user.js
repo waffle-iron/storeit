@@ -17,6 +17,7 @@ export class User {
   constructor(email) {
     this.email = email
     this.sockets = {}
+    this.commandUid = 0
   }
 
   loadHome(handlerFn) {
@@ -62,7 +63,7 @@ export const connectUser = (email, client, handlerFn) => {
 
   sockets[client.uid] = user
   users[email] = user
-  user.sockets[client.uid] = undefined
+  user.sockets[client.uid] = client
 
   user.loadHome((err) => {
     handlerFn(err, user)
