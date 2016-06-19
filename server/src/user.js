@@ -38,21 +38,21 @@ const getStat = () => {
   return `${Object.keys(users).length} users ${Object.keys(sockets).length} sockets.`
 }
 
-export const disconnectSocket = (socket) => {
+export const disconnectSocket = (client) => {
 
-  const user = sockets[socket]
+  const user = sockets[client.uid]
 
-  delete user.sockets[socket]
+  delete user.sockets[client.uid]
 
   if (Object.keys(user.sockets).length === 0) {
     delete users[user.email]
   }
 
-  delete sockets[socket]
+  delete sockets[client.uid]
   logger.info(`${user.email} has disconnected. ${getStat()}`)
 }
 
-export const connectUser = (email, socket, handlerFn) => {
+export const connectUser = (email, client, handlerFn) => {
 
   let user = users[email]
 
@@ -60,9 +60,9 @@ export const connectUser = (email, socket, handlerFn) => {
     user = new User(email)
   }
 
-  sockets[socket] = user
+  sockets[client.uid] = user
   users[email] = user
-  user.sockets[socket] = undefined
+  user.sockets[client.uid] = undefined
 
   user.loadHome((err) => {
     handlerFn(err, user)

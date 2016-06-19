@@ -12,17 +12,20 @@ const ClientStatus = {
   UNLOGGED: 2
 }
 
+let clientUid = 0
+
 class Client {
 
   constructor(ws) {
     this.ws = ws
+    this.uid = clientUid++
 
     ws.on('message', (mess) => {
       proto.parse(mess, this)
     })
 
     ws.on('close', (connection, closeReason, description) => {
-      user.disconnectSocket(this.ws)
+      user.disconnectSocket(this)
     })
   }
 
