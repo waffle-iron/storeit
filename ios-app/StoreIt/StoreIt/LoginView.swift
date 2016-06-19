@@ -21,7 +21,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.configureFacebook()
         
         let lastConnextionType = self.plistManager.getValueWithKey("connextionType")

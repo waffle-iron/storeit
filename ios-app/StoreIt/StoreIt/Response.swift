@@ -9,25 +9,22 @@
 import Foundation
 import ObjectMapper
 
+// TODO: Maybe use generic type for parameters
+
 class Response : Mappable {
     
     var code: String
     var text: String
     var commandUid: Int
     var command: String
+    var parameters: [String:File]?
     
     init() {
         self.code = ""
         self.text = ""
         self.command = ""
         self.commandUid = -1
-    }
-    
-    init(code: String, text: String, command: String, command_id: Int) {
-        self.code = ""
-        self.text = ""
-        self.command = ""
-        self.commandUid = -1
+        self.parameters = nil
     }
     
     required init?(_ map: Map) {
@@ -35,6 +32,7 @@ class Response : Mappable {
         self.text = ""
         self.command = ""
         self.commandUid = -1
+        self.parameters = nil
     }
     
     func mapping(map: Map) {
@@ -42,6 +40,7 @@ class Response : Mappable {
         text <- map["text"]
         commandUid <- map["commandUid"]
         command <- map["command"]
+        parameters <- map["parameters"]
     }
     
 }

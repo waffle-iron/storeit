@@ -8,17 +8,16 @@
 
 import Foundation
 import Starscream
+import ObjectMapper
 
 class WebSocketManager {
     
     let url: NSURL
     let ws: WebSocket
-    let requestResolver: RequestResolver
     
     init(host: String, port: Int) {
         self.url = NSURL(string: "ws://\(host):\(port)/")!
         self.ws = WebSocket(url: url)
-        self.requestResolver = RequestResolver()
         self.eventsInitializer()
     }
     
@@ -33,7 +32,9 @@ class WebSocketManager {
         
         self.ws.onText = { (request: String) in
             print("[Client.WebSocketManager] Client recieved a request : \(request)")
-            self.requestResolver.resolve(request)
+			
+            let _: Response? = Mapper<Response>().map(request)
+            // Do funny stuff with response here
         }
         
         self.ws.onData = { (data: NSData) in
