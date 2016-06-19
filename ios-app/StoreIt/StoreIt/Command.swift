@@ -9,19 +9,19 @@
 import Foundation
 import ObjectMapper
 
-class Command : Mappable {
+class Command<T: Mappable>: Mappable {
     
     var uid: Int
     var command: String
-    var parameters: [String:Any]
+    var parameters: T?
     
     init() {
         self.uid = -1
         self.command = ""
-        self.parameters = [String:Any]()
+        self.parameters = nil
     }
     
-    init(uid: Int, command: String, parameters: [String:Any]) {
+    init(uid: Int, command: String, parameters: T) {
         self.uid = uid
         self.command = command
         self.parameters = parameters
@@ -30,7 +30,7 @@ class Command : Mappable {
     required init?(_ map: Map) {
         self.uid = -1
         self.command = ""
-        self.parameters = [String:Any]()
+        self.parameters = nil
     }
     
     func mapping(map: Map) {

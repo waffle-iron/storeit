@@ -26,18 +26,36 @@ class NetworkManager {
         return WSManager.ws.isConnected
     }
     
-    func join(authType: String, accessToken: String, home: File) {
-        var parameters = [String:Any]()
-        
-        parameters["authType"] = authType
-        parameters["accessToken"] = accessToken
-        parameters["home"] = home
-        
+    func join(authType: String, accessToken: String) {
+        let parameters: JoinParameters = JoinParameters(authType: authType, accessToken: accessToken)
         let joinCommand = Command(uid: CommandInfos().JOIN.0, command: CommandInfos().JOIN.1, parameters: parameters)
         let jsonJoinCommand = Mapper().toJSONString(joinCommand)
         
         self.WSManager.sendRequest(jsonJoinCommand!)
     }
     
+    func fadd(files: [File]) {
+        let parameters = FilesParameters(files: files)
+        let faddCommand = Command(uid: CommandInfos().FADD.0, command: CommandInfos().FADD.1, parameters: parameters)
+        let jsonFaddCommand = Mapper().toJSONString(faddCommand)
+        
+        self.WSManager.sendRequest(jsonFaddCommand!)
+    }
+
+    func fdel(files: [File]) {
+      	let parameters = FilesParameters(files: files)
+        let fdelCommand = Command(uid: CommandInfos().FDEL.0, command: CommandInfos().FDEL.1, parameters: parameters)
+        let jsonFdelCommand = Mapper().toJSONString(fdelCommand)
+        
+        self.WSManager.sendRequest(jsonFdelCommand!)
+    }
+    
+    func fupt(files: [File]) {
+   		let parameters = FilesParameters(files: files)
+        let fuptCommand = Command(uid: CommandInfos().FDEL.0, command: CommandInfos().FDEL.1, parameters: parameters)
+        let jsonFuptCommand = Mapper().toJSONString(fuptCommand)
+        
+        self.WSManager.sendRequest(jsonFuptCommand!)
+    }
     
 }

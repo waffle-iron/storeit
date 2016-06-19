@@ -22,11 +22,6 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let toto = FileManager(path: "/Users/gjura_r/Desktop/demo/")
-        let tree: [String: File] = toto.getSyncDirTree()
-        
-        print(tree)
-        
         self.configureFacebook()
         
         let lastConnextionType = self.plistManager.getValueWithKey("connextionType")

@@ -21,7 +21,7 @@ class File: Mappable {
         self.path = ""
         self.metadata = ""
         self.IPFSHash = ""
-        self.files = [String: File]()
+        self.files = [:]
         self.isDir = false
     }
 
@@ -29,8 +29,8 @@ class File: Mappable {
         self.path = path
         self.metadata = metadata
         self.IPFSHash = IPFSHash
-        self.files = files
         self.isDir = true
+        self.files = files
     }
     
    required init?(_ map: Map) {
@@ -38,7 +38,7 @@ class File: Mappable {
     	self.metadata = ""
     	self.IPFSHash = ""
     	self.isDir = false
-    	self.files = [String:File]()
+    	self.files = [:]
     }
     
     func mapping(map: Map) {
