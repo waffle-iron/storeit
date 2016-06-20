@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,10 +13,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.storeit.storeit.protocol.StoreitFile;
-
-import java.io.File;
+import com.storeit.storeit.adapters.ExplorerAdapter;
+import com.storeit.storeit.utils.FilesManager;
+import com.storeit.storeit.R;
+import com.storeit.storeit.utils.StoreitFile;
 
 public class FileViewerFragment extends Fragment {
 
@@ -25,10 +25,9 @@ public class FileViewerFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-
-
+    private ExplorerAdapter adapter;
     private OnFragmentInteractionListener mListener;
-    RecyclerView explorersRecyclerView;
+    private RecyclerView explorersRecyclerView;
 
     public FileViewerFragment() {
 
@@ -67,22 +66,18 @@ public class FileViewerFragment extends Fragment {
         explorersRecyclerView = (RecyclerView)rootView.findViewById(R.id.explorer_recycler_view);
         explorersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         FilesManager manager = new FilesManager(getContext());
         StoreitFile file = manager.makeTree();
 
-        final ExplorerAdapter adapter = new ExplorerAdapter(file, getContext());
+        adapter = new ExplorerAdapter(file, getContext(), manager.getFolderPath());
         explorersRecyclerView.setAdapter(adapter);
         explorersRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
 
         final GestureDetector mGestureDetector = new GestureDetector(rootView.getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
-
 
         explorersRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
@@ -94,7 +89,6 @@ public class FileViewerFragment extends Fragment {
                     adapter.fileClicked(explorersRecyclerView.getChildLayoutPosition(child));
                     return  true;
                 }
-
                 return false;
             }
 
@@ -111,6 +105,10 @@ public class FileViewerFragment extends Fragment {
         return rootView;
     }
 
+    public void backPressed(){
+        adapter.backPressed();
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -120,14 +118,6 @@ public class FileViewerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-/*        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-        */
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -20,12 +20,12 @@ import java.net.UnknownHostException;
 /**
  * Created by loulo on 23/03/2016.
  */
-public class ReceiveService extends IntentService {
+public class SendService extends IntentService {
 
-    private final String LOGTAG = "ReceiveService";
+    private final String LOGTAG = "SendService";
 
-    public ReceiveService() {
-        super("ReceiveService");
+    public SendService() {
+        super("SendService");
     }
 
     @Override

@@ -1,24 +1,16 @@
-package com.storeit.storeit;
+package com.storeit.storeit.activities;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -28,8 +20,10 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.storeit.storeit.R;
+import com.storeit.storeit.oauth.GetUsernameTask;
 import com.storeit.storeit.protocol.LoginHandler;
-import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.services.SocketService;
 
 /*
 * Login Activity
@@ -37,18 +31,13 @@ import com.storeit.storeit.protocol.StoreitFile;
 */
 public class LoginActivity extends Activity implements LoginHandler {
 
-    private boolean mIsBound = false;
-    private SocketService mBoundService = null;
-
-    private String mEmail;
-    String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
-
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
     static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
+    private boolean mIsBound = false;
+    private SocketService mBoundService = null;
+    private String mEmail;
+    String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     private GoogleApiClient client;
 
     private void pickUserAccount() {
@@ -139,14 +128,8 @@ public class LoginActivity extends Activity implements LoginHandler {
     @Override
     protected void onStart() {
         super.onStart();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
 
-        //   Intent intent = new Intent(this, SocketService.class);
-        //   bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Login Page", // TODO: Define a title for the content shown.
@@ -186,49 +169,27 @@ public class LoginActivity extends Activity implements LoginHandler {
         client.disconnect();
     }
 
-    FilesManager filesManager;
-    StoreitFile file;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-        final EditText email = (EditText) findViewById(R.id.login_input_email);
-        final EditText password = (EditText) findViewById(R.id.login_input_password);
-        Button btn = (Button) findViewById(R.id.login_btn);
-
         SignInButton button = (SignInButton) findViewById(R.id.google_login);
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 pickUserAccount();
 
-                /*
+
                 if (mBoundService != null) {
                     if (!mBoundService.isConnected()) {
                         Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    if (email.getText().toString().isEmpty()) {
-                        Toast.makeText(LoginActivity.this, "Please enter a login", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (password.getText().toString().isEmpty()) {
-                        Toast.makeText(LoginActivity.this, "Please enter a password", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    file = filesManager.makeTree();
-
-                    mBoundService.sendJOIN(email.getText().toString(), "", file);
-                }*/
+                    // Send join command
+                }
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -239,7 +200,7 @@ public class LoginActivity extends Activity implements LoginHandler {
     @Override
     public void handleJoin(String cmd) {
 
-        int success = 0;
+        int success;
 
         String[] tokens = cmd.split("\\s");
         if (tokens.length != 2)

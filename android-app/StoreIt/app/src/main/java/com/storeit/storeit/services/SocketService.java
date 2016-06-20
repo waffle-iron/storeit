@@ -1,4 +1,4 @@
-package com.storeit.storeit;
+package com.storeit.storeit.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketExtension;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.storeit.storeit.protocol.CommandManager;
-import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.utils.StoreitFile;
 import java.io.IOException;
 
 /*

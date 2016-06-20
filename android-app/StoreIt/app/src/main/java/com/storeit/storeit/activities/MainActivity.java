@@ -1,12 +1,9 @@
-package com.storeit.storeit;
+package com.storeit.storeit.activities;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,15 +21,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import com.nononsenseapps.filepicker.FilePickerActivity;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import com.storeit.storeit.adapters.MainAdapter;
+import com.storeit.storeit.fragments.FileViewerFragment;
+import com.storeit.storeit.fragments.HomeFragment;
+import com.storeit.storeit.R;
+import com.storeit.storeit.ipfs.UploadAsync;
 
 public class MainActivity extends AppCompatActivity {
 
-    String TITLES[] = {"Home", "My files", "My account", "Settings"};
-    int ICONS[] = {R.drawable.ic_cloud_black_24dp, R.drawable.ic_folder_black_24dp, R.drawable.ic_account_box_black_24dp, R.drawable.ic_settings_applications_black_24dp};
+    String TITLES[] = {"Home", "My files", "Settings"};
+    int ICONS[] = {R.drawable.ic_cloud_black_24dp, R.drawable.ic_folder_black_24dp, R.drawable.ic_settings_applications_black_24dp};
 
     String NAME = "Louis Mondesir";
     String EMAIL = "louis.mondesir@gmail.com";
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     static int FILE_CODE_RESULT = 1005;
 
-    static final int HOME_FRAGMENT = 1, FILES_FRAGMENT = 2, ACCOUNT_FRAGMENT = 3, SETTINGS_FRAGMENT = 4;
+    static final int HOME_FRAGMENT = 1, FILES_FRAGMENT = 2, SETTINGS_FRAGMENT = 3;
 
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout Drawer;
 
     ActionBarDrawerToggle mDrawerToggle;
+    FloatingActionButton fbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new MyAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE, this);
+        mAdapter = new MainAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE, this);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -129,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
-        FloatingActionButton fbtn = (FloatingActionButton) findViewById(R.id.add_file_button);
+        fbtn = (FloatingActionButton)findViewById(R.id.add_file_button);
         assert fbtn != null;
+        fbtn.setVisibility(View.INVISIBLE);
+
         fbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         if (bar != null)
             bar.setTitle("Home");
 
-//        new com.storeit.storeit.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
+//        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
     }
 
     public void onTouchDrawer(final int position) {
@@ -158,16 +161,16 @@ public class MainActivity extends AppCompatActivity {
 
         switch (position) {
             case HOME_FRAGMENT:
+                fbtn.setVisibility(View.INVISIBLE);
                 openFragment(new HomeFragment());
                 if (actionBar != null)
                     actionBar.setTitle("Home");
                 break;
             case FILES_FRAGMENT:
+                fbtn.setVisibility(View.VISIBLE);
                 openFragment(new FileViewerFragment());
                 if (actionBar != null)
                     actionBar.setTitle("My Files");
-                break;
-            case ACCOUNT_FRAGMENT:
                 break;
             case SETTINGS_FRAGMENT:
                 Intent i = new Intent(this, StoreItPreferences.class);
@@ -227,5 +230,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
+        if (currentFragment instanceof FileViewerFragment)
+        {
+            FileViewerFragment fileViewerFragment = (FileViewerFragment)currentFragment;
+            fileViewerFragment.backPressed();
+            return;
+        }
+
+        super.onBackPressed();
     }
 }
