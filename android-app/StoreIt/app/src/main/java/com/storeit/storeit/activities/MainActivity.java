@@ -33,6 +33,7 @@ import com.storeit.storeit.fragments.FileViewerFragment;
 import com.storeit.storeit.fragments.HomeFragment;
 import com.storeit.storeit.ipfs.UploadAsync;
 import com.storeit.storeit.services.SocketService;
+import com.storeit.storeit.utils.FilesManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -185,6 +186,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String homeJson = intent.getStringExtra("home");
+
+
+        FilesManager filesManager = new FilesManager(this);
 
 //        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
     }
