@@ -26,7 +26,7 @@ export class User {
       logger.error('home has not loaded')
     }
 
-    for (const treeIncoming in trees) {
+    for (const treeIncoming of trees) {
 
       const pathToFile = treeIncoming.path.split(path.sep)
       const stepInto = (path, tree) => {
@@ -38,6 +38,8 @@ export class User {
         const name = pathToFile.shift()
         return stepInto(pathToFile, tree[name])
       }
+      pathToFile.shift()
+      stepInto(pathToFile, this.home)
     }
   }
 

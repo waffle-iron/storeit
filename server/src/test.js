@@ -18,6 +18,11 @@ class fakeUser {
     this.ws.on('open', () => {
       this.join()
     })
+    this.msgHandler = undefined
+
+    this.ws.on('message', (data) => {
+      this.msgHandler(data)
+    })
   }
 
   join() {
@@ -32,49 +37,97 @@ class fakeUser {
   }
 }
 
+const expectOkResponse = (data) => {
+  const obj = JSON.parse(data)
+
+  expect(obj.code).to.equal(0)
+}
+
 const expectUsualJoinResponse = (data) => {
 
   const obj = JSON.parse(data)
 
-  expect(obj.code).to.equal(0)
+  expectOkResponse(data)
   expect(obj.parameters.home.path).to.equal('/')
 }
 
-describe('simple connection', () => {
+let fakeA = undefined
+let fakeB = undefined
 
-  let fakeA = undefined
-  let fakeB = undefined
+describe('simple connection', () => {
 
   it('should get JOIN response', (done) => {
     fakeA = new fakeUser('adrien.morel@me.com')
 
-    fakeA.ws.on('message', (data) => {
+    fakeA.msgHandler = (data) => {
       expectUsualJoinResponse(data)
       done()
-    })
+    }
   })
 
   it('should connect another client', (done) => {
     fakeB = new fakeUser('adrien.morel@me.com', done)
-    fakeB.ws.on('message', (data) => {
+    fakeB.msgHandler = (data) => {
       expectUsualJoinResponse(data)
       done()
-    })
+    }
   })
 
   it('should have correct number of connected user', () => {
-      expect(user.getUserCount()).to.equal(1)
-      expect(user.getConnectionCount()).to.equal(2)
+    expect(user.getUserCount()).to.equal(1)
+    expect(user.getConnectionCount()).to.equal(2)
   })
 
+})
+
+describe('protocol file commands', () => {
+  const makeFileObj = (path, IPFSHash, files) => {
+    if (IPFSHash === undefined) {
+      IPFSHash = null
+    }
+    if (files === undefined) {
+      files = null
+    }
+
+    return {
+      path: path,
+      metadata: null,
+      IPFSHash: IPFSHash,
+      isDir: IPFSHash == null,
+      files: files,
+    }
+  }
+
   it('should disconnect user without issue', (done) => {
-    fakeA.leave()
-    fakeA.ws.on('close', () => {
+    fakeB.ws.on('close', () => {
       setTimeout(() => {
         expect(user.getConnectionCount()).to.equal(1)
         expect(user.getUserCount()).to.equal(1)
         done()
-      }, 100 // wait for server to take action)
+      }, 100) // wait for server to take action
     })
+
+    fakeB.leave()
+  })
+
+  it('should FADD correctly', (done) => {
+
+    fakeA.msgHandler = (data) => {
+      expectOkResponse(data)
+      expect(
+        makeFileObj('/', null, {
+          'foo': makeFileObj('/foo', null, {
+            'bar.txt': makeFileObj('/foo/bar.txt')
+          })
+        })).to.deep.equal(user.users['adrien.morel@me.com'].home),
+      done()
+    }
+
+    fakeA.send(new api.Command('FADD', {
+      files: [
+        makeFileObj('/foo', null, {'bar.txt': makeFileObj('/foo/bar.txt')}),
+      ]
+    }))
+
   })
 })

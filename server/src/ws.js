@@ -43,7 +43,7 @@ class Client {
   }
 
   answerSuccess(commandUid) {
-    this.sendObj(new protoObjs.Response(0, "success", commandUid))
+    this.sendObj(new protoObjs.Response(0, 'success', commandUid))
   }
 }
 
