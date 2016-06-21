@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Toast;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -21,9 +22,11 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.storeit.storeit.R;
 import com.storeit.storeit.oauth.GetUsernameTask;
 import com.storeit.storeit.protocol.LoginHandler;
+import com.storeit.storeit.protocol.command.JoinResponse;
 import com.storeit.storeit.services.SocketService;
 
 /*
@@ -56,13 +59,12 @@ public class LoginActivity extends Activity implements LoginHandler {
         }
     }
 
-    public void tokenReceived(String token) {
+    // Google+ token received, sending join cmd
+    public void tokenReceived(final String token) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                mBoundService.sendJOIN("google", token);
             }
         });
     }
@@ -92,6 +94,7 @@ public class LoginActivity extends Activity implements LoginHandler {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBoundService = ((SocketService.LocalBinder) service).getService();
+            mBoundService.setmLoginHandler(LoginActivity.this);
             mIsBound = true;
         }
 
@@ -163,35 +166,24 @@ public class LoginActivity extends Activity implements LoginHandler {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 pickUserAccount();
-
-                if (mBoundService != null) {
-                    if (!mBoundService.isConnected()) {
-                        Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Send join command
-                }
             }
         });
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
-    public void handleJoin(String cmd) {
+    public void handleJoin(JoinResponse response) {
 
-        int success;
-
-        String[] tokens = cmd.split("\\s");
-        if (tokens.length != 2)
-            success = 0;
-        else
-            success = Integer.parseInt(tokens[1]);
-
-        if (success == 1) {
+        if (response.getCode() == 1) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+            // Stringify fileobject in order to pass it to other activity. It will be save on disk
+            // So passing as string is fine
+            Gson gson = new Gson();
+            String homeJson = gson.toJson(response.getParameters().getHome());
+
+            intent.putExtra("home", homeJson);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         } else {

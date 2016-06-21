@@ -13,8 +13,11 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketExtension;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import com.storeit.storeit.protocol.CommandManager;
-import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.protocol.LoginHandler;
+import com.storeit.storeit.protocol.command.CommandManager;
+import com.storeit.storeit.protocol.command.JoinCommand;
+import com.storeit.storeit.protocol.command.JoinResponse;
+
 import java.io.IOException;
 
 /*
@@ -34,6 +37,8 @@ public class SocketService extends Service {
     private Handler handler = new Handler(Looper.getMainLooper());
     private WebSocket webSocket = null;
 
+    private LoginHandler mLoginHandler;
+
     private class SocketManager implements Runnable {
         @Override
         public void run() {
@@ -49,12 +54,16 @@ public class SocketService extends Service {
 
                             public void onTextMessage(WebSocket websocket, String message) {
                                 int cmdType = CommandManager.getCommandType(message);
-
                                 switch (cmdType){
                                     case CommandManager.JOIN:
                                         Log.v(LOGTAG, "Join command received :)");
-                                        break;
-                                    case CommandManager.QUIT:
+                                        if (mLoginHandler != null){
+
+                                            Gson gson = new Gson();
+                                            JoinResponse response = gson.fromJson(message, JoinResponse.class);
+                                            mLoginHandler.handleJoin(response);
+                                        }
+
                                         break;
                                     case CommandManager.FDEL:
                                         break;
@@ -78,16 +87,14 @@ public class SocketService extends Service {
         }
     }
 
-    public  void sendJOIN(String username, String password, StoreitFile file){
+    public  void sendJOIN(String authType, String token){
         Gson gson = new Gson();
+        JoinCommand cmd = new JoinCommand(0, authType, token);
+        webSocket.sendText(gson.toJson(cmd));
+    }
 
-        String jsonFile = gson.toJson(file);
-        String hashes = "None";
-        String cmd = "JOIN ";
-        String params =  username + " " + jsonFile + "\r\n";
-        cmd += params.length() + " " + params;
-
-        webSocket.sendText(cmd);
+    public void setmLoginHandler(LoginHandler handler){
+        mLoginHandler = handler;
     }
 
     @Override
