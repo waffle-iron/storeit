@@ -3,6 +3,8 @@ package com.storeit.storeit.utils;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.storeit.storeit.protocol.StoreitFile;
+
 import java.io.File;
 import java.util.Map;
 

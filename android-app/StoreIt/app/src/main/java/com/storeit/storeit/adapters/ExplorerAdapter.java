@@ -2,7 +2,6 @@ package com.storeit.storeit.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.UriMatcher;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.storeit.storeit.R;
-import com.storeit.storeit.utils.StoreitFile;
+import com.storeit.storeit.protocol.StoreitFile;
 
 import java.io.File;
 import java.util.ArrayDeque;

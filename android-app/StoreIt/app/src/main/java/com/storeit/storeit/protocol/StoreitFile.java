@@ -1,4 +1,4 @@
-package com.storeit.storeit.utils;
+package com.storeit.storeit.protocol;
 
 import android.net.Uri;
 

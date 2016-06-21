@@ -14,7 +14,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketExtension;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.storeit.storeit.protocol.CommandManager;
-import com.storeit.storeit.utils.StoreitFile;
+import com.storeit.storeit.protocol.StoreitFile;
 import java.io.IOException;
 
 /*

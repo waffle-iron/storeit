@@ -2,10 +2,14 @@ package com.storeit.storeit.activities;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -21,14 +25,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.nononsenseapps.filepicker.FilePickerActivity;
+import com.storeit.storeit.R;
 import com.storeit.storeit.adapters.MainAdapter;
 import com.storeit.storeit.fragments.FileViewerFragment;
 import com.storeit.storeit.fragments.HomeFragment;
-import com.storeit.storeit.R;
 import com.storeit.storeit.ipfs.UploadAsync;
+import com.storeit.storeit.services.SocketService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +56,34 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
     FloatingActionButton fbtn;
 
+
+    // Socket service is already existing
+    private boolean mIsBound = false;
+    private SocketService mBoundService = null;
+
+    // Should be the same class as LoginActivity ServiceConnection
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBoundService = ((SocketService.LocalBinder) service).getService();
+            mIsBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBoundService = null;
+            mIsBound = false;
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent socketService = new Intent(this, SocketService.class);
+        bindService(socketService, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
         assert mRecyclerView != null;
-
 
         final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
@@ -130,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
-        fbtn = (FloatingActionButton)findViewById(R.id.add_file_button);
+        fbtn = (FloatingActionButton) findViewById(R.id.add_file_button);
         assert fbtn != null;
         fbtn.setVisibility(View.INVISIBLE);
 
@@ -153,6 +184,17 @@ public class MainActivity extends AppCompatActivity {
             bar.setTitle("Home");
 
 //        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mIsBound) {
+            unbindService(mConnection);
+            mIsBound = false;
+        }
+
     }
 
     public void onTouchDrawer(final int position) {
@@ -235,9 +277,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
-        if (currentFragment instanceof FileViewerFragment)
-        {
-            FileViewerFragment fileViewerFragment = (FileViewerFragment)currentFragment;
+        if (currentFragment instanceof FileViewerFragment) {
+            FileViewerFragment fileViewerFragment = (FileViewerFragment) currentFragment;
             fileViewerFragment.backPressed();
             return;
         }

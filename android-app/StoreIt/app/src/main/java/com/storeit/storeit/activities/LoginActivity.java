@@ -4,6 +4,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
@@ -67,15 +68,11 @@ public class LoginActivity extends Activity implements LoginHandler {
     }
 
     public void handleException(final Exception e) {
-        // Because this call comes from the AsyncTask, we must ensure that the following
-        // code instead executes on the UI thread.
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (e instanceof GooglePlayServicesAvailabilityException) {
-                    // The Google Play services APK is old, disabled, or not present.
-                    // Show a dialog created by Google Play services that allows
-                    // the user to update the APK
                     int statusCode = ((GooglePlayServicesAvailabilityException) e)
                             .getConnectionStatusCode();
                     Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode,
@@ -83,9 +80,6 @@ public class LoginActivity extends Activity implements LoginHandler {
                             REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
                     dialog.show();
                 } else if (e instanceof UserRecoverableAuthException) {
-                    // Unable to authenticate, such as when the user has not yet granted
-                    // the app access to the account, but the user can fix this.
-                    // Forward the user to an activity in Google Play services.
                     Intent intent = ((UserRecoverableAuthException) e).getIntent();
                     startActivityForResult(intent,
                             REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
@@ -120,7 +114,6 @@ public class LoginActivity extends Activity implements LoginHandler {
         } else if ((
                 requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR)
                 && resultCode == RESULT_OK) {
-            // Receiving a result that follows a GoogleAuthException, try auth again
             getUsername();
         }
     }
@@ -131,41 +124,33 @@ public class LoginActivity extends Activity implements LoginHandler {
 
         client.connect();
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "Login Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.storeit.storeit/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+
+        Intent socketService = new Intent(this, SocketService.class);
+        bindService(socketService, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "Login Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.storeit.storeit/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
 
-        if (mIsBound) {
+/*        if (mIsBound) {
             unbindService(mConnection);
             mIsBound = false;
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        */
         client.disconnect();
     }
 
@@ -181,7 +166,6 @@ public class LoginActivity extends Activity implements LoginHandler {
 
                 pickUserAccount();
 
-
                 if (mBoundService != null) {
                     if (!mBoundService.isConnected()) {
                         Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
@@ -192,8 +176,6 @@ public class LoginActivity extends Activity implements LoginHandler {
                 }
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 

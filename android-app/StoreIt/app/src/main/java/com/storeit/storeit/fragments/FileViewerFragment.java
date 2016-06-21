@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.storeit.storeit.adapters.ExplorerAdapter;
 import com.storeit.storeit.utils.FilesManager;
 import com.storeit.storeit.R;
-import com.storeit.storeit.utils.StoreitFile;
+import com.storeit.storeit.protocol.StoreitFile;
 
 public class FileViewerFragment extends Fragment {
 
