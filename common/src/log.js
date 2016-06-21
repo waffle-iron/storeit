@@ -6,16 +6,9 @@ export const logger = new winston.Logger({
       level: 'debug',
       json: false,
       timestamp: false,
-      colorize: 'all'
+      colorize: 'all',
     }),
     //new winston.transports.File({ filename: __dirname + '/debug.log', json: false })
-  ],
-  exceptionHandlers: [
-    new winston.transports.Console({
-      json: false,
-      timestamp: true
-    }),
-    //new winston.transports.File({ filename: __dirname + '/exceptions.log', json: false })
   ],
   exitOnError: false
 })

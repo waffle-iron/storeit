@@ -72,8 +72,16 @@ export const setUsersDir = (name) => {
 export const users = {}
 export const sockets = {}
 
+export const getUserCount = () => {
+  return Object.keys(users).length
+}
+
+export const getConnectionCount = () => {
+  return Object.keys(sockets).length
+}
+
 const getStat = () => {
-  return `${Object.keys(users).length} users ${Object.keys(sockets).length} sockets.`
+  return `${getUserCount()} users ${getConnectionCount()} sockets.`
 }
 
 export const disconnectSocket = (client) => {
