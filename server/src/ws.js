@@ -48,6 +48,7 @@ class Client {
 }
 
 wss.on('connection', (ws) => {
+  logger.debug('client connects')
   new Client(ws)
 })
 

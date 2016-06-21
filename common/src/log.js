@@ -3,6 +3,7 @@ import winston from '../../desktop-app/node_modules/winston'
 export const logger = new winston.Logger({
   transports: [
     new winston.transports.Console({
+      level: 'debug',
       json: false,
       timestamp: false,
       colorize: 'all'

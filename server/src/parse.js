@@ -21,6 +21,7 @@ const join = function(command, arg, socket) {
 
 const recast = (command, client) => {
 
+  const uid = command.uid
   const usr = client.getUser()
   command.uid = ++usr.commandUid
   for (const sock in usr.sockets) {
@@ -29,12 +30,24 @@ const recast = (command, client) => {
     }
     usr.sockets[sock].sendObj(command)
   }
+
+  client.answerSuccess(uid)
 }
 
 const add = (command, arg, client) => {
-  const uid = command.uid
+  client.getUser().addTree(arg.files)
+  logger.info('user tree: ' + client.getUser().home)
   recast(command, client)
-  client.answerSuccess(uid)
+}
+
+const upt = (command, arg, client) => {
+  client.getUser().uptTree(arg.files)
+  recast(command, client)
+}
+
+const del = (command, arg, client) => {
+  client.getUser().delTree(arg.files)
+  recast(command, client)
 }
 
 export const parse = function(msg, client) {
@@ -43,7 +56,9 @@ export const parse = function(msg, client) {
 
   const hmap = {
     'JOIN': join,
-    'FADD': add
+    'FADD': add,
+    'FUPT': upt,
+    'FDEL': del
   }
 
   // TODO: catch the goddam exception

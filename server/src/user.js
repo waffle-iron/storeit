@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import {logger} from './log.js'
 let usersDir = "./storeit-users/"
 
@@ -18,6 +19,42 @@ export class User {
     this.email = email
     this.sockets = {}
     this.commandUid = 0
+  }
+
+  setTree(trees, action) {
+    if (this.home === undefined) {
+      logger.error('home has not loaded')
+    }
+
+    for (const treeIncoming in trees) {
+
+      const pathToFile = treeIncoming.path.split(path.sep)
+      const stepInto = (path, tree) => {
+
+        if (pathToFile.length === 1) {
+          return action(tree, treeIncoming, pathToFile[0])
+        }
+
+        const name = pathToFile.shift()
+        return stepInto(pathToFile, tree[name])
+      }
+    }
+  }
+
+  addTree(trees) {
+    return this.setTree(trees, (treeParent, tree, name) => {
+      treeParent.files[name] = tree
+    })
+  }
+
+  uptTree(trees) {
+    return this.setTree(trees, (treeParent, tree, name) => {
+      treeParent.files[name] = tree
+    })
+  }
+
+  delTree(trees) {
+    return this.setTree(trees, (tree, name) => delete tree[name])
   }
 
   loadHome(handlerFn) {
