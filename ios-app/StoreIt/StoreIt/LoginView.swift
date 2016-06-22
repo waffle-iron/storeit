@@ -14,9 +14,9 @@ import FBSDKLoginKit
 
 class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     
-    var connexionType: ConnexionType? = nil
+    var connectionType: ConnectionType? = nil
     var networkManager: NetworkManager? = nil
-    var connexionManager: ConnexionManager? = nil
+    var connectionManager: ConnectionManager? = nil
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
     var plistManager: PListManager? = nil
@@ -34,12 +34,12 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         
         self.configureFacebook()
         
-        let lastConnextionType = self.plistManager?.getValueWithKey("connextionType")
-        print("[LoginView] Last connexion type : \(lastConnextionType). Trying to auto log if possible...")
+        let lastConnexionType = self.plistManager?.getValueWithKey("connextionType")
+        print("[LoginView] Last connexion type : \(lastConnexionType). Trying to auto log if possible...")
         
-        if (lastConnextionType == ConnexionType.GOOGLE.rawValue) {
+        if (lastConnexionType == ConnectionType.GOOGLE.rawValue) {
             self.initGoogle()
-        } else if (lastConnextionType == ConnexionType.FACEBOOK.rawValue && FBSDKAccessToken.currentAccessToken() != nil) {
+        } else if (lastConnexionType == ConnectionType.FACEBOOK.rawValue && FBSDKAccessToken.currentAccessToken() != nil) {
             // TODO: check expiration of Facebook token
             self.initFacebook()
         }
@@ -57,9 +57,9 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         
         listView.navigationItem.title = self.navigationManager?.rootDirTitle
         
-        listView.connexionType = self.connexionType
+        listView.connectionType = self.connectionType
         listView.networkManager = self.networkManager
-        listView.connexionManager = self.connexionManager
+        listView.connectionManager = self.connectionManager
         listView.fileManager = self.fileManager
         listView.navigationManager = self.navigationManager
     }
@@ -69,23 +69,42 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         self.presentViewController(tabBarController, animated: true, completion: nil)
     }
     
-    @IBAction func logoutSegue(segue: UIStoryboardSegue) {
-        if (self.connexionType != nil && self.connexionType! == ConnexionType.FACEBOOK) {
+    func logout() {
+        if (self.connectionType != nil && self.connectionType! == ConnectionType.FACEBOOK) {
             let loginManager = FBSDKLoginManager()
             loginManager.logOut()
-        } else if (self.connexionType != nil && self.connexionType! == ConnexionType.GOOGLE) {
-            self.connexionManager?.forgetTokens()
+        } else if (self.connectionType != nil && self.connectionType! == ConnectionType.GOOGLE) {
+            self.connectionManager?.forgetTokens()
         }
         
         // TODO: send logout request
         
-         self.connexionType = nil
-         self.networkManager = nil
-         self.connexionManager = nil
-         self.fileManager = nil
-         self.navigationManager = nil
+        self.connectionType = nil
+        self.networkManager = nil
+        self.connectionManager = nil
+        self.fileManager = nil
+        self.navigationManager = nil
         
-        self.plistManager?.addValueForKey("connextionType", value: ConnexionType.NONE.rawValue)
+        self.plistManager?.addValueForKey("connextionType", value: ConnectionType.NONE.rawValue)
+    }
+    
+    @IBAction func logoutSegue(segue: UIStoryboardSegue) {
+		self.logout()
+    }
+    
+    func initConnexion(host: String, port: Int, path: String) {
+    	if (self.networkManager == nil) {
+        	self.networkManager = NetworkManager(host: host, port: port);
+    	}
+        
+        if (self.fileManager == nil) {
+            self.fileManager = FileManager(path: path) // Path to local synch dir
+        }
+        
+        if (self.navigationManager == nil) {
+            self.navigationManager = NavigationManager(rootDirTitle: "StoreIt",
+                                                       allItems: (self.fileManager?.getSyncDirTree())!)
+        }
     }
     
     // MARK: Login with Facebook
@@ -96,28 +115,19 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     func initFacebook() {
-        if (self.networkManager == nil) {
-            self.networkManager = NetworkManager(host: "localhost", port: 8001);
-        }
+        self.initConnexion("localhost", port: 7641, path: "/Users/gjura_r/Desktop/demo/")
+        self.connectionType = ConnectionType.FACEBOOK
+        self.plistManager?.addValueForKey("connextionType", value: ConnectionType.FACEBOOK.rawValue)
         
-        if (self.fileManager == nil) {
-            self.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
-        }
-        
-        if (self.navigationManager == nil) {
-            self.navigationManager = NavigationManager(rootDirTitle: "StoreIt", allItems: (self.fileManager?.getSyncDirTree())!)
-        }
-        self.connexionType = ConnexionType.FACEBOOK
-        self.plistManager?.addValueForKey("connextionType", value: ConnexionType.FACEBOOK.rawValue)
         self.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
     }
     
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         if ((error) != nil) {
-            self.connexionType = nil
+            self.logout()
         }
         else if result.isCancelled {
-            self.connexionType = nil
+            self.logout()
         }
         else {
             if result.grantedPermissions.contains("email"){
@@ -127,35 +137,24 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     func loginButtonWillLogin(loginButton: FBSDKLoginButton!) -> Bool {
-        self.connexionType = ConnexionType.FACEBOOK
+        self.connectionType = ConnectionType.FACEBOOK
         return true
     }
     
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        self.logout()
     }
     
     // MARK: Login with Google
     
     func initGoogle() {
-        if (self.networkManager == nil) {
-            self.networkManager = NetworkManager(host: "localhost", port: 7641);
+        if (self.connectionManager == nil) {
+            self.connectionType = ConnectionType.GOOGLE
+            self.connectionManager = ConnectionManager(connectionType: ConnectionType.GOOGLE)
+            self.plistManager?.addValueForKey("connextionType", value: ConnectionType.GOOGLE.rawValue)
         }
-        
-        if (self.connexionManager == nil) {
-            self.connexionType = ConnexionType.GOOGLE
-            self.connexionManager = ConnexionManager(connexionType: ConnexionType.GOOGLE)
-            self.plistManager?.addValueForKey("connextionType", value: ConnexionType.GOOGLE.rawValue)
-        }
-        
-        if (self.fileManager == nil) {
-            self.fileManager = FileManager(path: "/Users/gjura_r/Desktop/demo/") // Path to synch dir
-        }
-        
-        if (self.navigationManager == nil) {
-            self.navigationManager = NavigationManager(rootDirTitle: "StoreIt", allItems: (self.fileManager?.getSyncDirTree())!)
-        }
-        
-        self.connexionManager?.authorize(self)
+
+        self.connectionManager?.authorize(self)
     }
     
     @IBAction func login(sender: AnyObject) {

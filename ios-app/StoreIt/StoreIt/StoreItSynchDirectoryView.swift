@@ -16,9 +16,9 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     
     var alertControllerManager: AlertControllerManager?
     
-    var connexionType: ConnexionType? = nil
+    var connectionType: ConnectionType? = nil
     var networkManager: NetworkManager? = nil
-    var connexionManager: ConnexionManager? = nil
+    var connectionManager: ConnectionManager? = nil
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
     
@@ -77,9 +77,9 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
             
             listView.navigationItem.title = targetPath
             
-            listView.connexionType = self.connexionType
+            listView.connectionType = self.connectionType
             listView.networkManager = self.networkManager
-            listView.connexionManager = self.connexionManager
+            listView.connectionManager = self.connectionManager
             listView.fileManager = self.fileManager
             listView.navigationManager = self.navigationManager
         }

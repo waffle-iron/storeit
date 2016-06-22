@@ -30,7 +30,7 @@ class NetworkManager {
         let parameters: JoinParameters = JoinParameters(authType: authType, accessToken: accessToken)
         let joinCommand = Command(uid: CommandInfos().JOIN.0, command: CommandInfos().JOIN.1, parameters: parameters)
         let jsonJoinCommand = Mapper().toJSONString(joinCommand)
-        print("COMMAND JOIN: \(jsonJoinCommand)")
+
         self.WSManager.sendRequest(jsonJoinCommand!)
     }
     

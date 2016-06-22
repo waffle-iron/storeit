@@ -13,9 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    var connexionType: ConnexionType? = nil
+    var connectionType: ConnectionType? = nil
     var networkManager: NetworkManager? = nil
-    var connexionManager: ConnexionManager? = nil
+    var connectionManager: ConnectionManager? = nil
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
     let plistManager: PListManager = PListManager()
@@ -24,9 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = self.window?.rootViewController as! UINavigationController
         let loginView = navigationController.viewControllers[0] as! LoginView
 
-		loginView.connexionType = self.connexionType
+		loginView.connectionType = self.connectionType
         loginView.networkManager = self.networkManager
-        loginView.connexionManager = self.connexionManager
+        loginView.connectionManager = self.connectionManager
         loginView.fileManager = self.fileManager
         loginView.plistManager = self.plistManager
         
@@ -37,12 +37,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = self.window?.rootViewController as! UINavigationController
         let loginView = navigationController.viewControllers[0] as! LoginView
 
-        if (loginView.connexionType != nil
-            && loginView.connexionType! == ConnexionType.GOOGLE) {
-            loginView.connexionManager?.handleRedirectUrl(url)
+        if (loginView.connectionType != nil
+            && loginView.connectionType! == ConnectionType.GOOGLE) {
+            loginView.connectionManager?.handleRedirectUrl(url)
         }
-        else if (loginView.connexionType != nil
-            && loginView.connexionType! == ConnexionType.FACEBOOK) {
+        else if (loginView.connectionType != nil
+            && loginView.connectionType! == ConnectionType.FACEBOOK) {
             return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
         }
         return true

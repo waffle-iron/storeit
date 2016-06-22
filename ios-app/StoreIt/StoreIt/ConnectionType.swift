@@ -1,5 +1,5 @@
 //
-//  ConnextionType.swift
+//  ConnectionType.swift
 //  StoreIt
 //
 //  Created by Romain Gjura on 22/06/2016.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ConnexionType: String {
+enum ConnectionType: String {
     case GOOGLE = "gg"
     case FACEBOOK = "fb"
     case NONE = "None"

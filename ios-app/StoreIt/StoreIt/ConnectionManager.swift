@@ -1,5 +1,5 @@
 //
-//  ConnexionManager.swift
+//  ConnectionManager.swift
 //  StoreIt
 //
 //  Created by Romain Gjura on 05/05/2016.
@@ -9,14 +9,14 @@
 import Foundation
 import p2_OAuth2
 
-class ConnexionManager {
+class ConnectionManager {
     
     let oauth2: OAuth2?
     
-    init(connexionType: ConnexionType) {
-        print("[ConnexionManager] Initializing a connexion of type \(connexionType)")
+    init(connectionType: ConnectionType) {
+        print("[ConnexionManager] Initializing a connexion of type \(connectionType)")
         
-        switch connexionType {
+        switch connectionType {
             case .GOOGLE:
                 oauth2 = OAuth2Google()
             	break
