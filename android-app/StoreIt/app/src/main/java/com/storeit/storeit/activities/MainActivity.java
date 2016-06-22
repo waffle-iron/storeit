@@ -26,12 +26,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.storeit.storeit.R;
 import com.storeit.storeit.adapters.MainAdapter;
 import com.storeit.storeit.fragments.FileViewerFragment;
 import com.storeit.storeit.fragments.HomeFragment;
 import com.storeit.storeit.ipfs.UploadAsync;
+import com.storeit.storeit.protocol.StoreitFile;
 import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.utils.FilesManager;
 
@@ -57,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
     FloatingActionButton fbtn;
 
+    // Will be passed as json string
+    private StoreitFile rootFile;
+    private FilesManager filesManager;
 
     // Socket service is already existing
     private boolean mIsBound = false;
@@ -187,8 +192,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String homeJson = intent.getStringExtra("home");
 
+        Gson gson = new Gson();
+        rootFile = gson.fromJson(homeJson, StoreitFile.class);
 
-        FilesManager filesManager = new FilesManager(this);
+
+        filesManager = new FilesManager(this, rootFile);
 
 //        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
     }
@@ -285,5 +293,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    public FilesManager getFilesManager(){
+        return filesManager;
     }
 }

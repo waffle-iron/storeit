@@ -1,7 +1,6 @@
 package com.storeit.storeit.protocol;
 
 import android.net.Uri;
-
 import java.io.File;
 import java.util.HashMap;
 
@@ -12,15 +11,15 @@ import java.util.HashMap;
 public class StoreitFile {
 
     private String path;
-    private String unique_hash;
+    private String IPFSHash;
     private String metadata;
-    private int kind;
+    private boolean isDir;
     private HashMap<String, StoreitFile> files;
 
-    public StoreitFile(String path, String unique_hash, int kind) {
+    public StoreitFile(String path, String IPFSHash, boolean isDir) {
         this.path = path;
-        this.unique_hash = unique_hash;
-        this.kind = kind;
+        this.IPFSHash = IPFSHash;
+        this.isDir = isDir;
         this.metadata = "";
         this.files = new HashMap<>();
     }
@@ -43,19 +42,19 @@ public class StoreitFile {
         this.files.put(uri.getLastPathSegment(), file);
     }
 
-    public String getUnique_hash() {
-        return unique_hash;
+    public String getIPFSHash() {
+        return IPFSHash;
     }
 
     public String getMetadata(){
         return metadata;
     }
 
-    public int getKind() {
-        return kind;
+    public boolean isDirectory() {
+        return isDir;
     }
 
-    public void setKind(int kind) {
-        this.kind = kind;
+    public void setIsDir(boolean isDir) {
+        this.isDir = isDir;
     }
 }

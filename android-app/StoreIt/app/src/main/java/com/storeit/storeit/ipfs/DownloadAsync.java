@@ -17,7 +17,7 @@ public class DownloadAsync extends AsyncTask<String, Void, Boolean> {
     private int id = 1;
     private Context mContext;
 
-    public DownloadAsync(Context context){
+    public DownloadAsync(Context context) {
         mContext = context;
     }
 
@@ -49,11 +49,12 @@ public class DownloadAsync extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
         String fileName = params[0];
-        String hash = params[1];
+        String path = params[1];
+        String hash = params[2];
         IPFS ipfs = new IPFS("toto");
 
-        File path[] = mContext.getExternalFilesDirs(null);
-        File file = new File(path[1], fileName);
+        File filePath = new File(path);
+        File file = new File(filePath, fileName);
 
         FileOutputStream outputStream;
         try {

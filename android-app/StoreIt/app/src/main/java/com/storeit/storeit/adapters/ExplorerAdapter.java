@@ -1,8 +1,10 @@
 package com.storeit.storeit.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +13,11 @@ import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.storeit.storeit.R;
+import com.storeit.storeit.ipfs.DownloadAsync;
 import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.utils.FilesManager;
 
 import java.io.File;
 import java.util.ArrayDeque;
@@ -26,6 +31,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     private Deque<StoreitFile> historyStack = new ArrayDeque<>();
     private Context context;
     private String storeitPath;
+    private FilesManager manager;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView fileNameTextView;
@@ -47,24 +53,25 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
         }
     }
 
-    public ExplorerAdapter(StoreitFile file, Context passedContext, String path) {
-
+    public ExplorerAdapter(FilesManager manager, Context passedContext) {
+        StoreitFile rootFile = manager.getRoot();
         ArrayList<StoreitFile> files = new ArrayList<>();
+        this.manager = manager;
 
-        for (Map.Entry<String, StoreitFile> entry : file.getFiles().entrySet()) { // list all files from current folder
+        for (Map.Entry<String, StoreitFile> entry : rootFile.getFiles().entrySet()) { // list all files from current folder
             files.add(entry.getValue());
         }
 
-        historyStack.push(file);
+        historyStack.push(rootFile);
 
         mFiles = files.toArray(new StoreitFile[files.size()]); // Store file list
         this.context = passedContext;
-        storeitPath = path;
+        storeitPath = manager.getFolderPath();
     }
 
     public void backPressed() {
 
-         if (historyStack.size() <= 1) // Check if this is not the root
+        if (historyStack.size() <= 1) // Check if this is not the root
             return;
 
         ArrayList<StoreitFile> files = new ArrayList<>();
@@ -78,10 +85,29 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void fileClicked(int position){
+    private void createDownloadDialog(final StoreitFile file) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Download File")
+                .setMessage("File is not on phone. Download it?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String hash = file.getIPFSHash();
+                        new DownloadAsync(context).execute(file.getPath(), manager.getFolderPath(), file.getIPFSHash());
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
-        if (mFiles[position].getKind() == 1) // Check if is a directory or a file
+    public void fileClicked(int position) {
+
+        if (!mFiles[position].isDirectory()) // Check if is a directory or a file
         {
+            if (!manager.exist(mFiles[position])) {
+                createDownloadDialog(mFiles[position]);
+                return;
+            }
             Intent intent = new Intent(Intent.ACTION_VIEW);
             File file = new File(storeitPath + File.separator + mFiles[position].getPath());
 
@@ -116,7 +142,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ExplorerAdapter.ViewHolder holder, int position) {
         holder.fileNameTextView.setText(mFiles[position].getFileName()); // Get file name
-        if (mFiles[position].getKind() == 0) { // Directory, we use folder icon
+        if (mFiles[position].isDirectory()) { // Directory, we use folder icon
             holder.fileTypeImageView.setImageResource(R.drawable.ic_folder_black_24dp);
         } else { // File, we use file icon
             holder.fileTypeImageView.setImageResource(R.drawable.ic_insert_drive_file_black_24dp);

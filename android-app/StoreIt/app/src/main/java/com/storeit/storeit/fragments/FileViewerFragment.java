@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.storeit.storeit.activities.MainActivity;
 import com.storeit.storeit.adapters.ExplorerAdapter;
 import com.storeit.storeit.utils.FilesManager;
 import com.storeit.storeit.R;
@@ -66,10 +68,9 @@ public class FileViewerFragment extends Fragment {
         explorersRecyclerView = (RecyclerView)rootView.findViewById(R.id.explorer_recycler_view);
         explorersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FilesManager manager = new FilesManager(getContext());
-        StoreitFile file = manager.makeTree();
+        FilesManager manager = ((MainActivity)getActivity()).getFilesManager();
 
-        adapter = new ExplorerAdapter(file, getContext(), manager.getFolderPath());
+        adapter = new ExplorerAdapter(manager, getContext());
         explorersRecyclerView.setAdapter(adapter);
         explorersRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
