@@ -1,4 +1,7 @@
 import commander from 'commander'
+import dotenv from 'dotenv'
+dotenv.config()
+
 import * as userfile from './user-file.js'
 import * as ws from './ws.js'
 import * as auth from './auth.js'
