@@ -42,7 +42,8 @@ class OAuth2Google : OAuth2 {
         let loginView = navigationController.viewControllers[0] as! LoginView
 
         oauth2.onAuthorize = { parameters in
-            //print("[ConnexionManager] Did authorize with parameters: \(parameters)")
+            print("[ConnexionManager] Did authorize with parameters: \(parameters)")
+            loginView.networkManager?.join("gg", accessToken: self.oauth2.accessToken!)
             loginView.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
         }
         oauth2.onFailure = { error in

@@ -14,8 +14,13 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet weak var list: UITableView!
     
-    var managers: AppDataManagers?
     var alertControllerManager: AlertControllerManager?
+    
+    var connexionType: ConnexionType? = nil
+    var networkManager: NetworkManager? = nil
+    var connexionManager: ConnexionManager? = nil
+    var fileManager: FileManager? = nil
+    var navigationManager: NavigationManager? = nil
     
     enum CellIdentifiers: String {
         case Directory = "directoryCell"
@@ -32,7 +37,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
 
         // if we're at root dir, we can't go back to login view with back navigation controller button
         
-        if (self.navigationItem.title == managers?.navigationManager!.rootDirTitle) {
+        if (self.navigationItem.title == navigationManager!.rootDirTitle) {
             self.navigationItem.hidesBackButton = true
         } else {
             self.navigationItem.hidesBackButton = false
@@ -46,7 +51,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     override func willMoveToParentViewController(parent: UIViewController?) {
         super.willMoveToParentViewController(parent)
         if (parent == nil) {
-            self.managers?.navigationManager!.goPreviousDir()
+            self.navigationManager?.goPreviousDir()
         }
     }
     
@@ -68,22 +73,27 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         if (segue.identifier == "nextDirSegue") {
         
             let listView = (segue.destinationViewController as! StoreItSynchDirectoryView)
-            let targetPath = (self.managers?.navigationManager!.goToNextDir(target!))!
+            let targetPath = (self.navigationManager?.goToNextDir(target!))!
             
             listView.navigationItem.title = targetPath
-            listView.managers = self.managers
+            
+            listView.connexionType = self.connexionType
+            listView.networkManager = self.networkManager
+            listView.connexionManager = self.connexionManager
+            listView.fileManager = self.fileManager
+            listView.navigationManager = self.navigationManager
         }
         else if (segue.identifier == "showFileSegue") {
             let fileView = segue.destinationViewController
             
-            fileView.navigationItem.title = self.managers?.navigationManager!.getTargetName(target!)
+            fileView.navigationItem.title = self.navigationManager?.getTargetName(target!)
         }
     }
 
 	// MARK: Creation and management of table cells
     
    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (managers?.navigationManager!.items.count)!
+        return (self.navigationManager?.items.count)!
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -92,8 +102,8 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     
     // Function triggered when a cell is selected
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let selectedFile: File = (managers?.navigationManager!.getSelectedFileAtRow(indexPath))!
-        let isDir: Bool = (managers?.navigationManager!.isSelectedFileAtRowADir(indexPath))!
+        let selectedFile: File = (navigationManager?.getSelectedFileAtRow(indexPath))!
+        let isDir: Bool = (self.navigationManager?.isSelectedFileAtRowADir(indexPath))!
         
         if (isDir) {
             self.performSegueWithIdentifier("nextDirSegue", sender: selectedFile)
@@ -104,8 +114,8 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     
     func createItemCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
         
-        let isDir: Bool = (managers?.navigationManager!.isSelectedFileAtRowADir(indexPath))!
-        let items: [String] = (managers?.navigationManager!.items)!
+        let isDir: Bool = (self.navigationManager?.isSelectedFileAtRowADir(indexPath))!
+        let items: [String] = (self.navigationManager?.items)!
         
         if (isDir) {
             let cell = self.list.dequeueReusableCellWithIdentifier(CellIdentifiers.Directory.rawValue) as! DirectoryCell

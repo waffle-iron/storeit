@@ -13,7 +13,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    var connexionType: ConnexionType? = nil
+    var networkManager: NetworkManager? = nil
+    var connexionManager: ConnexionManager? = nil
+    var fileManager: FileManager? = nil
+    var navigationManager: NavigationManager? = nil
+    let plistManager: PListManager = PListManager()
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        let navigationController = self.window?.rootViewController as! UINavigationController
+        let loginView = navigationController.viewControllers[0] as! LoginView
+
+		loginView.connexionType = self.connexionType
+        loginView.networkManager = self.networkManager
+        loginView.connexionManager = self.connexionManager
+        loginView.fileManager = self.fileManager
+        loginView.plistManager = self.plistManager
+        
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
@@ -21,12 +37,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = self.window?.rootViewController as! UINavigationController
         let loginView = navigationController.viewControllers[0] as! LoginView
 
-        if (loginView.managers.connexionType != nil
-            && loginView.managers.connexionType! == ConnexionType.GOOGLE) {
-            loginView.managers.connexionManager?.handleRedirectUrl(url)
+        if (loginView.connexionType != nil
+            && loginView.connexionType! == ConnexionType.GOOGLE) {
+            loginView.connexionManager?.handleRedirectUrl(url)
         }
-        else if (loginView.managers.connexionType != nil
-            && loginView.managers.connexionType! == ConnexionType.FACEBOOK) {
+        else if (loginView.connexionType != nil
+            && loginView.connexionType! == ConnexionType.FACEBOOK) {
             return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
         }
         return true
