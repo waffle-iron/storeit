@@ -27,6 +27,12 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         super.viewDidLoad()
 
         self.configureFacebook()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewDidLoad()
+        
+        self.configureFacebook()
         
         let lastConnextionType = self.plistManager?.getValueWithKey("connextionType")
         print("[LoginView] Last connexion type : \(lastConnextionType). Trying to auto log if possible...")
@@ -34,7 +40,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         if (lastConnextionType == ConnexionType.GOOGLE.rawValue) {
             self.initGoogle()
         } else if (lastConnextionType == ConnexionType.FACEBOOK.rawValue && FBSDKAccessToken.currentAccessToken() != nil) {
-         	// TODO: check expiration of Facebook token
+            // TODO: check expiration of Facebook token
             self.initFacebook()
         }
     }

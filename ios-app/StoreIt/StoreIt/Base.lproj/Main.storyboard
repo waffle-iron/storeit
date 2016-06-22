@@ -142,7 +142,7 @@
                     <navigationItem key="navigationItem" id="y7k-Zm-JRx"/>
                     <connections>
                         <outlet property="FBLoginButton" destination="Ujj-Uy-4AQ" id="0xS-v1-Ulj"/>
-                        <segue destination="grJ-Ff-90b" kind="show" identifier="StoreItSynchDirSegue" id="KWc-09-4h1"/>
+                        <segue destination="grJ-Ff-90b" kind="show" identifier="StoreItSynchDirSegue" animates="NO" id="KWc-09-4h1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
