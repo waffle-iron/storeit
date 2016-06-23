@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
@@ -34,7 +35,7 @@ public class SocketService extends Service {
 
     private boolean mConnected = false;
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    //private Handler handler = new Handler(Looper.getMainLooper());
     private WebSocket webSocket = null;
 
     private LoginHandler mLoginHandler;
@@ -54,16 +55,14 @@ public class SocketService extends Service {
 
                             public void onTextMessage(WebSocket websocket, String message) {
                                 int cmdType = CommandManager.getCommandType(message);
-                                switch (cmdType){
+                                switch (cmdType) {
                                     case CommandManager.JOIN:
                                         Log.v(LOGTAG, "Join command received :)");
-                                        if (mLoginHandler != null){
-
+                                        if (mLoginHandler != null) {
                                             Gson gson = new Gson();
                                             JoinResponse response = gson.fromJson(message, JoinResponse.class);
                                             mLoginHandler.handleJoin(response);
                                         }
-
                                         break;
                                     case CommandManager.FDEL:
                                         break;
@@ -87,13 +86,13 @@ public class SocketService extends Service {
         }
     }
 
-    public  void sendJOIN(String authType, String token){
+    public void sendJOIN(String authType, String token) {
         Gson gson = new Gson();
         JoinCommand cmd = new JoinCommand(0, authType, token);
         webSocket.sendText(gson.toJson(cmd));
     }
 
-    public void setmLoginHandler(LoginHandler handler){
+    public void setmLoginHandler(LoginHandler handler) {
         mLoginHandler = handler;
     }
 
