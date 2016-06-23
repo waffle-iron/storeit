@@ -37,12 +37,12 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         
         self.configureFacebook()
         
-        let lastConnexionType = self.plistManager?.getValueWithKey("connextionType")
-        print("[LoginView] Last connexion type : \(lastConnexionType). Trying to auto log if possible...")
+        let lastConnectionType = self.plistManager?.getValueWithKey("connectionType")
+        print("[LoginView] Last connexion type : \(lastConnectionType). Trying to auto log if possible...")
         
-        if (lastConnexionType == ConnectionType.GOOGLE.rawValue) {
+        if (lastConnectionType == ConnectionType.GOOGLE.rawValue) {
             self.initGoogle()
-        } else if (lastConnexionType == ConnectionType.FACEBOOK.rawValue && FBSDKAccessToken.currentAccessToken() != nil) {
+        } else if (lastConnectionType == ConnectionType.FACEBOOK.rawValue && FBSDKAccessToken.currentAccessToken() != nil) {
             // TODO: check expiration of Facebook token
             self.initFacebook()
         }
@@ -73,6 +73,8 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     func logout() {
+        print("[LoginView] Logging out...")
+        
         if (self.connectionType != nil && self.connectionType! == ConnectionType.FACEBOOK) {
             let loginManager = FBSDKLoginManager()
             loginManager.logOut()
@@ -87,14 +89,19 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         self.fileManager = nil
         self.navigationManager = nil
         
-        self.plistManager?.addValueForKey("connextionType", value: ConnectionType.NONE.rawValue)
+        self.plistManager?.addValueForKey("connectionType", value: ConnectionType.NONE.rawValue)
+    }
+    
+    func logoutToLoginView() {
+        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.logout()
     }
     
     @IBAction func logoutSegue(segue: UIStoryboardSegue) {
 		self.logout()
     }
     
-    func initConnexion(host: String, port: Int, path: String, allItems: [String:File]) {
+    func initConnection(host: String, port: Int, path: String, allItems: [String:File]) {
         if (self.fileManager == nil) {
             self.fileManager = FileManager(path: path) // Path to local synch dir
         }
@@ -104,7 +111,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         }
         
         if (self.networkManager == nil) {
-            self.networkManager = NetworkManager(host: host, port: port, navigationManager: self.navigationManager!, logoutFunction: self.logout)
+            self.networkManager = NetworkManager(host: host, port: port, navigationManager: self.navigationManager!, logoutFunction: logoutToLoginView)
         }
     }
     
@@ -116,7 +123,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     func initFacebook() {
-        self.initConnexion(self.host, port: self.port, path: "/Users/gjura_r/Desktop/demo/", allItems: [:])
+        self.initConnection(self.host, port: self.port, path: "/Users/gjura_r/Desktop/demo/", allItems: [:])
         self.connectionType = ConnectionType.FACEBOOK
         self.plistManager?.addValueForKey("connextionType", value: ConnectionType.FACEBOOK.rawValue)
         
@@ -125,7 +132,6 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         }
         
         self.networkManager?.join("fb", accessToken: FBSDKAccessToken.currentAccessToken().tokenString!)
-        
         self.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
     }
     
@@ -158,14 +164,14 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         if (self.connectionManager == nil) {
             self.connectionType = ConnectionType.GOOGLE
             self.connectionManager = ConnectionManager(connectionType: ConnectionType.GOOGLE)
-            self.plistManager?.addValueForKey("connextionType", value: ConnectionType.GOOGLE.rawValue)
+            self.plistManager?.addValueForKey("connectionType", value: ConnectionType.GOOGLE.rawValue)
         }
 
         self.connectionManager?.authorize(self)
     }
     
     @IBAction func login(sender: AnyObject) {
-		self.initGoogle()
+    	self.initGoogle()
     }
 
 }

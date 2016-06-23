@@ -32,11 +32,11 @@ class WebSocketManager {
 
         self.ws.onDisconnect = { (error: NSError?) in
         	print("[Client.WebSocketManager] Websocket is disconnected from \(self.url) with error: \(error?.localizedDescription)")
-            //self.logoutFunction() + return to loginView...
+            self.logoutFunction()
         }
         
         self.ws.onText = { (request: String) in
-            print("[Client.WebSocketManager] Client recieved a request : \(request)")
+            //print("[Client.WebSocketManager] Client recieved a request : \(request)")
 			
             let command: ResponseResolver? = Mapper<ResponseResolver>().map(request)
             

@@ -44,7 +44,7 @@ class OAuth2Google : OAuth2 {
         oauth2.onAuthorize = { parameters in
             print("[ConnexionManager] Did authorize with parameters: \(parameters)")
             
-            loginView.initConnexion(loginView.host, port: loginView.port, path: "/Users/gjura_r/Desktop/demo/", allItems: [:])
+            loginView.initConnection(loginView.host, port: loginView.port, path: "/Users/gjura_r/Desktop/demo/", allItems: [:])
             
             while (loginView.networkManager?.isConnected() == false) {
                 usleep(1)
