@@ -16,10 +16,14 @@ class NetworkManager {
     
     private let WSManager: WebSocketManager
     
-    init(host: String, port: Int) {
+    init(host: String, port: Int, navigationManager: NavigationManager, logoutFunction: () -> Void) {
         self.host = host
         self.port = port
-        self.WSManager = WebSocketManager(host: host, port: port)
+        self.WSManager = WebSocketManager(host: host, port: port, navigationManager: navigationManager, logoutFunction: logoutFunction)
+    }
+    
+    func close() {
+        WSManager.ws.disconnect()
     }
     
     func isConnected() -> Bool {

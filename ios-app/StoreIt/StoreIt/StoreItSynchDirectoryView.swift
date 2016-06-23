@@ -45,6 +45,18 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         
         self.alertControllerManager = AlertControllerManager(title: "Importer un fichier", message: nil)
         self.addActionsToActionSheet()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            // do some task
+            
+            while (((self.navigationManager?.items)! == []) == nil) {
+   				print("Waiting data to reaload view...")
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.list.reloadData()
+            }
+        }
     }
     
     // function triggered when back button of navigation bar is pressed

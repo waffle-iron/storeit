@@ -25,6 +25,12 @@ class NavigationManager {
         self.currentDirectory = allItems
         self.items = Array(allItems.keys)
     }
+    
+    func setItems(allItems: [String: File]) {
+        self.storeItSynchDir = allItems
+        self.currentDirectory = allItems
+        self.items = Array(allItems.keys)
+    }
 
     func getFileObjectAtIndex() -> [String: File] {
         let cpyIndexes = self.indexes

@@ -44,7 +44,12 @@ class OAuth2Google : OAuth2 {
         oauth2.onAuthorize = { parameters in
             print("[ConnexionManager] Did authorize with parameters: \(parameters)")
             
-            loginView.initConnexion("localhost", port: 7641, path: "/Users/gjura_r/Desktop/demo/")
+            loginView.initConnexion(loginView.host, port: loginView.port, path: "/Users/gjura_r/Desktop/demo/", allItems: [:])
+            
+            while (loginView.networkManager?.isConnected() == false) {
+                usleep(1)
+            }
+            
             loginView.networkManager?.join("gg", accessToken: self.oauth2.accessToken!)
             loginView.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
         }

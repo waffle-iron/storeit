@@ -14,10 +14,14 @@ class WebSocketManager {
     
     let url: NSURL
     let ws: WebSocket
+    let navigationManager: NavigationManager
+    let logoutFunction: () -> Void
     
-    init(host: String, port: Int) {
+    init(host: String, port: Int, navigationManager: NavigationManager, logoutFunction: () -> Void) {
         self.url = NSURL(string: "ws://\(host):\(port)/")!
         self.ws = WebSocket(url: url)
+        self.navigationManager = navigationManager
+        self.logoutFunction = logoutFunction
         self.eventsInitializer()
     }
     
@@ -28,6 +32,7 @@ class WebSocketManager {
 
         self.ws.onDisconnect = { (error: NSError?) in
         	print("[Client.WebSocketManager] Websocket is disconnected from \(self.url) with error: \(error?.localizedDescription)")
+            //self.logoutFunction() + return to loginView...
         }
         
         self.ws.onText = { (request: String) in
@@ -36,9 +41,11 @@ class WebSocketManager {
             let command: ResponseResolver? = Mapper<ResponseResolver>().map(request)
             
             // Server has responded
-            if (command?.command == "RESP") {
-                let _: Response? = Mapper<Response>().map(request)
-                // Do funny stuff with response here
+            if (command?.command == "JOIN") {
+                let response: Response? = Mapper<Response>().map(request)
+                let home: File? = response?.parameters!["home"]
+                
+                self.navigationManager.setItems((home?.files)!)
             }
             
             // Server sent a command (FADD, FUPT, FDEL)

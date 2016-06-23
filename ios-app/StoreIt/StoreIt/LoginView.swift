@@ -20,6 +20,9 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
     var plistManager: PListManager? = nil
+
+    let port: Int = 8001
+    let host: String = "localhost"
     
     @IBOutlet weak var FBLoginButton: FBSDKLoginButton!
     
@@ -77,8 +80,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
             self.connectionManager?.forgetTokens()
         }
         
-        // TODO: send logout request
-        
+		self.networkManager?.close()
         self.connectionType = nil
         self.networkManager = nil
         self.connectionManager = nil
@@ -92,18 +94,17 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
 		self.logout()
     }
     
-    func initConnexion(host: String, port: Int, path: String) {
-    	if (self.networkManager == nil) {
-        	self.networkManager = NetworkManager(host: host, port: port);
-    	}
-        
+    func initConnexion(host: String, port: Int, path: String, allItems: [String:File]) {
         if (self.fileManager == nil) {
             self.fileManager = FileManager(path: path) // Path to local synch dir
         }
         
         if (self.navigationManager == nil) {
-            self.navigationManager = NavigationManager(rootDirTitle: "StoreIt",
-                                                       allItems: (self.fileManager?.getSyncDirTree())!)
+            self.navigationManager = NavigationManager(rootDirTitle: "StoreIt", allItems: [:])
+        }
+        
+        if (self.networkManager == nil) {
+            self.networkManager = NetworkManager(host: host, port: port, navigationManager: self.navigationManager!, logoutFunction: self.logout)
         }
     }
     
@@ -115,9 +116,15 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     func initFacebook() {
-        self.initConnexion("localhost", port: 7641, path: "/Users/gjura_r/Desktop/demo/")
+        self.initConnexion(self.host, port: self.port, path: "/Users/gjura_r/Desktop/demo/", allItems: [:])
         self.connectionType = ConnectionType.FACEBOOK
         self.plistManager?.addValueForKey("connextionType", value: ConnectionType.FACEBOOK.rawValue)
+        
+        while (self.networkManager?.isConnected() == false) {
+            usleep(1)
+        }
+        
+        self.networkManager?.join("fb", accessToken: FBSDKAccessToken.currentAccessToken().tokenString!)
         
         self.performSegueWithIdentifier("StoreItSynchDirSegue", sender: nil)
     }
