@@ -33,7 +33,9 @@ import com.storeit.storeit.adapters.MainAdapter;
 import com.storeit.storeit.fragments.FileViewerFragment;
 import com.storeit.storeit.fragments.HomeFragment;
 import com.storeit.storeit.ipfs.UploadAsync;
+import com.storeit.storeit.protocol.FileCommandHandler;
 import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.protocol.command.FileCommand;
 import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.utils.FilesManager;
 
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBoundService = ((SocketService.LocalBinder) service).getService();
+            mBoundService.setFileCommandandler(mFileCommandHandler);
             mIsBound = true;
         }
 
@@ -298,4 +301,21 @@ public class MainActivity extends AppCompatActivity {
     public FilesManager getFilesManager(){
         return filesManager;
     }
+
+    private FileCommandHandler mFileCommandHandler = new FileCommandHandler() {
+        @Override
+        public void handleFDEL(FileCommand command) {
+            Log.v("MainActivity", "FDEL");
+        }
+
+        @Override
+        public void handleFADD(FileCommand command) {
+            Log.v("MainActivity", "FADD");
+        }
+
+        @Override
+        public void handleFUPT(FileCommand command) {
+            Log.v("MainActivity", "FUPT");
+        }
+    };
 }

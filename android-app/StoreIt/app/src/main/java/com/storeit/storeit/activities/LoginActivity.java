@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,7 +26,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.storeit.storeit.R;
 import com.storeit.storeit.oauth.GetUsernameTask;
+import com.storeit.storeit.protocol.FileCommandHandler;
 import com.storeit.storeit.protocol.LoginHandler;
+import com.storeit.storeit.protocol.command.FileCommand;
 import com.storeit.storeit.protocol.command.JoinResponse;
 import com.storeit.storeit.services.SocketService;
 
@@ -33,7 +36,7 @@ import com.storeit.storeit.services.SocketService;
 * Login Activity
 * Create tcp service if it's not launched
 */
-public class LoginActivity extends Activity implements LoginHandler {
+public class LoginActivity extends Activity {
 
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
     static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
@@ -43,6 +46,26 @@ public class LoginActivity extends Activity implements LoginHandler {
     private String mEmail;
     String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     private GoogleApiClient client;
+
+    private LoginHandler mLoginHandler = new LoginHandler() {
+        @Override
+        public void handleJoin(JoinResponse response) {
+            if (response.getCode() == 1) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                // Stringify fileobject in order to pass it to other activity. It will be save on disk
+                // So passing as string is fine
+                Gson gson = new Gson();
+                String homeJson = gson.toJson(response.getParameters().getHome());
+
+                intent.putExtra("home", homeJson);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else {
+                Toast.makeText(LoginActivity.this, "Invalid login or password", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
     private void pickUserAccount() {
         String[] accountTypes = new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE};
@@ -94,7 +117,7 @@ public class LoginActivity extends Activity implements LoginHandler {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBoundService = ((SocketService.LocalBinder) service).getService();
-            mBoundService.setmLoginHandler(LoginActivity.this);
+            mBoundService.setmLoginHandler(mLoginHandler);
             mIsBound = true;
         }
 
@@ -170,24 +193,5 @@ public class LoginActivity extends Activity implements LoginHandler {
             }
         });
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    @Override
-    public void handleJoin(JoinResponse response) {
-
-        if (response.getCode() == 1) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-            // Stringify fileobject in order to pass it to other activity. It will be save on disk
-            // So passing as string is fine
-            Gson gson = new Gson();
-            String homeJson = gson.toJson(response.getParameters().getHome());
-
-            intent.putExtra("home", homeJson);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        } else {
-            Toast.makeText(LoginActivity.this, "Invalid login or password", Toast.LENGTH_LONG).show();
-        }
     }
 }

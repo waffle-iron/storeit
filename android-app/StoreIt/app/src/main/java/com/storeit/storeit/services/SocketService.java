@@ -14,8 +14,10 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketExtension;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import com.storeit.storeit.protocol.FileCommandHandler;
 import com.storeit.storeit.protocol.LoginHandler;
 import com.storeit.storeit.protocol.command.CommandManager;
+import com.storeit.storeit.protocol.command.FileCommand;
 import com.storeit.storeit.protocol.command.JoinCommand;
 import com.storeit.storeit.protocol.command.JoinResponse;
 
@@ -35,10 +37,11 @@ public class SocketService extends Service {
 
     private boolean mConnected = false;
 
-    //private Handler handler = new Handler(Looper.getMainLooper());
     private WebSocket webSocket = null;
 
+    // Handlers for callback
     private LoginHandler mLoginHandler;
+    private FileCommandHandler mFileCommandHandler;
 
     private class SocketManager implements Runnable {
         @Override
@@ -65,11 +68,26 @@ public class SocketService extends Service {
                                         }
                                         break;
                                     case CommandManager.FDEL:
+                                        if (mFileCommandHandler != null) {
+                                            Gson gson = new Gson();
+                                            FileCommand fileCommand = gson.fromJson(message, FileCommand.class);
+                                            mFileCommandHandler.handleFDEL(fileCommand);
+                                        }
                                         break;
                                     case CommandManager.FADD:
+                                        if (mFileCommandHandler != null) {
+                                            Gson gson = new Gson();
+                                            FileCommand fileCommand = gson.fromJson(message, FileCommand.class);
+                                            mFileCommandHandler.handleFADD(fileCommand);
+                                        }
                                         break;
                                     case CommandManager.FUPT:
+                                    if (mFileCommandHandler != null) {
+                                        Gson gson = new Gson();
+                                        FileCommand fileCommand = gson.fromJson(message, FileCommand.class);
+                                        mFileCommandHandler.handleFUPT(fileCommand);
                                         break;
+                                    }
                                     default:
                                         Log.v(LOGTAG, "Invalid command received :/");
                                         break;
@@ -94,6 +112,10 @@ public class SocketService extends Service {
 
     public void setmLoginHandler(LoginHandler handler) {
         mLoginHandler = handler;
+    }
+
+    public void setFileCommandandler(FileCommandHandler handler) {
+        mFileCommandHandler = handler;
     }
 
     @Override

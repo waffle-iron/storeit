@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.storeit.storeit.protocol.StoreitFile;
 import java.io.BufferedReader;
@@ -63,7 +62,6 @@ public class FilesManager {
             String line;
 
             File jsonFile = new File(storageLocation + "/storeit.json");
-
 
             try {
                 BufferedReader br;
