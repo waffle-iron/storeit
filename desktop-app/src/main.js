@@ -4,7 +4,7 @@ dotenv.config()
 
 import * as userfile from './user-file.js'
 import * as ws from './ws.js'
-import * as auth from './auth.js'
+import oauth from './auth.js'
 
 commander
   .version('0.0.1')
@@ -20,10 +20,10 @@ else {
 }
 
 if (commander.code) {
-  auth.getGoogleToken(commander.code, (tokens) => {
-    ws.co(tokens.access_token)
-  })
+  // auth.getGoogleToken(commander.code, (tokens) => {
+  //   ws.co(tokens.access_token)
+  // })
 }
 else {
-  auth.googleAuth()
+  oauth('google')
 }

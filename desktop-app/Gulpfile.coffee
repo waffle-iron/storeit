@@ -11,5 +11,5 @@ gulp.task 'watch:lint', (done) ->
 
 gulp.task 'lint', ->
   gulp.src SRC
-    .pipe eslint()
+    .pipe eslint('./.eslintrc.js')
     .pipe eslint.format()
