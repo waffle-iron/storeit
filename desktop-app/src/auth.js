@@ -1,6 +1,7 @@
 import google from 'googleapis'
-import openurl from 'openurl'
 import {logger} from './log.js'
+
+let open = require("open");
 
 let OAuth2 = google.auth.OAuth2
 
@@ -11,7 +12,7 @@ export let googleAuth = () => {
     scope: 'email'
   })
 
-  openurl.open(url)
+  open(url)
 }
 
 export let getGoogleToken = (code, callback) => {
