@@ -17,11 +17,20 @@ public class FileCommand {
         this.parameters = new Parameters(files);
     }
 
+    public StoreitFile getFiles() {
+        return parameters.getFiles();
+    }
+
+
     class Parameters {
         StoreitFile files;
 
         public  Parameters(StoreitFile files){
             this.files = files;
+        }
+
+        public StoreitFile getFiles() {
+            return files;
         }
     }
 }

@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
     FloatingActionButton fbtn;
 
-    // Will be passed as json string
-    private StoreitFile rootFile;
     private FilesManager filesManager;
 
     // Socket service is already existing
@@ -196,9 +194,8 @@ public class MainActivity extends AppCompatActivity {
         String homeJson = intent.getStringExtra("home");
 
         Gson gson = new Gson();
-        rootFile = gson.fromJson(homeJson, StoreitFile.class);
-
-
+        StoreitFile rootFile = gson.fromJson(homeJson, StoreitFile.class);
+        
         filesManager = new FilesManager(this, rootFile);
 
 //        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
@@ -311,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleFADD(FileCommand command) {
             Log.v("MainActivity", "FADD");
+            filesManager.addFile(command.getFiles());
         }
 
         @Override

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.storeit.storeit.protocol.StoreitFile;
@@ -23,11 +22,12 @@ public class FilesManager {
     private File mDataDir;
     private StoreitFile mRootFile;
     private static final String LOGTAG = "FilesManager";
+    private String storageLocation;
 
     public FilesManager(Context ctx, StoreitFile rootFile) {
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String storageLocation = SP.getString("pref_key_storage_location", "");
+        storageLocation = SP.getString("pref_key_storage_location", "");
 
         if (storageLocation.equals("")) {
             File path[] = ctx.getExternalFilesDirs(null);
@@ -156,5 +156,50 @@ public class FilesManager {
 
     public StoreitFile getFileByHash(String hash, StoreitFile file) {
         return recursiveSearch(hash, file);
+    }
+
+    private StoreitFile getParentFile(StoreitFile root, String parentPath) {
+
+        if (root.getPath().equals(parentPath)) {
+            return root;
+        }
+
+        for (Map.Entry<String, StoreitFile> entry : root.getFiles().entrySet()) {
+            if (entry.getValue().isDirectory()) {
+                return getParentFile(entry.getValue(), parentPath);
+            }
+        }
+
+        return null;
+    }
+
+    private void saveJson() {
+        File jsonFile = new File(storageLocation + "/storeit.json");
+
+            try {
+                if (!jsonFile.exists()) {
+                    if (!jsonFile.createNewFile()) {
+                        Log.v(LOGTAG, "Error creating .storeit");
+                    }
+                }
+                FileWriter fw = new FileWriter(jsonFile, false);
+                Gson gson = new Gson();
+                fw.write(gson.toJson(mRootFile, StoreitFile.class));
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public void addFile(StoreitFile file) {
+
+        File parentFile = new File(file.getPath());
+        String parentPath = parentFile.getParentFile().getAbsolutePath();
+
+        StoreitFile parent =  getParentFile(mRootFile, parentPath);
+        if (parent != null) {
+            parent.addFile(file);
+            saveJson();
+        }
     }
 }
