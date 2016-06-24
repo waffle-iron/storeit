@@ -92,8 +92,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String hash = file.getIPFSHash();
-                        new DownloadAsync(context).execute(file.getPath(), manager.getFolderPath(), file.getIPFSHash());
+                        new DownloadAsync(context).execute(manager.getFolderPath(), file.getIPFSHash());
                     }
                 })
                 .setNegativeButton("No", null)
@@ -109,11 +108,13 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
                 return;
             }
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            File file = new File(storeitPath + File.separator + mFiles[position].getPath());
+
+            File file = new File(storeitPath + File.separator + mFiles[position].getPath()); // To get the file type
+            File phyiscalFile = new File(storeitPath + File.separator + mFiles[position].getIPFSHash()); // the location of the real file
 
             String extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString());
             String mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-            intent.setDataAndType(Uri.fromFile(file), mimetype);
+            intent.setDataAndType(Uri.fromFile(phyiscalFile), mimetype);
 
             context.startActivity(intent);
 

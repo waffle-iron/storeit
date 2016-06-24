@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.storeit.storeit.protocol.StoreitFile;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -34,19 +36,13 @@ public class FilesManager {
 
         mDataDir = new File(storageLocation);
 
-        File storeitFolder = new File(storageLocation + "/storeit");
-        if (!storeitFolder.exists()) {
-            if (!storeitFolder.mkdirs()) {
-                Toast.makeText(ctx, "An error occured while creating storeit folder...", Toast.LENGTH_LONG).show();
-            }
-            File jsonFile = new File(storageLocation + "/storeit.json");
 
+        File jsonFile = new File(storageLocation + "/storeit.json");
+        if (!jsonFile.exists()) {
             Log.d(LOGTAG, "Creating root json file");
             try {
-                if (!jsonFile.exists()){
-                    if (!jsonFile.createNewFile()) {
-                        Log.v(LOGTAG, "Error creating .storeit");
-                    }
+                if (!jsonFile.createNewFile()) {
+                    Log.v(LOGTAG, "Error creating .storeit");
                 }
                 FileWriter fw = new FileWriter(jsonFile);
                 Gson gson = new Gson();
@@ -60,8 +56,6 @@ public class FilesManager {
             StoreitFile currentRoot;
             StringBuilder text = new StringBuilder();
             String line;
-
-            File jsonFile = new File(storageLocation + "/storeit.json");
 
             try {
                 BufferedReader br;
@@ -111,7 +105,7 @@ public class FilesManager {
         if (!existingFile.getPath().equals("/storeit")) { // Don't delete root
             StoreitFile f = getFileByHash(existingFile.getIPFSHash(), newRoot); // Look for the actual file
             if (f == null) { // If the file doesn't exist anymore
-                File fileToDelete = new File(mDataDir.getAbsolutePath() + File.separator + existingFile.getPath());
+                File fileToDelete = new File(mDataDir.getAbsolutePath() + File.separator + existingFile.getIPFSHash());
                 if (fileToDelete.exists()) {
                     if (existingFile.isDirectory()) { // Delete directory
                         deleteContents(fileToDelete);
@@ -138,7 +132,7 @@ public class FilesManager {
 
     public boolean exist(StoreitFile file) {
 
-        File requestedFile = new File(mDataDir.getAbsolutePath() + "/" + file.getPath());
+        File requestedFile = new File(mDataDir.getAbsolutePath() + File.separator + file.getIPFSHash());
         return requestedFile.exists();
     }
 

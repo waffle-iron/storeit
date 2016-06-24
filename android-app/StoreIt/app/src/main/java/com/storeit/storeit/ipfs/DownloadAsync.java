@@ -50,13 +50,14 @@ public class DownloadAsync extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(String... params) {
-        String fileName = params[0];
-        String path = params[1];
-        String hash = params[2];
+
+        String path = params[0];
+        String hash = params[1];
+
         IPFS ipfs = new IPFS("toto");
 
         File filePath = new File(path);
-        File file = new File(filePath, fileName);
+        File file = new File(filePath, hash);
 
         FileOutputStream outputStream = null;
 
