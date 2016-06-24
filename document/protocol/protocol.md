@@ -79,7 +79,7 @@ Delete a file/directory.
 	"uid": 765,
 	"command": "FDEL",
 	"parameters": {
-		"files": [FILEObject, ...]
+		"files": ["/a.txt", "/archive/b.txt", "/dir"]
 	}
 }
 ```
@@ -113,6 +113,23 @@ Update a file.
 	}
 }
 ```
+
+###### FMOV
+
+From a client or a server.
+move or rename a file.
+
+```javascript
+{
+	"uid": 768,
+	"command": "FMOV",
+	"parameters": {
+		"src": "/foo/bar.txt"
+		"dest": "/foo/toto.txt"
+	}
+}
+```
+
 
 ##### 2.4 FILE object
 
