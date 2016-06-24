@@ -1,7 +1,6 @@
 import google from 'googleapis'
 import {logger} from './log.js'
-
-let open = require("open");
+import open from 'open'
 
 let OAuth2 = google.auth.OAuth2
 
