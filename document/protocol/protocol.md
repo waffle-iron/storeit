@@ -130,6 +130,28 @@ move or rename a file.
 }
 ```
 
+If you are moving a file, please don't omit the file name in the destination. For example :
+
+DON'T DO:
+
+```javascript
+{
+	"src": "/foo/bar"
+	"dest": "/target/"
+}
+```
+
+expecting to move /foo/bar into /target/bar
+
+DO:
+
+```javascript
+{
+	"src": "/foo/bar"
+	"dest": "/target/bar"
+}
+```
+
 
 ##### 2.4 FILE object
 
