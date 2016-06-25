@@ -114,6 +114,32 @@ Update a file.
 }
 ```
 
+You should do only one FUPT per file/directory and omit the files parameter of your directory. For example, if your home is :
+
+```ascii
+| foo
+L___ bar.txt
+L___ pictures
+```
+
+And you want to update foo's timestamp, just send :
+
+```javascript
+{
+	"uid": 767,
+	"command": "FUPT",
+	"parameters": {
+		"files": {
+			"path": "/foo",
+			"metadata": "updated metadata",
+			"IPFSHash": null,
+			"isDir": true,
+			"files": null
+		}
+	}
+}
+```
+
 ###### FMOV
 
 From a client or a server.
