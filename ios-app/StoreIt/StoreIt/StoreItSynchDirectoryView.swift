@@ -100,8 +100,14 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
             let fileView = segue.destinationViewController
 
             self.ipfsManager?.get((target?.IPFSHash)!) { data in
-                print(data)
+                //print(data)
             }
+            
+            /*self.ipfsManager?.add("/Users/gjura_r/Desktop/demo/lardon.jpg") { merkleNode in
+                print("[IPFS.ADD] \(merkleNode)")
+            }*/
+            
+            self.ipfsManager?.add2("/Users/gjura_r/Desktop/demo/eiffeltower2.jpg")
             
             fileView.navigationItem.title = self.navigationManager?.getTargetName(target!)
         }
@@ -148,8 +154,12 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     // MARK: Action sheet creation and management
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        print("Image as been picked: \(image)") // Do some funny stuff here with ipfs
-        self.dismissViewControllerAnimated(true, completion: nil);
+        self.dismissViewControllerAnimated(true, completion: {_ in
+        	let path  = editingInfo["UIImagePickerControllerReferenceURL"] as! NSURL
+            self.ipfsManager?.add(path.path!) { merkleNode in
+                print("[IPFS.ADD] \(merkleNode)")
+            }
+        });
     }
     
     func pickImageFromLibrary(action: UIAlertAction) -> Void {
@@ -158,7 +168,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
             
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-            imagePicker.allowsEditing = false
+            imagePicker.allowsEditing = true
             
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
@@ -169,7 +179,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
             let camera = UIImagePickerController()
             
-            camera.allowsEditing = false
+            camera.allowsEditing = true
             camera.sourceType = UIImagePickerControllerSourceType.Camera
             camera.delegate = self
             

@@ -35,6 +35,24 @@ class FileManager {
         return self.buildTree(self.rootDirPath)
     }
     
+    func createDir(path: String, metadata: String, IPFSHash: String, files: [String:File]? = nil) -> File {
+        let dir = File(path: path,
+                       metadata: metadata,
+                       IPFSHash: IPFSHash,
+                       isDir: true,
+                       files: (files == nil ? [:] : files!))
+        return dir
+    }
+    
+    func createFile(path: String, metadata: String, IPFSHash: String, files: [String:File]? = nil) -> File {
+        let dir = File(path: path,
+                       metadata: metadata,
+                       IPFSHash: IPFSHash,
+                       isDir: false,
+                       files: [:])
+        return dir
+    }
+    
     // Build recursively the tree of the root directory into a dictionnary
     private func buildTree(path: String) -> [String: File] {
         let files: [String] = getDirectoryContent(path)
