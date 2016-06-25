@@ -8,11 +8,27 @@
 
 import Foundation
 import SwiftIpfsApi
+import SwiftMultihash
 
 class IpfsManager {
     
-    init() {
-		let _ = try! IpfsApi(host: "", port: 0)
+    private let ipfs: IpfsApi?
+    
+    init?() {
+        do {
+			self.ipfs = try IpfsApi(host: "127.0.0.1", port: 5001)
+        } catch let err as NSError {
+            print("[IPFS] Error when initializing IFPS... (error: \(err))")
+            return nil
+        }
+    }
+    
+    func get(hash: String, completionHandler: ([UInt8] -> Void)) {
+        do {
+        	let multihash = try fromB58String(hash)
+        	try self.ipfs!.get(multihash, completionHandler: completionHandler)
+        }
+        catch let err as NSError { print("[IPFS.GET] error: \(err)") }
     }
     
 }

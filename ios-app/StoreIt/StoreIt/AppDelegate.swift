@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var connectionManager: ConnectionManager? = nil
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
+    var ipfsManager: IpfsManager? = nil
     let plistManager: PListManager = PListManager()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -28,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         loginView.networkManager = self.networkManager
         loginView.connectionManager = self.connectionManager
         loginView.fileManager = self.fileManager
+        loginView.ipfsManager = self.ipfsManager
         loginView.plistManager = self.plistManager
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)

@@ -19,6 +19,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     var connectionManager: ConnectionManager? = nil
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
+    var ipfsManager: IpfsManager? = nil
     var plistManager: PListManager? = nil
 
     let port: Int = 8001
@@ -65,6 +66,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         listView.connectionManager = self.connectionManager
         listView.fileManager = self.fileManager
         listView.navigationManager = self.navigationManager
+        listView.ipfsManager = self.ipfsManager
     }
     
     func moveToTabBarController() {
@@ -88,6 +90,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         self.connectionManager = nil
         self.fileManager = nil
         self.navigationManager = nil
+        self.ipfsManager = nil
         
         self.plistManager?.addValueForKey("connectionType", value: ConnectionType.NONE.rawValue)
     }
@@ -112,6 +115,10 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         
         if (self.networkManager == nil) {
             self.networkManager = NetworkManager(host: host, port: port, navigationManager: self.navigationManager!, logoutFunction: logoutToLoginView)
+        }
+        
+        if (self.ipfsManager == nil) {
+            self.ipfsManager = IpfsManager()
         }
     }
     

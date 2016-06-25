@@ -21,6 +21,7 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     var connectionManager: ConnectionManager? = nil
     var fileManager: FileManager? = nil
     var navigationManager: NavigationManager? = nil
+    var ipfsManager: IpfsManager? = nil
     
     enum CellIdentifiers: String {
         case Directory = "directoryCell"
@@ -97,6 +98,10 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         }
         else if (segue.identifier == "showFileSegue") {
             let fileView = segue.destinationViewController
+
+            self.ipfsManager?.get((target?.IPFSHash)!) { data in
+                print(data)
+            }
             
             fileView.navigationItem.title = self.navigationManager?.getTargetName(target!)
         }
