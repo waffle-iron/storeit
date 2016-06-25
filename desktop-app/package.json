@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run build && node build/main.js",
     "build": "babel src -s -d build",
-    "postinstall": "shx cp -n .env.sample .env && shx cp -n .tokens.json.sample .tokens",
+    "postinstall": "shx cp -n .env.sample .env && shx cp -n .tokens.json.sample .tokens.json",
     "dev": "concurrently -r -k 'gulp' 'node-inspector' 'nodemon --debug src/main.js --debug --watch src --exec babel-node'",
     "bdd": "mocha --compilers coffee:coffee-script/register --require source-map-support/register",
     "test": "npm run build && npm run bdd"

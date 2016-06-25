@@ -100,7 +100,6 @@ let oauth = (type) => {
     break
   default:
     throw {msg: 'StoreIt auth not implemented yet'}
-    break
   }
 }
 
