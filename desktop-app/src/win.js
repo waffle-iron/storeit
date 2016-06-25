@@ -1,10 +1,10 @@
-import * as auth from './auth.js'
+import oauth from './auth.js'
 import {logger} from './log.js'
-import * as electron from 'electron'
+import electron from 'electron'
 
-const {app} = electron
-const {BrowserWindow} = electron
-const ipc = electron.ipcMain
+let {app} = electron
+let {BrowserWindow} = electron
+let ipc = electron.ipcMain
 
 let win;
 
@@ -17,8 +17,11 @@ let createWindow = () => {
     win = null;
   });
 
-  ipc.on('loginGoogle', function(event, data){
-    auth.googleAuth()
+  ipc.on('loginGoogle', (event, data) => {
+      oauth('google')
+  });
+  ipc.on('loginFacebook', (event, data) => {
+      oauth('facebook')
   });
 }
 

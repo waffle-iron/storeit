@@ -4,7 +4,6 @@ dotenv.config()
 
 import * as userfile from './user-file.js'
 import * as ws from './ws.js'
-import oauth from './auth.js'
 import * as win from './win.js'
 
 commander
@@ -26,5 +25,5 @@ if (commander.code) {
   // })
 }
 else {
-  oauth('google')
+    win.openLoginWin()
 }

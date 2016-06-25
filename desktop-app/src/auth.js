@@ -5,7 +5,7 @@ import open from 'open'
 import express from 'express'
 import gapi from 'googleapis'
 
-import * as log from '../../common/log.js'
+import * as log from './log.js'
 
 const REDIRECT_URI = 'http://localhost:7777'
 const TOKENS_FILE = './.tokens.json'
@@ -100,7 +100,6 @@ let oauth = (type) => {
     break
   default:
     throw {msg: 'StoreIt auth not implemented yet'}
-    break
   }
 }
 
