@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <title>StoreIt</title>
+</head>
+<body>
+    <div id="loginButtons">
+        <div>
+            <button id="loginGoogle">Login with google</button>
+        </div>
+        <div>
+            <button id="loginFacebook">Login with Facebook</button>
+        </div>
+    </div>
+    <script>
+        var ipc = require('electron').ipcRenderer;
+
+        document.getElementById("loginGoogle").addEventListener("click", () => {
+            ipc.send('loginGoogle');
+        });
+
+        document.getElementById("loginFacebook").addEventListener("click", () => {
+            ipc.send('loginFacebook');
+        });
+    </script>
+</body>
+</html>
