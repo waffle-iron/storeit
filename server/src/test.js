@@ -1,6 +1,7 @@
-logger.transports.console.level = 'error';
-
 import {logger} from './log.js'
+
+logger.transports.console.level = 'error'
+
 import {expect} from 'chai'
 import WebSocket from 'ws'
 import * as api from './protocol-objects'
@@ -110,24 +111,94 @@ describe('protocol file commands', () => {
     fakeB.leave()
   })
 
+  const userTree = makeFileObj('/', null, null)
+
+  const checkUserTree = () => {
+    expect(userTree).to.deep.equal(user.users['adrien.morel@me.com'].home)
+  }
+
   it('should FADD correctly', (done) => {
+
+    const FADDContent = makeFileObj('/foo', null, {
+      'bar.txt': makeFileObj('/foo/bar.txt')
+    })
 
     fakeA.msgHandler = (data) => {
       expectOkResponse(data)
-      expect(
-        makeFileObj('/', null, {
-          'foo': makeFileObj('/foo', null, {
-            'bar.txt': makeFileObj('/foo/bar.txt')
-          })
-        })).to.deep.equal(user.users['adrien.morel@me.com'].home),
+
+      userTree.files = {
+        'foo': FADDContent
+      }
+
+      checkUserTree()
       done()
     }
 
     fakeA.send(new api.Command('FADD', {
       files: [
-        makeFileObj('/foo', null, {'bar.txt': makeFileObj('/foo/bar.txt')}),
+        FADDContent
+      ]
+    }))
+  })
+
+  it('should FMOV correctly (simple rename)', (done) => {
+
+    fakeA.msgHandler = (data) => {
+      expectOkResponse(data)
+      checkUserTree()
+      done()
+    }
+
+    const tree = userTree.files['foo'].files['bar.txt']
+    delete userTree.files['foo'].files['bar.txt']
+    userTree.files['foo'].files['renamed.txt'] = tree
+    userTree.files['foo'].files['renamed.txt'].path = '/foo/renamed.txt'
+
+    fakeA.send(new api.Command('FMOV', {
+      src: '/foo/bar.txt',
+      dest: '/foo/renamed.txt'
+    }))
+
+  })
+
+  it('should FMOV correctly (directory move)', (done) => {
+
+    let responseCount = 1
+
+    fakeA.msgHandler = (data) => {
+      expectOkResponse(data)
+      checkUserTree()
+      if (responseCount-- === 0) {
+        done()
+      }
+    }
+
+    const FADDContent = makeFileObj('/foo/newdir', null, {
+      'anotherdir': makeFileObj('/foo/newdir/anotherdir', null, {
+        'foobar.txt': makeFileObj('/foo/newdir/anotherdir/foobar.txt'),
+        'girl.mov': makeFileObj('/foo/newdir/anotherdir/girl.mov')
+      })
+    })
+
+    userTree.files['foo'].files['newdir'] = FADDContent
+
+    fakeA.send(new api.Command('FADD', {
+      files: [
+        FADDContent
       ]
     }))
 
+    const tree = userTree.files['foo'].files['newdir']
+    delete userTree.files['foo'].files['newdir']
+    userTree.files['newdir'] = tree
+    userTree.files['newdir'].path = '/newdir'
+    userTree.files['newdir'].files['anotherdir'].path = '/newdir/anotherdir'
+    userTree.files['newdir'].files['anotherdir'].files['foobar.txt'].path = '/newdir/anotherdir/foobar.txt'
+    userTree.files['newdir'].files['anotherdir'].files['girl.mov'].path = '/newdir/anotherdir/girl.mov'
+
+    fakeA.send(new api.Command('FMOV', {
+      src: '/foo/newdir',
+      dest: '/newdir'
+    }))
   })
 })

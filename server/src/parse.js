@@ -13,7 +13,7 @@ const join = function(command, arg, socket) {
       return logger.error('could not connect user')
     }
 
-    socket.sendObj(new protoObjs.Response(0, "welcome", command.uid, {
+    socket.sendObj(new protoObjs.Response(0, 'welcome', command.uid, {
       home: user.home
     }))
   })
@@ -25,7 +25,7 @@ const recast = (command, client) => {
   const usr = client.getUser()
   command.uid = ++usr.commandUid
   for (const sock in usr.sockets) {
-    if (sock == client.uid) {
+    if (parseInt(sock) === client.uid) {
       continue
     }
     usr.sockets[sock].sendObj(command)
@@ -45,6 +45,11 @@ const upt = (command, arg, client) => {
   recast(command, client)
 }
 
+const mov = (command, arg, client) => {
+  client.getUser().renameFile(arg.src, arg.dest)
+  recast(command, client)
+}
+
 const del = (command, arg, client) => {
   client.getUser().delTree(arg.files)
   recast(command, client)
@@ -58,6 +63,7 @@ export const parse = function(msg, client) {
     'JOIN': join,
     'FADD': add,
     'FUPT': upt,
+    'FMOV': mov,
     'FDEL': del
   }
 

@@ -21,42 +21,76 @@ export class User {
     this.commandUid = 0
   }
 
-  setTree(trees, action) {
+  setTree(destPath, action) {
+
     if (this.home === undefined) {
       logger.error('home has not loaded')
     }
 
-    for (const treeIncoming of trees) {
+    const pathToFile = destPath.split(path.sep)
+    const stepInto = (path, tree) => {
 
-      const pathToFile = treeIncoming.path.split(path.sep)
-      const stepInto = (path, tree) => {
-
-        if (pathToFile.length === 1) {
-          return action(tree, treeIncoming, pathToFile[0])
-        }
-
-        const name = pathToFile.shift()
-        return stepInto(pathToFile, tree[name])
+      if (pathToFile.length === 1) {
+        return action(tree, pathToFile[0])
       }
-      pathToFile.shift()
-      stepInto(pathToFile, this.home)
+
+      const name = pathToFile.shift()
+      return stepInto(pathToFile, tree.files[name])
+    }
+    pathToFile.shift()
+    return stepInto(pathToFile, this.home)
+  }
+
+  setTrees(trees, action) {
+    for (const treeIncoming of trees) {
+      this.setTree(treeIncoming.path, (treeParent, name) =>
+        action(treeParent, treeIncoming, name))
     }
   }
 
   addTree(trees) {
-    return this.setTree(trees, (treeParent, tree, name) => {
+    return this.setTrees(trees, (treeParent, tree, name) => {
       treeParent.files[name] = tree
     })
   }
 
   uptTree(trees) {
-    return this.setTree(trees, (treeParent, tree, name) => {
+    return this.setTrees(trees, (treeParent, tree, name) => {
       treeParent.files[name] = tree
     })
   }
 
+  renameFile(src, dest) {
+    const takenTree = this.setTree(src, (treeParent, name) => {
+      const tree = treeParent.files[name]
+      delete treeParent.files[name]
+      return tree
+    })
+
+    this.setTree(dest, (treeParent, name) => {
+      treeParent.files[name] = takenTree
+
+      const rec = (tree, name, currentPath) => {
+
+        const sep = currentPath === '/' ? '' : path.sep
+        tree.path = currentPath + sep + name
+
+        if (!tree.files) {
+          return
+        }
+
+        for (const file of Object.keys(tree.files)) {
+          rec(tree.files[file], file, tree.path)
+        }
+      }
+
+      rec(takenTree, name, treeParent.path)
+    })
+
+  }
+
   delTree(trees) {
-    return this.setTree(trees, (tree, name) => delete tree[name])
+    return this.setTrees(trees, (tree, name) => delete tree[name])
   }
 
   loadHome(handlerFn) {
