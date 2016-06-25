@@ -1,10 +1,30 @@
 import WebSocket from 'ws'
 
 import {FacebookService, GoogleService} from './oauth'
-import * as userfile from './user-file'
 import * as log from '../../common/log'
 
 let recoTime = 1
+
+let uid = 0 // TODO: remove
+
+// TODO: remove
+class Command {
+  constructor(name, parameters) {
+    this.uid = uid++
+    this.command = name
+    this.parameters = parameters
+  }
+}
+
+// TODO: remove
+class Response { // eslint-disable-line no-unused-vars
+  constructor(code, text, uid, parameters) {
+    this.code = code,
+    this.text = text,
+    this.commandUid = uid,
+    this.parameters = parameters
+  }
+}
 
 export default class Client {
 
@@ -24,11 +44,11 @@ export default class Client {
       return service.oauth()
       break
     default:
-      return this.storeitAuth()
+      return this.login()
     }
   }
 
-  storeitAuth() {
+  login() {
     throw {msg: 'StoreIt auth not implemented yet'}
   }
 
@@ -36,7 +56,7 @@ export default class Client {
     const {SERVER_HOST, SERVER_PORT} = process.env
     this.sock = new WebSocket(`ws://${SERVER_HOST}:${SERVER_PORT}`)
 
-    this.sock.on('open', () => this.sendUserTree())
+    this.sock.on('open', () => true) // TODO: send user tree ?
     this.sock.on('close', () => this.reconnect())
     this.sock.on('error', () => log.error('socket error occured'))
     this.sock.on('message', (data) => this.recv(data))
@@ -52,12 +72,10 @@ export default class Client {
     }
   }
 
-  sendUserTree() {
-    return this.send(userfile.makeUserTree())
-  }
+  send(cmd, params) {
+    log.info(`sending command ${cmd}`)
+    let data = new Command(cmd, params)
 
-  send(data) {
-    log.info(`sending command ${data.cmd}`)
     return new Promise((resolve, reject) =>
       this.sock.send(JSON.stringify(data), (err) =>
         !err ? resolve(data) : reject(err)
@@ -67,5 +85,25 @@ export default class Client {
 
   recv(data) {
     return new Promise((resolve) => resolve(JSON.parse(data)))
+  }
+
+  join(authType, accessToken) {
+    return this.send('JOIN', {authType, accessToken})
+  }
+
+  fileAdd(files) {
+    return this.send('FADD', {files})
+  }
+
+  fileUpdate(files) {
+    return this.send('FUPT', {files})
+  }
+
+  fileDel(files) {
+    return this.send('FDEL', {files})
+  }
+
+  fileMove(src, dst) {
+    return this.send('FMOV', {src, dst})
   }
 }
