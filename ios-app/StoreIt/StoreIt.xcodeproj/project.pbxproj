@@ -38,6 +38,15 @@
 		8596DF0C1CDBDC03008501BD /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8596DF0B1CDBDC03008501BD /* ConnectionManager.swift */; };
 		85B154121D140D18003B62FE /* PListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B154111D140D18003B62FE /* PListManager.swift */; };
 		85BA025B1CEDBD7200A8FC6F /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BA025A1CEDBD7200A8FC6F /* NavigationManager.swift */; };
+		85D0E6061D1D96F300C564C3 /* Base32.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E5FE1D1D96F300C564C3 /* Base32.framework */; };
+		85D0E6071D1D96F300C564C3 /* SwiftBase58.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E5FF1D1D96F300C564C3 /* SwiftBase58.framework */; };
+		85D0E6081D1D96F300C564C3 /* SwiftGMP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E6001D1D96F300C564C3 /* SwiftGMP.framework */; };
+		85D0E6091D1D96F300C564C3 /* SwiftHex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E6011D1D96F300C564C3 /* SwiftHex.framework */; };
+		85D0E60A1D1D96F300C564C3 /* SwiftIpfsApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E6021D1D96F300C564C3 /* SwiftIpfsApi.framework */; };
+		85D0E60B1D1D96F300C564C3 /* SwiftMultiaddr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E6031D1D96F300C564C3 /* SwiftMultiaddr.framework */; };
+		85D0E60C1D1D96F300C564C3 /* SwiftMultihash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E6041D1D96F300C564C3 /* SwiftMultihash.framework */; };
+		85D0E60D1D1D96F300C564C3 /* VarInt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D0E6051D1D96F300C564C3 /* VarInt.framework */; };
+		85D0E6101D1D985E00C564C3 /* IpfsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D0E60F1D1D985E00C564C3 /* IpfsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +107,15 @@
 		8596DF0B1CDBDC03008501BD /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		85B154111D140D18003B62FE /* PListManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PListManager.swift; sourceTree = "<group>"; };
 		85BA025A1CEDBD7200A8FC6F /* NavigationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
+		85D0E5FE1D1D96F300C564C3 /* Base32.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Base32.framework; path = Carthage/Build/iOS/Base32.framework; sourceTree = "<group>"; };
+		85D0E5FF1D1D96F300C564C3 /* SwiftBase58.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftBase58.framework; path = Carthage/Build/iOS/SwiftBase58.framework; sourceTree = "<group>"; };
+		85D0E6001D1D96F300C564C3 /* SwiftGMP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGMP.framework; path = Carthage/Build/iOS/SwiftGMP.framework; sourceTree = "<group>"; };
+		85D0E6011D1D96F300C564C3 /* SwiftHex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftHex.framework; path = Carthage/Build/iOS/SwiftHex.framework; sourceTree = "<group>"; };
+		85D0E6021D1D96F300C564C3 /* SwiftIpfsApi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftIpfsApi.framework; path = Carthage/Build/iOS/SwiftIpfsApi.framework; sourceTree = "<group>"; };
+		85D0E6031D1D96F300C564C3 /* SwiftMultiaddr.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftMultiaddr.framework; path = Carthage/Build/iOS/SwiftMultiaddr.framework; sourceTree = "<group>"; };
+		85D0E6041D1D96F300C564C3 /* SwiftMultihash.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftMultihash.framework; path = Carthage/Build/iOS/SwiftMultihash.framework; sourceTree = "<group>"; };
+		85D0E6051D1D96F300C564C3 /* VarInt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VarInt.framework; path = Carthage/Build/iOS/VarInt.framework; sourceTree = "<group>"; };
+		85D0E60F1D1D985E00C564C3 /* IpfsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IpfsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +123,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85D0E6061D1D96F300C564C3 /* Base32.framework in Frameworks */,
+				85D0E6071D1D96F300C564C3 /* SwiftBase58.framework in Frameworks */,
+				85D0E6081D1D96F300C564C3 /* SwiftGMP.framework in Frameworks */,
+				85D0E6091D1D96F300C564C3 /* SwiftHex.framework in Frameworks */,
+				85D0E60A1D1D96F300C564C3 /* SwiftIpfsApi.framework in Frameworks */,
+				85D0E60B1D1D96F300C564C3 /* SwiftMultiaddr.framework in Frameworks */,
+				85D0E60C1D1D96F300C564C3 /* SwiftMultihash.framework in Frameworks */,
+				85D0E60D1D1D96F300C564C3 /* VarInt.framework in Frameworks */,
 				241B726554C97932431BE4C2 /* Pods_StoreIt.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,6 +164,14 @@
 		734FCD23F0830BD3F91C18D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85D0E5FE1D1D96F300C564C3 /* Base32.framework */,
+				85D0E5FF1D1D96F300C564C3 /* SwiftBase58.framework */,
+				85D0E6001D1D96F300C564C3 /* SwiftGMP.framework */,
+				85D0E6011D1D96F300C564C3 /* SwiftHex.framework */,
+				85D0E6021D1D96F300C564C3 /* SwiftIpfsApi.framework */,
+				85D0E6031D1D96F300C564C3 /* SwiftMultiaddr.framework */,
+				85D0E6041D1D96F300C564C3 /* SwiftMultihash.framework */,
+				85D0E6051D1D96F300C564C3 /* VarInt.framework */,
 				2454C174D35A6508F9B22EE5 /* Pods_StoreIt.framework */,
 			);
 			name = Frameworks;
@@ -252,6 +286,7 @@
 				8500F70B1C97103E00C69875 /* File.swift */,
 				8500F70D1C97112800C69875 /* FileManager.swift */,
 				85BA025A1CEDBD7200A8FC6F /* NavigationManager.swift */,
+				85D0E60F1D1D985E00C564C3 /* IpfsManager.swift */,
 			);
 			name = FileManagement;
 			sourceTree = "<group>";
@@ -281,6 +316,7 @@
 				8500F6D81C970F1C00C69875 /* Resources */,
 				0707757418910AEA4818C73C /* Embed Pods Frameworks */,
 				58C70A24B7AF1A152C6CAB46 /* Copy Pods Resources */,
+				85D0E60E1D1D970600C564C3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -445,6 +481,27 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-StoreIt/Pods-StoreIt-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		85D0E60E1D1D970600C564C3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Base32.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftBase58.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftGMP.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftHex.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftIpfsApi.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftMultiaddr.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftMultihash.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/VarInt.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -454,6 +511,7 @@
 			files = (
 				8500F6E01C970F1C00C69875 /* LoginView.swift in Sources */,
 				853B29011CD8B33000742F8D /* WebSocketManager.swift in Sources */,
+				85D0E6101D1D985E00C564C3 /* IpfsManager.swift in Sources */,
 				857987321CDCBE4D0062B8F8 /* OAuth2Google.swift in Sources */,
 				850831521CE7332200C11EB5 /* DirectoryCell.swift in Sources */,
 				855AFB311D15D081009B81D9 /* Response.swift in Sources */,
@@ -625,8 +683,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = StoreIt/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.storeit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -647,8 +707,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = StoreIt/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.storeit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
