@@ -49,11 +49,12 @@ class GoogleService extends AuthProvider {
       process.env.GAPI_CLIENT_SECRET, REDIRECT_URI)
   }
   oauth() {
-    let redir = this.listenRedirect()
     let url = this.client.generateAuthUrl({scope: 'email'})
-    open(url)
+    let tokenPromise = this.listenRedirect()
+      .then((code) => this.getToken(code))
 
-    redir.then((code) => this.getToken(code))
+    open(url)
+    return tokenPromise
   }
 
   getToken(code) {
