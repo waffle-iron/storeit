@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 
 import open from 'open'
-// import * as jsonf from 'json-file'
 import express from 'express'
 import gapi from 'googleapis'
 
@@ -12,21 +11,26 @@ const TOKENS_FILE = './.tokens.json'
 
 class AuthProvider {
   constructor() {
-    this.server = express()
+    this.express = express()
     this.loadTokens()
   }
 
-  listenRedirect() {
+  waitAuthorized() {
     return new Promise((resolve, reject) => {
-      this.server.use('/', (req, res) => {
+      this.express.use('/', (req, res) => {
         let msg = 'Thank you for authenticating, you can now quit this page.'
         res.send(`StoreIt: ${msg}`)
+
+        this.http.close()
+        log.info('Access granted, Http server stopped')
 
         let code = req.query.code
         code != null ? resolve(code) : reject({err: 'could not get code'})
       })
-      this.server.listen(7777)
-      console.log('Listening port 7777, waiting for auth redirect...')
+
+      this.http = this.express.listen(7777)
+      log.info('Http server listening on port 7777,' +
+        'waiting for user authorization')
     })
   }
 
@@ -47,10 +51,24 @@ class GoogleService extends AuthProvider {
 
     this.client = new gapi.auth.OAuth2(process.env.GAPI_CLIENT_ID,
       process.env.GAPI_CLIENT_SECRET, REDIRECT_URI)
+    if (this.hasRefreshToken()) {
+      let {access_token, refresh_token} = this.tokens.google
+      this.client.setCredentials({
+        access_token,
+        refresh_token
+      })
+    }
   }
+
   oauth() {
-    let url = this.client.generateAuthUrl({scope: 'email'})
-    let tokenPromise = this.listenRedirect()
+    if (this.hasRefreshToken())
+      return this.getToken()
+
+    let url = this.client.generateAuthUrl({
+      scope: 'email',
+      access_type: 'offline' // eslint-disable-line camelcase
+    })
+    let tokenPromise = this.waitAuthorized()
       .then((code) => this.getToken(code))
 
     open(url)
@@ -59,7 +77,7 @@ class GoogleService extends AuthProvider {
 
   getToken(code) {
     return new Promise((resolve, reject) => {
-      this.client.getToken(code, (err, tokens) => {
+      let manageTokens = (err, tokens) => {
         if(!err) {
           this.client.setCredentials(tokens)
           this.saveTokens({google: tokens})
@@ -69,8 +87,19 @@ class GoogleService extends AuthProvider {
           log.error(err)
           reject(err)
         }
-      })
+      }
+
+      if (code != null)
+        this.client.getToken(code, manageTokens)
+      else {
+        log.info('refreshing token')
+        this.client.refreshAccessToken(manageTokens)
+      }
     })
+  }
+
+  hasRefreshToken() {
+    return this.tokens.google.refresh_token != null
   }
 }
 
