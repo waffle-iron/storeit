@@ -118,7 +118,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
         }
         
         if (self.ipfsManager == nil) {
-            self.ipfsManager = IpfsManager()
+            self.ipfsManager = IpfsManager(host: "http://127.0.0.1", port: 5001)
         }
     }
     

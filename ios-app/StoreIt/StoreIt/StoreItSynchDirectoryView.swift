@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 // TODO: maybe import interface texts from a file for different languages ?
 
@@ -100,14 +101,10 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
             let fileView = segue.destinationViewController
 
             self.ipfsManager?.get((target?.IPFSHash)!) { data in
-                //print(data)
+                print("[IPFS.GET] received data: \(data)")
+                // Set file preview on next view here
+                // Refresh
             }
-            
-            /*self.ipfsManager?.add("/Users/gjura_r/Desktop/demo/lardon.jpg") { merkleNode in
-                print("[IPFS.ADD] \(merkleNode)")
-            }*/
-            
-            self.ipfsManager?.add2("/Users/gjura_r/Desktop/demo/eiffeltower2.jpg")
             
             fileView.navigationItem.title = self.navigationManager?.getTargetName(target!)
         }
@@ -155,10 +152,21 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
         self.dismissViewControllerAnimated(true, completion: {_ in
-        	let path  = editingInfo["UIImagePickerControllerReferenceURL"] as! NSURL
-            self.ipfsManager?.add(path.path!) { merkleNode in
-                print("[IPFS.ADD] \(merkleNode)")
-            }
+            let referenceUrl = editingInfo["UIImagePickerControllerReferenceURL"] as! NSURL
+            let asset = PHAsset.fetchAssetsWithALAssetURLs([referenceUrl], options: nil).firstObject as! PHAsset
+            
+            PHImageManager.defaultManager().requestImageDataForAsset(asset, options: PHImageRequestOptions(), resultHandler: {
+                (imagedata, dataUTI, orientation, info) in
+                if info!.keys.contains(NSString(string: "PHImageFileURLKey"))
+                {
+                    let filePath = info![NSString(string: "PHImageFileURLKey")] as! NSURL
+                    let fileName = filePath.lastPathComponent!
+                    
+                    print(fileName)
+                    
+                    // IPFS ADD HERE
+                }
+            })
         });
     }
     
