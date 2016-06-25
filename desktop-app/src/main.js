@@ -2,9 +2,8 @@ import commander from 'commander'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import * as userfile from './user-file.js'
-import * as ws from './ws.js'
-import auth from './auth.js'
+import Client from './client'
+import * as userfile from './user-file'
 
 commander
   .version('0.0.1')
@@ -18,7 +17,5 @@ else {
   userfile.storeDir = './storeit'
 }
 
-auth('google')
-  .then((tokens) => {
-    //   ws.co(tokens.access_token)
-  })
+let client = new Client()
+client.auth('google')

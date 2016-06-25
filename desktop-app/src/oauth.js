@@ -49,8 +49,10 @@ export class GoogleService extends OAuthProvider {
   constructor() {
     super()
 
-    this.client = new gapi.auth.OAuth2(process.env.GAPI_CLIENT_ID,
-      process.env.GAPI_CLIENT_SECRET, REDIRECT_URI)
+    const {GAPI_CLIENT_ID, GAPI_CLIENT_SECRET} = process.env
+
+    this.client = new gapi.auth.OAuth2(GAPI_CLIENT_ID,
+      GAPI_CLIENT_SECRET, REDIRECT_URI)
     if (this.hasRefreshToken()) {
       /* eslint-disable camelcase */
       let {access_token, refresh_token} = this.tokens.google
