@@ -14,12 +14,13 @@ class fakeUser {
     this.ws.send(JSON.stringify(obj))
   }
 
-  constructor(email) {
+  constructor(accessToken, msgHandler) {
     this.ws = new WebSocket('ws://localhost:7641')
+    this.accessToken = accessToken
     this.ws.on('open', () => {
       this.join()
     })
-    this.msgHandler = undefined
+    this.msgHandler = msgHandler
 
     this.ws.on('message', (data) => {
       this.msgHandler(data)
@@ -28,8 +29,8 @@ class fakeUser {
 
   join() {
     this.send(new api.Command('JOIN', {
-      authType: 'fb',
-      accessToken: 'blabhla'
+      authType: 'gg',
+      accessToken: this.accessToken
     }))
   }
 
@@ -52,26 +53,36 @@ const expectUsualJoinResponse = (data) => {
   expect(obj.parameters.home.path).to.equal('/')
 }
 
+const expectErrorResponse = (data) => {
+  const obj = JSON.parse(data)
+
+  expect(obj.code).to.not.equal(0)
+}
+
 let fakeA = undefined
 let fakeB = undefined
 
 describe('simple connection', () => {
 
   it('should get JOIN response', (done) => {
-    fakeA = new fakeUser('adrien.morel@me.com')
-
-    fakeA.msgHandler = (data) => {
+    fakeA = new fakeUser('developer', (data) => {
       expectUsualJoinResponse(data)
       done()
-    }
+    })
+  })
+
+  it('should fail to connect client', (done) => {
+    fakeB = new fakeUser('invalid_access_token', (data) => {
+      expectErrorResponse(data)
+      done()
+    })
   })
 
   it('should connect another client', (done) => {
-    fakeB = new fakeUser('adrien.morel@me.com', done)
-    fakeB.msgHandler = (data) => {
+    fakeB = new fakeUser('developer', (data) => {
       expectUsualJoinResponse(data)
       done()
-    }
+    })
   })
 
   it('should have correct number of connected user', () => {
@@ -105,7 +116,7 @@ describe('protocol file commands', () => {
         expect(user.getConnectionCount()).to.equal(1)
         expect(user.getUserCount()).to.equal(1)
         done()
-      }, 100) // wait for server to take action
+      }, 10) // wait for server to take action
     })
 
     fakeB.leave()

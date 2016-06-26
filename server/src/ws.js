@@ -45,6 +45,10 @@ class Client {
   answerSuccess(commandUid) {
     this.sendObj(new protoObjs.Response(0, 'success', commandUid))
   }
+
+  answerFailure(commandUid, err) {
+    this.sendObj(new protoObjs.Response(err.code, err.msg, commandUid))
+  }
 }
 
 wss.on('connection', (ws) => {

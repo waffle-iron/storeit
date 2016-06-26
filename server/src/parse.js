@@ -3,20 +3,30 @@ import * as S from 'string'
 import * as git from './git.js'
 import * as user from './user.js'
 import * as protoObjs from './protocol-objects'
+import * as auth from './auth.js'
 
-const join = function(command, arg, socket) {
+const join = function(command, arg, socket, handlerFn) {
 
   // TODO: error checking on JSON
+  auth.verifyUserToken(arg.accessToken, (err, email) => {
+    if (!err) {
+      user.connectUser(email, socket, (err, user) => {
+        if (err) {
+          logger.debug('could not connect user')
+          handlerFn({code: 1, msg: 'bad credentials'})
+        }
 
-  user.connectUser('adrien.morel@me.com', socket, (err, user) => {
-    if (err) {
-      return logger.error('could not connect user')
+        socket.sendObj(new protoObjs.Response(0, 'welcome', command.uid, {
+          home: user.home
+        }))
+      })
     }
-
-    socket.sendObj(new protoObjs.Response(0, 'welcome', command.uid, {
-      home: user.home
-    }))
+    else {
+      logger.debug('could not connect user')
+      handlerFn({code: 1, msg: 'bad credentials'})
+    }
   })
+
 }
 
 const recast = (command, client) => {
@@ -68,5 +78,9 @@ export const parse = function(msg, client) {
   }
 
   // TODO: catch the goddam exception
-  hmap[command.command](command, command.parameters, client)
+  hmap[command.command](command, command.parameters, client, (err) => {
+    if (err) {
+      client.answerFailure(command.uid, err)
+    }
+  })
 }
