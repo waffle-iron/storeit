@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -195,10 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         StoreitFile rootFile = gson.fromJson(homeJson, StoreitFile.class);
-        
-        filesManager = new FilesManager(this, rootFile);
 
-//        new com.storeit.storeit.ipfs.DownloadAsync().execute("toto.mp4", "QmcRhxaBZ6vFz8BJAnkoB4yMvFiYEZxkacApWZoWc2XUvB");
+        filesManager = new FilesManager(this, rootFile);
     }
 
     @Override
@@ -257,7 +256,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -295,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public FilesManager getFilesManager(){
+    public FilesManager getFilesManager() {
         return filesManager;
     }
 
@@ -309,6 +307,25 @@ public class MainActivity extends AppCompatActivity {
         public void handleFADD(FileCommand command) {
             Log.v("MainActivity", "FADD");
             filesManager.addFile(command.getFiles());
+
+            runOnUiThread(new Runnable() {
+                              @Override
+                              public void run() {
+
+
+                                  Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
+                                  if (currentFragment instanceof FileViewerFragment) {
+
+                                      FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+                                      fragTransaction.detach(currentFragment);
+                                      fragTransaction.attach(currentFragment);
+                                      fragTransaction.commit();
+                                  }
+
+                                  Log.v("MainActivity", "FADD reload data");
+                              }
+                          }
+            );
         }
 
         @Override
