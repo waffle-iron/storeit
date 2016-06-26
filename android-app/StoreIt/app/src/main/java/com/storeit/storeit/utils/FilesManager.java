@@ -191,6 +191,17 @@ public class FilesManager {
             }
     }
 
+    public void removeFile(StoreitFile file) {
+        File parentFile = new File(file.getPath());
+        String parentPath = parentFile.getParentFile().getAbsolutePath();
+
+        StoreitFile parent = getParentFile(mRootFile, parentPath);
+        if (parent != null) {
+            parent.getFiles().remove(file.getFileName());
+            saveJson();
+        }
+    }
+
     public void addFile(StoreitFile file) {
 
         File parentFile = new File(file.getPath());

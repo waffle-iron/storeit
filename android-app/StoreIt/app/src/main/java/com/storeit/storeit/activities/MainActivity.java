@@ -297,32 +297,38 @@ public class MainActivity extends AppCompatActivity {
         return filesManager;
     }
 
+    private void refreshFileExplorer() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
+        if (currentFragment instanceof FileViewerFragment) {
+
+            FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+            fragTransaction.detach(currentFragment);
+            fragTransaction.attach(currentFragment);
+            fragTransaction.commit();
+        }
+    }
+
     private FileCommandHandler mFileCommandHandler = new FileCommandHandler() {
         @Override
         public void handleFDEL(FileCommand command) {
             Log.v("MainActivity", "FDEL");
+            filesManager.removeFile(command.getFiles());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refreshFileExplorer();
+                }
+            });
         }
 
         @Override
         public void handleFADD(FileCommand command) {
             Log.v("MainActivity", "FADD");
             filesManager.addFile(command.getFiles());
-
             runOnUiThread(new Runnable() {
                               @Override
                               public void run() {
-
-
-                                  Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
-                                  if (currentFragment instanceof FileViewerFragment) {
-
-                                      FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-                                      fragTransaction.detach(currentFragment);
-                                      fragTransaction.attach(currentFragment);
-                                      fragTransaction.commit();
-                                  }
-
-                                  Log.v("MainActivity", "FADD reload data");
+                                  refreshFileExplorer();
                               }
                           }
             );
