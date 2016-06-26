@@ -130,4 +130,8 @@ public class FileViewerFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+    public StoreitFile getCurrentFile() {
+        return adapter.getCurrentFile();
+    }
 }

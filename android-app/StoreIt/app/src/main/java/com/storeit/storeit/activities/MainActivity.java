@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
     public void openFragment(final Fragment fragment) {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        ft.addToBackStack(null);
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();
     }
@@ -275,8 +276,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Uri uri = data.getData();
                 Log.v("MainActivity", "icici " + uri.toString());
-                new UploadAsync(this).execute(uri.getPath());
-
+                fbtn.setVisibility(View.VISIBLE);
+                new UploadAsync(this, mBoundService).execute(uri.getPath());
             }
         }
     }
@@ -297,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         return filesManager;
     }
 
-    private void refreshFileExplorer() {
+    public void refreshFileExplorer() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container); // Get the current fragment
         if (currentFragment instanceof FileViewerFragment) {
 

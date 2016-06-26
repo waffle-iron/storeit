@@ -145,6 +145,9 @@ public class FilesManager {
     }
 
     private StoreitFile recursiveSearch(String hash, StoreitFile root) {
+        if (root.getIPFSHash().equals(hash))
+            return root;
+
         for (Map.Entry<String, StoreitFile> entry : root.getFiles().entrySet()) {
             if (entry.getValue().getIPFSHash().equals(hash))
                 return entry.getValue();
@@ -173,22 +176,22 @@ public class FilesManager {
         return null;
     }
 
-    private void saveJson() {
+    public void saveJson() {
         File jsonFile = new File(storageLocation + "/storeit.json");
 
-            try {
-                if (!jsonFile.exists()) {
-                    if (!jsonFile.createNewFile()) {
-                        Log.v(LOGTAG, "Error creating .storeit");
-                    }
+        try {
+            if (!jsonFile.exists()) {
+                if (!jsonFile.createNewFile()) {
+                    Log.v(LOGTAG, "Error creating .storeit");
                 }
-                FileWriter fw = new FileWriter(jsonFile, false);
-                Gson gson = new Gson();
-                fw.write(gson.toJson(mRootFile, StoreitFile.class));
-                fw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            FileWriter fw = new FileWriter(jsonFile, false);
+            Gson gson = new Gson();
+            fw.write(gson.toJson(mRootFile, StoreitFile.class));
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeFile(StoreitFile file) {
@@ -202,12 +205,21 @@ public class FilesManager {
         }
     }
 
+    public void addFile(StoreitFile file, StoreitFile parent) {
+        StoreitFile p = getFileByHash(parent.getIPFSHash(), mRootFile);
+        if (p != null) {
+            p.addFile(file);
+            saveJson();
+        }
+
+    }
+
     public void addFile(StoreitFile file) {
 
         File parentFile = new File(file.getPath());
         String parentPath = parentFile.getParentFile().getAbsolutePath();
 
-        StoreitFile parent =  getParentFile(mRootFile, parentPath);
+        StoreitFile parent = getParentFile(mRootFile, parentPath);
         if (parent != null) {
             parent.addFile(file);
             saveJson();

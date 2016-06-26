@@ -33,6 +33,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     private String storeitPath;
     private FilesManager manager;
 
+    public StoreitFile getCurrentFile() {
+        return historyStack.peek();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView fileNameTextView;
         ImageView fileTypeImageView;

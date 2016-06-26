@@ -16,6 +16,7 @@ import com.neovisionaries.ws.client.WebSocketExtension;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.storeit.storeit.protocol.FileCommandHandler;
 import com.storeit.storeit.protocol.LoginHandler;
+import com.storeit.storeit.protocol.StoreitFile;
 import com.storeit.storeit.protocol.command.CommandManager;
 import com.storeit.storeit.protocol.command.FileCommand;
 import com.storeit.storeit.protocol.command.JoinCommand;
@@ -42,6 +43,8 @@ public class SocketService extends Service {
     // Handlers for callback
     private LoginHandler mLoginHandler;
     private FileCommandHandler mFileCommandHandler;
+
+
 
     private class SocketManager implements Runnable {
         @Override
@@ -107,6 +110,12 @@ public class SocketService extends Service {
     public void sendJOIN(String authType, String token) {
         Gson gson = new Gson();
         JoinCommand cmd = new JoinCommand(0, authType, token);
+        webSocket.sendText(gson.toJson(cmd));
+    }
+
+    public void sendFADD(StoreitFile newFile) {
+        Gson gson = new Gson();
+        FileCommand cmd = new FileCommand(0, "FADD", newFile);
         webSocket.sendText(gson.toJson(cmd));
     }
 
