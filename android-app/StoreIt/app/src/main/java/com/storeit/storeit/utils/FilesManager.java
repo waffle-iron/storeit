@@ -146,10 +146,10 @@ public class FilesManager {
 
     private StoreitFile recursiveSearch(String hash, StoreitFile root) {
         for (Map.Entry<String, StoreitFile> entry : root.getFiles().entrySet()) {
-            if (entry.getValue().isDirectory())
-                recursiveSearch(hash, entry.getValue());
-            else if (entry.getValue().getIPFSHash().equals(hash))
+            if (entry.getValue().getIPFSHash().equals(hash))
                 return entry.getValue();
+            else if (entry.getValue().isDirectory())
+                recursiveSearch(hash, entry.getValue());
         }
         return null;
     }
@@ -211,6 +211,17 @@ public class FilesManager {
         if (parent != null) {
             parent.addFile(file);
             saveJson();
+        }
+    }
+
+    public void updateFile(StoreitFile file) {
+        StoreitFile toUpdate = getFileByHash(file.getIPFSHash(), mRootFile);
+
+        if (toUpdate != null) {
+            toUpdate.setFiles(file.getFiles());
+            toUpdate.setIsDir(file.isDirectory());
+            toUpdate.setMetadata(file.getMetadata());
+            toUpdate.setPath(file.getPath());
         }
     }
 }

@@ -57,4 +57,20 @@ public class StoreitFile {
     public void setIsDir(boolean isDir) {
         this.isDir = isDir;
     }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setIPFSHash(String IPFSHash) {
+        this.IPFSHash = IPFSHash;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
+    public void setFiles(HashMap<String, StoreitFile> files) {
+        this.files = files;
+    }
 }

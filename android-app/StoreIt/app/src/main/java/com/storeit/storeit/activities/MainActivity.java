@@ -330,13 +330,19 @@ public class MainActivity extends AppCompatActivity {
                               public void run() {
                                   refreshFileExplorer();
                               }
-                          }
-            );
+                          });
         }
 
         @Override
         public void handleFUPT(FileCommand command) {
             Log.v("MainActivity", "FUPT");
+            filesManager.updateFile(command.getFiles());
+            runOnUiThread(new Runnable() {
+                              @Override
+                              public void run() {
+                                  refreshFileExplorer();
+                              }
+                          });
         }
     };
 }
