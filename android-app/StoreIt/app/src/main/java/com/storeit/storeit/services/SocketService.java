@@ -7,14 +7,21 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketExtension;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import com.storeit.storeit.protocol.CommandManager;
-import com.storeit.storeit.utils.StoreitFile;
+import com.storeit.storeit.protocol.FileCommandHandler;
+import com.storeit.storeit.protocol.LoginHandler;
+import com.storeit.storeit.protocol.StoreitFile;
+import com.storeit.storeit.protocol.command.CommandManager;
+import com.storeit.storeit.protocol.command.FileCommand;
+import com.storeit.storeit.protocol.command.JoinCommand;
+import com.storeit.storeit.protocol.command.JoinResponse;
+
 import java.io.IOException;
 
 /*
@@ -31,8 +38,13 @@ public class SocketService extends Service {
 
     private boolean mConnected = false;
 
-    private Handler handler = new Handler(Looper.getMainLooper());
     private WebSocket webSocket = null;
+
+    // Handlers for callback
+    private LoginHandler mLoginHandler;
+    private FileCommandHandler mFileCommandHandler;
+
+
 
     private class SocketManager implements Runnable {
         @Override
@@ -49,19 +61,36 @@ public class SocketService extends Service {
 
                             public void onTextMessage(WebSocket websocket, String message) {
                                 int cmdType = CommandManager.getCommandType(message);
-
-                                switch (cmdType){
+                                switch (cmdType) {
                                     case CommandManager.JOIN:
                                         Log.v(LOGTAG, "Join command received :)");
-                                        break;
-                                    case CommandManager.QUIT:
+                                        if (mLoginHandler != null) {
+                                            Gson gson = new Gson();
+                                            JoinResponse response = gson.fromJson(message, JoinResponse.class);
+                                            mLoginHandler.handleJoin(response);
+                                        }
                                         break;
                                     case CommandManager.FDEL:
+                                        if (mFileCommandHandler != null) {
+                                            Gson gson = new Gson();
+                                            FileCommand fileCommand = gson.fromJson(message, FileCommand.class);
+                                            mFileCommandHandler.handleFDEL(fileCommand);
+                                        }
                                         break;
                                     case CommandManager.FADD:
+                                        if (mFileCommandHandler != null) {
+                                            Gson gson = new Gson();
+                                            FileCommand fileCommand = gson.fromJson(message, FileCommand.class);
+                                            mFileCommandHandler.handleFADD(fileCommand);
+                                        }
                                         break;
                                     case CommandManager.FUPT:
+                                    if (mFileCommandHandler != null) {
+                                        Gson gson = new Gson();
+                                        FileCommand fileCommand = gson.fromJson(message, FileCommand.class);
+                                        mFileCommandHandler.handleFUPT(fileCommand);
                                         break;
+                                    }
                                     default:
                                         Log.v(LOGTAG, "Invalid command received :/");
                                         break;
@@ -78,16 +107,36 @@ public class SocketService extends Service {
         }
     }
 
-    public  void sendJOIN(String username, String password, StoreitFile file){
+    public void sendJOIN(String authType, String token) {
         Gson gson = new Gson();
+        JoinCommand cmd = new JoinCommand(0, authType, token);
+        webSocket.sendText(gson.toJson(cmd));
+    }
 
-        String jsonFile = gson.toJson(file);
-        String hashes = "None";
-        String cmd = "JOIN ";
-        String params =  username + " " + jsonFile + "\r\n";
-        cmd += params.length() + " " + params;
+    public void sendFADD(StoreitFile newFile) {
+        Gson gson = new Gson();
+        FileCommand cmd = new FileCommand(0, "FADD", newFile);
+        webSocket.sendText(gson.toJson(cmd));
+    }
 
-        webSocket.sendText(cmd);
+    public void sendFDEL(StoreitFile newFile) {
+        Gson gson = new Gson();
+        FileCommand cmd = new FileCommand(0, "FDEL", newFile);
+        webSocket.sendText(gson.toJson(cmd));
+    }
+
+    public void sendFUPT(StoreitFile newFile) {
+        Gson gson = new Gson();
+        FileCommand cmd = new FileCommand(0, "FUPT", newFile);
+        webSocket.sendText(gson.toJson(cmd));
+    }
+
+    public void setmLoginHandler(LoginHandler handler) {
+        mLoginHandler = handler;
+    }
+
+    public void setFileCommandandler(FileCommandHandler handler) {
+        mFileCommandHandler = handler;
     }
 
     @Override

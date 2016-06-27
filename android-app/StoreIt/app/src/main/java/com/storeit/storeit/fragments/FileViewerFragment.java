@@ -8,15 +8,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.storeit.storeit.activities.MainActivity;
 import com.storeit.storeit.adapters.ExplorerAdapter;
+import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.utils.FilesManager;
 import com.storeit.storeit.R;
-import com.storeit.storeit.utils.StoreitFile;
+import com.storeit.storeit.protocol.StoreitFile;
 
 public class FileViewerFragment extends Fragment {
 
@@ -63,18 +69,18 @@ public class FileViewerFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_file_viewer, container, false);
 
-        explorersRecyclerView = (RecyclerView)rootView.findViewById(R.id.explorer_recycler_view);
+        explorersRecyclerView = (RecyclerView) rootView.findViewById(R.id.explorer_recycler_view);
         explorersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FilesManager manager = new FilesManager(getContext());
-        StoreitFile file = manager.makeTree();
+        FilesManager manager = ((MainActivity) getActivity()).getFilesManager();
 
-        adapter = new ExplorerAdapter(file, getContext(), manager.getFolderPath());
+        adapter = new ExplorerAdapter(manager, getContext());
         explorersRecyclerView.setAdapter(adapter);
         explorersRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         final GestureDetector mGestureDetector = new GestureDetector(rootView.getContext(), new GestureDetector.SimpleOnGestureListener() {
-            @Override public boolean onSingleTapUp(MotionEvent e) {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
@@ -84,10 +90,10 @@ public class FileViewerFragment extends Fragment {
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
 
                 View child = explorersRecyclerView.findChildViewUnder(e.getX(), e.getY());
-                if(child!=null && mGestureDetector.onTouchEvent(e)) {
+                if (child != null && mGestureDetector.onTouchEvent(e)) {
                     Log.v("FILE_FRAGMENT", "file fragment clicked : " + explorersRecyclerView.getChildLayoutPosition(child));
                     adapter.fileClicked(explorersRecyclerView.getChildLayoutPosition(child));
-                    return  true;
+                    return true;
                 }
                 return false;
             }
@@ -102,10 +108,12 @@ public class FileViewerFragment extends Fragment {
             }
         });
 
+        registerForContextMenu(explorersRecyclerView);
+
         return rootView;
     }
 
-    public void backPressed(){
+    public void backPressed() {
         adapter.backPressed();
     }
 
@@ -126,7 +134,36 @@ public class FileViewerFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int position = adapter.getPosition();
+
+        MainActivity activity  = (MainActivity)getActivity();
+        FilesManager manager = activity.getFilesManager();
+        StoreitFile file = adapter.getFileAt(position);
+        SocketService service = activity.getSocketService();
+
+        switch (item.getItemId()) {
+            case R.id.action_delete_file:
+                Log.v("FileViewerFragment", "Delete");
+                manager.removeFile(file);
+                adapter.removeFile(position);
+                service.sendFDEL(file);
+
+                break;
+            case R.id.action_rename_file:
+                Log.v("FileVIewerFragment", "Rename");
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    public StoreitFile getCurrentFile() {
+        return adapter.getCurrentFile();
     }
 }

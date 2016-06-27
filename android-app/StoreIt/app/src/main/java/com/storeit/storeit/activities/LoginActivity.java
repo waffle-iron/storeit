@@ -4,41 +4,71 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.storeit.storeit.R;
 import com.storeit.storeit.oauth.GetUsernameTask;
 import com.storeit.storeit.protocol.LoginHandler;
+import com.storeit.storeit.protocol.command.JoinResponse;
 import com.storeit.storeit.services.SocketService;
 
 /*
 * Login Activity
 * Create tcp service if it's not launched
 */
-public class LoginActivity extends Activity implements LoginHandler {
+public class LoginActivity extends Activity {
 
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
     static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
 
     private boolean mIsBound = false;
+    private boolean destroyService = true;
     private SocketService mBoundService = null;
     private String mEmail;
     String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
-    private GoogleApiClient client;
+
+    private LoginHandler mLoginHandler = new LoginHandler() {
+        @Override
+        public void handleJoin(JoinResponse response) {
+            if (response.getCode() == 1) {
+
+                // The service will be handled by MainActivit;
+                destroyService = false;
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                // Stringify fileobject in order to pass it to other activity. It will be save on disk
+                // So passing as string is fine
+                Gson gson = new Gson();
+                String homeJson = gson.toJson(response.getParameters().getHome());
+
+                intent.putExtra("home", homeJson);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else {
+                Toast.makeText(LoginActivity.this, "Invalid login or password", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
     private void pickUserAccount() {
         String[] accountTypes = new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE};
@@ -55,27 +85,22 @@ public class LoginActivity extends Activity implements LoginHandler {
         }
     }
 
-    public void tokenReceived(String token) {
+    // Google+ token received, sending join cmd
+    public void tokenReceived(final String token) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                mBoundService.sendJOIN("google", token);
             }
         });
     }
 
     public void handleException(final Exception e) {
-        // Because this call comes from the AsyncTask, we must ensure that the following
-        // code instead executes on the UI thread.
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (e instanceof GooglePlayServicesAvailabilityException) {
-                    // The Google Play services APK is old, disabled, or not present.
-                    // Show a dialog created by Google Play services that allows
-                    // the user to update the APK
                     int statusCode = ((GooglePlayServicesAvailabilityException) e)
                             .getConnectionStatusCode();
                     Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode,
@@ -83,9 +108,6 @@ public class LoginActivity extends Activity implements LoginHandler {
                             REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
                     dialog.show();
                 } else if (e instanceof UserRecoverableAuthException) {
-                    // Unable to authenticate, such as when the user has not yet granted
-                    // the app access to the account, but the user can fix this.
-                    // Forward the user to an activity in Google Play services.
                     Intent intent = ((UserRecoverableAuthException) e).getIntent();
                     startActivityForResult(intent,
                             REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
@@ -98,6 +120,7 @@ public class LoginActivity extends Activity implements LoginHandler {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBoundService = ((SocketService.LocalBinder) service).getService();
+            mBoundService.setmLoginHandler(mLoginHandler);
             mIsBound = true;
         }
 
@@ -120,100 +143,66 @@ public class LoginActivity extends Activity implements LoginHandler {
         } else if ((
                 requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR)
                 && resultCode == RESULT_OK) {
-            // Receiving a result that follows a GoogleAuthException, try auth again
             getUsername();
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.storeit.storeit/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+        Intent socketService = new Intent(this, SocketService.class);
+        bindService(socketService, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.storeit.storeit/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
 
-        if (mIsBound) {
+        if (mIsBound && destroyService) {
             unbindService(mConnection);
             mIsBound = false;
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.disconnect();
     }
+
+    LoginButton fbButton;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
         SignInButton button = (SignInButton) findViewById(R.id.google_login);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 pickUserAccount();
-
-
-                if (mBoundService != null) {
-                    if (!mBoundService.isConnected()) {
-                        Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Send join command
-                }
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
 
-    @Override
-    public void handleJoin(String cmd) {
+        callbackManager = CallbackManager.Factory.create();
+        fbButton = (LoginButton) findViewById(R.id.facebook_login);
 
-        int success;
+        fbButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("LoginActivity", loginResult.getAccessToken().getToken());
+                mBoundService.sendJOIN("fb", loginResult.getAccessToken().getToken());
+            }
 
-        String[] tokens = cmd.split("\\s");
-        if (tokens.length != 2)
-            success = 0;
-        else
-            success = Integer.parseInt(tokens[1]);
+            @Override
+            public void onCancel() {
 
-        if (success == 1) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        } else {
-            Toast.makeText(LoginActivity.this, "Invalid login or password", Toast.LENGTH_LONG).show();
-        }
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
     }
 }
