@@ -29,7 +29,7 @@ class fakeUser {
 
   join() {
     this.send(new api.Command('JOIN', {
-      authType: 'gg',
+      authType: 'fb',
       accessToken: this.accessToken
     }))
   }

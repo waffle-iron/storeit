@@ -147,6 +147,10 @@ export const connectUser = (email, client, handlerFn) => {
   user.sockets[client.uid] = client
 
   user.loadHome((err) => {
+
+    if (err) {
+      disconnectSocket(client)
+    }
     handlerFn(err, user)
   })
 

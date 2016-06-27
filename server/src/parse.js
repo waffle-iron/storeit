@@ -8,17 +8,18 @@ import * as auth from './auth.js'
 const join = function(command, arg, socket, handlerFn) {
 
   // TODO: error checking on JSON
-  auth.verifyUserToken(arg.accessToken, (err, email) => {
+  auth.verifyUserToken(arg.authType, arg.accessToken, (err, email) => {
     if (!err) {
-      user.connectUser(email, socket, (err, user) => {
+      user.connectUser(email, socket, (err, usr) => {
         if (err) {
           logger.debug('could not connect user')
           handlerFn({code: 1, msg: 'bad credentials'})
         }
-
-        socket.sendObj(new protoObjs.Response(0, 'welcome', command.uid, {
-          home: user.home
-        }))
+        else {
+          socket.sendObj(new protoObjs.Response(0, 'welcome', command.uid, {
+            home: usr.home
+          }))
+        }
       })
     }
     else {
