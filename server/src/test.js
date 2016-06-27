@@ -194,4 +194,19 @@ describe('protocol file commands', () => {
       dest: '/newdir'
     }))
   })
+
+  it('should FDEL correctly', (done) => {
+
+    fakeA.msgHandler = (data) => {
+      expectOkResponse(data)
+      checkUserTree()
+      done()
+    }
+
+    delete userTree.files['newdir'].files['anotherdir']
+    delete userTree.files['readme.txt']
+    fakeA.send(new api.Command('FDEL', {
+      files: ['/newdir/anotherdir', '/readme.txt']
+    }))
+  })
 })

@@ -112,8 +112,10 @@ export class User {
 
   }
 
-  delTree(trees) {
-    return this.setTrees(trees, (tree, name) => delete tree[name])
+  delTree(paths) {
+    for (const p of paths) {
+      this.setTree(p, (tree, name) => delete tree.files[name])
+    }
   }
 
   loadHome(handlerFn) {
