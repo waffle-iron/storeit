@@ -11,23 +11,15 @@ let win;
 let createWindow = () => {
   win = new BrowserWindow({width: 800, height: 600});
 
-  win.loadURL(`file://${__dirname}/../index.html`);
+  win.loadURL(`file://${__dirname}/../settings.html`);
 
   win.on('closed', () => {
     win = null;
   });
 
-  ipc.on('loginGoogle', (event, data) => {
-      let client = new Client()
-      client.auth('google')
-  });
-  ipc.on('loginFacebook', (event, data) => {
-      let client = new Client()
-      client.auth('facebook')
-  });
 }
 
-export let openLoginWin = () => {
+export let openSettingsGui = () => {
   app.on('ready', createWindow);
 
   app.on('window-all-closed', () => {

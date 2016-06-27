@@ -3,11 +3,12 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import * as userfile from './user-file'
-import * as win from './win'
+import * as loginGui from './login-gui'
 
 commander
   .version('0.0.1')
-  .option('-d, --store <name>', 'set the user synced directory (default is ./storeit')
+    .option('-d, --store <name>', 'Set the user synced directory (default is ./storeit)')
+    .option('-s --settings', 'Open a configuration  window')
   .parse(process.argv)
 
 if (commander.store) {
@@ -17,4 +18,8 @@ else {
   userfile.storeDir = './storeit'
 }
 
-win.openLoginWin()
+if (commander.settings) {
+
+}
+
+loginGui.openLoginGui()
