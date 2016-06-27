@@ -305,6 +305,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public SocketService getSocketService() {
+        return mBoundService;
+    }
+
     private FileCommandHandler mFileCommandHandler = new FileCommandHandler() {
         @Override
         public void handleFDEL(FileCommand command) {

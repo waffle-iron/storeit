@@ -24,8 +24,10 @@ import com.storeit.storeit.protocol.StoreitFile;
 import com.storeit.storeit.utils.FilesManager;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.Map;
 
@@ -36,7 +38,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     private Context context;
     private String storeitPath;
     private FilesManager manager;
-    int     position;
+    int position;
 
     public StoreitFile getCurrentFile() {
         return historyStack.peek();
@@ -195,5 +197,16 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
 
     public int getPosition() {
         return position;
+    }
+
+    public StoreitFile getFileAt(int position) {
+        return mFiles[position];
+    }
+
+    public void removeFile(int position) {
+        ArrayList<StoreitFile> files = new ArrayList<>( Arrays.asList(mFiles));
+        files.remove(position);
+        mFiles = files.toArray(new StoreitFile[files.size()]);
+        notifyDataSetChanged();
     }
 }

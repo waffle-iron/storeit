@@ -114,7 +114,6 @@ public class FilesManager {
                             Log.e(LOGTAG, "Error while deleting " + fileToDelete);
                         }
                     }
-
                 }
             }
         }
@@ -201,6 +200,13 @@ public class FilesManager {
         StoreitFile parent = getParentFile(mRootFile, parentPath);
         if (parent != null) {
             parent.getFiles().remove(file.getFileName());
+
+            File fileToDelete = new File(mDataDir.getAbsolutePath() + File.separator + file.getIPFSHash());
+            if (fileToDelete.exists()) {
+                if (!fileToDelete.delete()) {
+                    Log.e(LOGTAG, "Error while deleting " + fileToDelete);
+                }
+            }
             saveJson();
         }
     }

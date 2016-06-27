@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.storeit.storeit.activities.MainActivity;
 import com.storeit.storeit.adapters.ExplorerAdapter;
+import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.utils.FilesManager;
 import com.storeit.storeit.R;
 import com.storeit.storeit.protocol.StoreitFile;
@@ -137,9 +138,18 @@ public class FileViewerFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         int position = adapter.getPosition();
 
+        MainActivity activity  = (MainActivity)getActivity();
+        FilesManager manager = activity.getFilesManager();
+        StoreitFile file = adapter.getFileAt(position);
+        SocketService service = activity.getSocketService();
+
         switch (item.getItemId()) {
             case R.id.action_delete_file:
                 Log.v("FileViewerFragment", "Delete");
+                manager.removeFile(file);
+                adapter.removeFile(position);
+                service.sendFDEL(file);
+
                 break;
             case R.id.action_rename_file:
                 Log.v("FileVIewerFragment", "Rename");

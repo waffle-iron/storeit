@@ -119,6 +119,18 @@ public class SocketService extends Service {
         webSocket.sendText(gson.toJson(cmd));
     }
 
+    public void sendFDEL(StoreitFile newFile) {
+        Gson gson = new Gson();
+        FileCommand cmd = new FileCommand(0, "FDEL", newFile);
+        webSocket.sendText(gson.toJson(cmd));
+    }
+
+    public void sendFUPT(StoreitFile newFile) {
+        Gson gson = new Gson();
+        FileCommand cmd = new FileCommand(0, "FUPT", newFile);
+        webSocket.sendText(gson.toJson(cmd));
+    }
+
     public void setmLoginHandler(LoginHandler handler) {
         mLoginHandler = handler;
     }
