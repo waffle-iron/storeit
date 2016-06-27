@@ -7,28 +7,27 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.storeit.storeit.R;
 import com.storeit.storeit.oauth.GetUsernameTask;
-import com.storeit.storeit.protocol.FileCommandHandler;
 import com.storeit.storeit.protocol.LoginHandler;
-import com.storeit.storeit.protocol.command.FileCommand;
 import com.storeit.storeit.protocol.command.JoinResponse;
 import com.storeit.storeit.services.SocketService;
 
@@ -42,15 +41,19 @@ public class LoginActivity extends Activity {
     static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
 
     private boolean mIsBound = false;
+    private boolean destroyService = true;
     private SocketService mBoundService = null;
     private String mEmail;
     String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
-    private GoogleApiClient client;
 
     private LoginHandler mLoginHandler = new LoginHandler() {
         @Override
         public void handleJoin(JoinResponse response) {
             if (response.getCode() == 1) {
+
+                // The service will be handled by MainActivit;
+                destroyService = false;
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
                 // Stringify fileobject in order to pass it to other activity. It will be save on disk
@@ -142,20 +145,12 @@ public class LoginActivity extends Activity {
                 && resultCode == RESULT_OK) {
             getUsername();
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "Login Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://com.storeit.storeit/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
 
         Intent socketService = new Intent(this, SocketService.class);
         bindService(socketService, mConnection, Context.BIND_AUTO_CREATE);
@@ -164,25 +159,20 @@ public class LoginActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "Login Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://com.storeit.storeit/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
 
-/*        if (mIsBound) {
+        if (mIsBound && destroyService) {
             unbindService(mConnection);
             mIsBound = false;
         }
-        */
-        client.disconnect();
     }
+
+    LoginButton fbButton;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
         SignInButton button = (SignInButton) findViewById(R.id.google_login);
@@ -192,6 +182,27 @@ public class LoginActivity extends Activity {
                 pickUserAccount();
             }
         });
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        callbackManager = CallbackManager.Factory.create();
+        fbButton = (LoginButton) findViewById(R.id.facebook_login);
+
+        fbButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("LoginActivity", loginResult.getAccessToken().getToken());
+                mBoundService.sendJOIN("fb", loginResult.getAccessToken().getToken());
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
     }
 }
