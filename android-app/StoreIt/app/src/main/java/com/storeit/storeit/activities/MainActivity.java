@@ -26,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.google.gson.Gson;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.storeit.storeit.R;
@@ -40,6 +39,10 @@ import com.storeit.storeit.protocol.command.FileCommand;
 import com.storeit.storeit.services.SocketService;
 import com.storeit.storeit.utils.FilesManager;
 
+/**
+ * Main acyivity
+ * Contains all the fragments of the apps
+ */
 public class MainActivity extends AppCompatActivity {
 
     String TITLES[] = {"Home", "My files", "Settings"};
@@ -48,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     String NAME = "Louis Mondesir";
     String EMAIL = "louis.mondesir@gmail.com";
     int PROFILE = R.drawable.header_profile_picture;
-
 
     static int FILE_CODE_RESULT = 1005;
 
@@ -153,14 +155,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                // code here will execute once the drawer is opened( As I dont want anything happened whe drawer is
-                // open I am not going to put anything here)
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                // Code here will execute once drawer is closed
             }
 
 
@@ -254,10 +253,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override

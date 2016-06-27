@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -32,12 +36,13 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     private Context context;
     private String storeitPath;
     private FilesManager manager;
+    int     position;
 
     public StoreitFile getCurrentFile() {
         return historyStack.peek();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
         TextView fileNameTextView;
         ImageView fileTypeImageView;
         Context contxt;
@@ -49,11 +54,23 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
             itemView.setOnClickListener(this);
             fileNameTextView = (TextView) itemView.findViewById(R.id.file_item_row_name);
             fileTypeImageView = (ImageView) itemView.findViewById(R.id.explorer_image_file_type);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Toast.makeText(contxt, "The Item Clicked is: " + getPosition(), Toast.LENGTH_SHORT).show();
+        }
+
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v,
+                                        ContextMenu.ContextMenuInfo menuInfo) {
+
+            menu.add(Menu.NONE, R.id.action_delete_file, Menu.NONE, "Delete");
+            menu.add(Menu.NONE, R.id.action_rename_file, Menu.NONE, "Rename");
+
+
         }
     }
 
@@ -145,17 +162,38 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ExplorerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ExplorerAdapter.ViewHolder holder, int position) {
         holder.fileNameTextView.setText(mFiles[position].getFileName()); // Get file name
         if (mFiles[position].isDirectory()) { // Directory, we use folder icon
             holder.fileTypeImageView.setImageResource(R.drawable.ic_folder_black_24dp);
         } else { // File, we use file icon
             holder.fileTypeImageView.setImageResource(R.drawable.ic_insert_drive_file_black_24dp);
         }
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(holder.getPosition());
+                return false;
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mFiles.length;
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }
