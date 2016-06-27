@@ -3,9 +3,3 @@ node_modules
 build
 .env
 .tokens.json
-
-#Visual studio files
-.vs
-obj
-.ntvs_analysis.dat
-*.njsproj
