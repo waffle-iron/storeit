@@ -1,5 +1,5 @@
-import oauth from './auth.js'
-import {logger} from './log.js'
+import Client from './client'
+import {logger} from './log'
 import electron from 'electron'
 
 let {app} = electron
@@ -18,10 +18,12 @@ let createWindow = () => {
   });
 
   ipc.on('loginGoogle', (event, data) => {
-      oauth('google')
+      let client = new Client()
+      client.auth('google')
   });
   ipc.on('loginFacebook', (event, data) => {
-      oauth('facebook')
+      let client = new Client()
+      client.auth('facebook')
   });
 }
 
