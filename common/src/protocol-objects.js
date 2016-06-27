@@ -17,3 +17,21 @@ export class Response {
     this.parameters = parameters
   }
 }
+
+export const makeFileObj = (path, IPFSHash, files) => {
+
+  if (IPFSHash === undefined) {
+    IPFSHash = null
+  }
+  if (files === undefined) {
+    files = null
+  }
+
+  return {
+    path,
+    metadata: null,
+    IPFSHash,
+    isDir: IPFSHash == null,
+    files,
+  }
+}

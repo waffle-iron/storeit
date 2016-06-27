@@ -1,7 +1,30 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import * as api from './protocol-objects.js'
 import {logger} from './log.js'
-let usersDir = "./storeit-users/"
+
+let usersDir = './storeit-users/'
+
+export const setUsersDir = (name) => {
+  usersDir = name
+}
+
+export const makeBasicHome = () => {
+
+  const readmeHash = 'Qmco5NmRNMit3V2u3whKmMAFaH4tVX4jPnkwZFRdsb4dtT'
+  return api.makeFileObj('/', null, {
+    'readme.txt': api.makeFileObj('/readme.txt', readmeHash)
+  })
+}
+
+export const createUser = (email, handlerFn) => {
+
+  const userHomePath = `${usersDir}/${email}`
+
+  const basicHome = makeBasicHome()
+
+  fs.writeFile(userHomePath, JSON.stringify(basicHome, null, 2), (err) => handlerFn(err))
+}
 
 const readHome = (email, handlerFn) => {
   fs.readFile(usersDir + email, 'utf8', (err, data) => {
@@ -99,10 +122,6 @@ export class User {
       handlerFn(err, obj)
     })
   }
-}
-
-export const setUsersDir = (name) => {
-  usersDir = name
 }
 
 export const users = {}

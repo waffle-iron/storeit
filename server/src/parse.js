@@ -1,9 +1,14 @@
 import {logger} from './log.js'
-import * as S from 'string'
-import * as git from './git.js'
 import * as user from './user.js'
 import * as protoObjs from './protocol-objects'
 import * as auth from './auth.js'
+
+const sendWelcome = (socket, usr, commandUid, handlerFn) => {
+  socket.sendObj(new protoObjs.Response(0, 'welcome', commandUid, {
+    home: usr.home
+  }))
+  handlerFn()
+}
 
 const join = function(command, arg, socket, handlerFn) {
 
@@ -11,14 +16,29 @@ const join = function(command, arg, socket, handlerFn) {
   auth.verifyUserToken(arg.authType, arg.accessToken, (err, email) => {
     if (!err) {
       user.connectUser(email, socket, (err, usr) => {
-        if (err) {
+        if (err && err.errno === -2) {
+          user.createUser(email, (err) => {
+            if (err) {
+              handlerFn(err)
+            }
+            else {
+              user.connectUser(email, socket, (err, usrAgain) => {
+                if (err) {
+                  handlerFn({code: 2, msg: 'could not connect user'})
+                }
+                else {
+                  sendWelcome(socket, usrAgain, command.uid, handlerFn)
+                }
+              })
+            }
+          })
+        }
+        else if (err) {
           logger.debug('could not connect user')
           handlerFn({code: 1, msg: 'bad credentials'})
         }
         else {
-          socket.sendObj(new protoObjs.Response(0, 'welcome', command.uid, {
-            home: usr.home
-          }))
+          sendWelcome(socket, usr, command.uid, handlerFn)
         }
       })
     }

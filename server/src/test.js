@@ -5,8 +5,8 @@ logger.transports.console.level = 'error'
 import {expect} from 'chai'
 import WebSocket from 'ws'
 import * as api from './protocol-objects'
-import './ws.js'
 import * as user from './user.js'
+import './ws.js'
 
 class fakeUser {
 
@@ -93,22 +93,6 @@ describe('simple connection', () => {
 })
 
 describe('protocol file commands', () => {
-  const makeFileObj = (path, IPFSHash, files) => {
-    if (IPFSHash === undefined) {
-      IPFSHash = null
-    }
-    if (files === undefined) {
-      files = null
-    }
-
-    return {
-      path: path,
-      metadata: null,
-      IPFSHash: IPFSHash,
-      isDir: IPFSHash == null,
-      files: files,
-    }
-  }
 
   it('should disconnect user without issue', (done) => {
     fakeB.ws.on('close', () => {
@@ -122,7 +106,7 @@ describe('protocol file commands', () => {
     fakeB.leave()
   })
 
-  const userTree = makeFileObj('/', null, null)
+  const userTree = user.makeBasicHome()
 
   const checkUserTree = () => {
     expect(userTree).to.deep.equal(user.users['adrien.morel@me.com'].home)
@@ -130,16 +114,14 @@ describe('protocol file commands', () => {
 
   it('should FADD correctly', (done) => {
 
-    const FADDContent = makeFileObj('/foo', null, {
-      'bar.txt': makeFileObj('/foo/bar.txt')
+    const FADDContent = api.makeFileObj('/foo', null, {
+      'bar.txt': api.makeFileObj('/foo/bar.txt')
     })
 
     fakeA.msgHandler = (data) => {
       expectOkResponse(data)
 
-      userTree.files = {
-        'foo': FADDContent
-      }
+      userTree.files['foo'] = FADDContent
 
       checkUserTree()
       done()
@@ -184,10 +166,10 @@ describe('protocol file commands', () => {
       }
     }
 
-    const FADDContent = makeFileObj('/foo/newdir', null, {
-      'anotherdir': makeFileObj('/foo/newdir/anotherdir', null, {
-        'foobar.txt': makeFileObj('/foo/newdir/anotherdir/foobar.txt'),
-        'girl.mov': makeFileObj('/foo/newdir/anotherdir/girl.mov')
+    const FADDContent = api.makeFileObj('/foo/newdir', null, {
+      'anotherdir': api.makeFileObj('/foo/newdir/anotherdir', null, {
+        'foobar.txt': api.makeFileObj('/foo/newdir/anotherdir/foobar.txt'),
+        'girl.mov': api.makeFileObj('/foo/newdir/anotherdir/girl.mov')
       })
     })
 
