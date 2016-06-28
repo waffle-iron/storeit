@@ -49,7 +49,7 @@ This is the first request to make whenever a client wants to get online.
 	"uid": 263,
 	"command": "JOIN",
 	"parameters": {
-		"authType": "fb",
+		"authType": "fb", // fb for facebook and gg for google
 		"accessToken": "34j8b4jhb343hbKJH54",
 	}
 }
