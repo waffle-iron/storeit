@@ -18,4 +18,4 @@ else {
 }
 
 let client = new Client()
-client.auth('google')
+client.auth('facebook')

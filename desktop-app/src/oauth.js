@@ -3,11 +3,13 @@ import * as fs from 'fs'
 import open from 'open'
 import express from 'express'
 import gapi from 'googleapis'
+import fbgraph from 'fbgraph'
 
 import {logger} from '../lib/log'
 
 const REDIRECT_URI = 'http://localhost:7777'
 const TOKENS_FILE = './.tokens.json'
+const HTTP_PORT = 7777
 
 class OAuthProvider {
   constructor() {
@@ -28,9 +30,8 @@ class OAuthProvider {
         code != null ? resolve(code) : reject({err: 'could not get code'})
       })
 
-      this.http = this.express.listen(7777)
-      logger.info('Http server listening on port 7777,' +
-        'waiting for user authorization')
+      this.http = this.express.listen(HTTP_PORT)
+      logger.info(`Http server listening on port ${HTTP_PORT}`)
     })
   }
 
@@ -95,11 +96,12 @@ export class GoogleService extends OAuthProvider {
 
       if (code != null) {
         logger.info('exchanging code against access token')
-        return this.client.getToken(code, manageTokens)
+        this.client.getToken(code, manageTokens)
       }
-
-      logger.info('refreshing token')
-      return this.client.refreshAccessToken(manageTokens)
+      else {
+        logger.info('refreshing token')
+        this.client.refreshAccessToken(manageTokens)
+      }
     })
   }
 
@@ -111,13 +113,59 @@ export class GoogleService extends OAuthProvider {
 export class FacebookService extends OAuthProvider {
   constructor() {
     super()
+
+    const {FBAPI_CLIENT_ID, FBAPI_CLIENT_SECRET} = process.env
+    this.client = fbgraph
+    this.credentials = {
+      'client_id': FBAPI_CLIENT_ID,
+      'redirect_uri': REDIRECT_URI,
+      'client_secret': FBAPI_CLIENT_SECRET,
+    }
+    this.authUrl = this.client.getOauthUrl({
+      'client_id': this.credentials['client_id'],
+      'redirect_uri': REDIRECT_URI,
+      'scope': 'email'
+    })
+    console.log(REDIRECT_URI)
   }
 
   oauth() {
-    throw {msg: 'facebook oauth not supported yet'}
+    const ENDPOINT = 'auth/facebook'
+    this.express.use(`/${ENDPOINT}`, (req, res) => {
+      if (!req.query.code) {
+        if (!req.query.error)
+          res.redirect(this.authUrl)
+        else
+          res.send('access denied')
+      }
+    })
+    let tokenPromise = this.waitAuthorized()
+      .then((code) => this.getToken(code))
+    open(`http://localhost:${HTTP_PORT}/${ENDPOINT}`)
+    return tokenPromise
   }
 
-  getToken() {
-    throw {msg: 'facebook oauth not supported yet'}
+  getToken(code) {
+    return new Promise((resolve, reject) => {
+      let params = Object.assign({code}, this.credentials)
+
+      /*
+      * FIXME: See error below
+      * Error validating verification code.
+      * Please make sure your redirect_uri is identical to the one you used in the OAuth dialog request
+      */
+      this.client.authorize(params, (err, facebookRes) => {
+        if (!err) {
+          // this.client.setCredentials() // TODO
+          // this.saveTokens({facebook: facebookRes.tokens}) // TODO
+          logger.log('SUCCESS', facebookRes)
+          resolve(facebookRes.accessToken)
+        }
+        else {
+          logger.error(err.message)
+          reject(err)
+        }
+      })
+    })
   }
 }
