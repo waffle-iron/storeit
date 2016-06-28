@@ -1,7 +1,7 @@
 import WebSocket from 'ws'
 
 import {FacebookService, GoogleService} from './oauth'
-import {logger} from './log.js'
+import {logger} from '../lib/log'
 
 let recoTime = 1
 

@@ -4,7 +4,7 @@ import open from 'open'
 import express from 'express'
 import gapi from 'googleapis'
 
-import {logger} from './log.js'
+import {logger} from '../lib/log'
 
 const REDIRECT_URI = 'http://localhost:7777'
 const TOKENS_FILE = './.tokens.json'
@@ -29,7 +29,7 @@ class OAuthProvider {
       })
 
       this.http = this.express.listen(7777)
-        logger.info('Http server listening on port 7777,' +
+      logger.info('Http server listening on port 7777,' +
         'waiting for user authorization')
     })
   }

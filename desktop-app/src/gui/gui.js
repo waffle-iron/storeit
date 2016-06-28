@@ -1,5 +1,5 @@
 import Client from '../client'
-import {logger} from '../log'
+import {logger} from '../../lib/log'
 import electron from 'electron'
 
 let {app} = electron
