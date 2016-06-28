@@ -8,37 +8,39 @@ let ipc = electron.ipcMain
 
 let win;
 
-let createWindow = () => {
-  win = new BrowserWindow({width: 800, height: 600});
+let createWindow = (type) => {
+  win = new BrowserWindow({width: 800, height: 600})
 
-  win.loadURL(`file://${__dirname}/../../index.html`);
+  win.loadURL(`file://${__dirname}/../../` + type + '.html')
 
   win.on('closed', () => {
     win = null;
-  });
+  })
 
   ipc.on('loginGoogle', (event, data) => {
       let client = new Client()
       client.auth('google')
-  });
+  })
   ipc.on('loginFacebook', (event, data) => {
       let client = new Client()
       client.auth('facebook')
-  });
+  })
 }
 
-export let openLoginGui = () => {
-  app.on('ready', createWindow);
+export let openGui = (type) => {
+    app.on('ready', () => {
+        createWindow(type)
+    })
 
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-      app.quit();
+      app.quit()
     }
-  });
+  })
 
   app.on('activate', () => {
     if (win === null) {
-      createWindow();
+        createWindow(type)
     }
-  });
+  })
 }

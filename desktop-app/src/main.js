@@ -3,8 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import * as userfile from './user-file'
-import * as loginGui from './gui/login-gui'
-import * as settingsGui from './gui/settings-gui'
+import * as gui from './gui/gui'
 
 commander
     .version('0.0.1')
@@ -20,7 +19,7 @@ else {
 }
 
 if (commander.settings) {
-    settingsGui.openSettingsGui()
+    gui.openGui('settings')
 } else {
-    loginGui.openLoginGui()
+    gui.openGui('login')
 }
