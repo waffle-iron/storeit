@@ -17,7 +17,7 @@ export const makeBasicHome = () => {
   })
 }
 
-export const createUser = () => {
+export const createUser = (email, handlerFn) => {
 
   const userHomePath = `${usersDir}/${email}`
 
