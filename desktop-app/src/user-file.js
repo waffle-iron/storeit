@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import {logger} from './log.js'
+import {logger} from '../lib/log'
 
 export let storeDir = './storeit'
 
