@@ -4,11 +4,12 @@ dotenv.config()
 
 import * as userfile from './user-file'
 import * as loginGui from './login-gui'
+import * as settingsGui from './settings-gui'
 
 commander
-  .version('0.0.1')
+    .version('0.0.1')
+    .option('-s, --settings', 'Open a configuration  window')
     .option('-d, --store <name>', 'Set the user synced directory (default is ./storeit)')
-    .option('-s --settings', 'Open a configuration  window')
   .parse(process.argv)
 
 if (commander.store) {
@@ -19,7 +20,7 @@ else {
 }
 
 if (commander.settings) {
-
+    settingsGui.openSettingsGui()
+} else {
+    loginGui.openLoginGui()
 }
-
-loginGui.openLoginGui()
