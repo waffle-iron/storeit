@@ -14,7 +14,7 @@ const join = function(command, arg, socket, handlerFn) {
 
   // TODO: error checking on JSON
   auth.verifyUserToken(arg.authType, arg.accessToken, (err, email) => {
-    if (!err) {
+    if (!err && email !== undefined) {
       user.connectUser(email, socket, (err, usr) => {
         if (err && err.errno === -2) {
           user.createUser(email, (err) => {
