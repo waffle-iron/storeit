@@ -62,7 +62,7 @@ The response will contain a FILE object named "home". Example :
 	"code": 0,
 	"text": "welcome",
 	"commandUid": 42,
-	"command": "JOIN",
+	"command": "RESP",
 	"parameters": {
 		"home": FILEObject
 	}
