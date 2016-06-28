@@ -36,22 +36,31 @@ class WebSocketManager {
         }
         
         self.ws.onText = { (request: String) in
-            //print("[Client.WebSocketManager] Client recieved a request : \(request)")
+            print("[Client.WebSocketManager] Client recieved a request : \(request)")
 			
             let command: ResponseResolver? = Mapper<ResponseResolver>().map(request)
             
             // Server has responded
-            if (command?.command == "JOIN") {
+            if (command?.command == "RESP") {
                 let response: Response? = Mapper<Response>().map(request)
-                let home: File? = response?.parameters!["home"]
-                
-                self.navigationManager.setItems((home?.files)!)
+               
+                // TODO: structure with different response texts
+                if (response?.text == "welcome") {
+                    let home: File? = response?.parameters!["home"]
+                    self.navigationManager.setItems((home?.files)!)
+                }
             }
             
             // Server sent a command (FADD, FUPT, FDEL)
             else if (command != nil && CommandInfos().SERVER_TO_CLIENT_CMD.contains(command!.command)) {
-                let _: Command? = Mapper<Command<FilesParameters>>().map(request)
-                // Do funny stuff with command here
+                if (command!.command == "FDEL") {
+                	let _: Command? = Mapper<Command<FdelParameters>>().map(request)
+
+                } else if (command!.command == "FMOV") {
+                    let _: Command? = Mapper<Command<FmovParameters>>().map(request)
+                } else {
+                    let _: Command? = Mapper<Command<DefaultParameters>>().map(request)
+                }
             }
                 
             // We don't know what the server wants
@@ -69,6 +78,7 @@ class WebSocketManager {
     
     func sendRequest(request: String) {
         if (self.ws.isConnected) {
+            print("[WSManager] request is sending... : \(request)")
             self.ws.writeString(request)
         } else {
             print("[Client.WebSocketManager] Client can't send request \(request) to \(url), WS is disconnected")

@@ -39,15 +39,15 @@ class NetworkManager {
     }
     
     func fadd(files: [File]) {
-        let parameters = FilesParameters(files: files)
+        let parameters = DefaultParameters(files: files)
         let faddCommand = Command(uid: CommandInfos().FADD.0, command: CommandInfos().FADD.1, parameters: parameters)
         let jsonFaddCommand = Mapper().toJSONString(faddCommand)
         
         self.WSManager.sendRequest(jsonFaddCommand!)
     }
 
-    func fdel(files: [File]) {
-      	let parameters = FilesParameters(files: files)
+    func fdel(files: [String]) {
+      	let parameters = FdelParameters(files: files)
         let fdelCommand = Command(uid: CommandInfos().FDEL.0, command: CommandInfos().FDEL.1, parameters: parameters)
         let jsonFdelCommand = Mapper().toJSONString(fdelCommand)
         
@@ -55,7 +55,7 @@ class NetworkManager {
     }
     
     func fupt(files: [File]) {
-   		let parameters = FilesParameters(files: files)
+   		let parameters = DefaultParameters(files: files)
         let fuptCommand = Command(uid: CommandInfos().FDEL.0, command: CommandInfos().FDEL.1, parameters: parameters)
         let jsonFuptCommand = Mapper().toJSONString(fuptCommand)
         

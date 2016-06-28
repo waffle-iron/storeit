@@ -48,11 +48,11 @@ class StoreItSynchDirectoryView: UIViewController, UITableViewDelegate, UITableV
         self.alertControllerManager = AlertControllerManager(title: "Importer un fichier", message: nil)
         self.addActionsToActionSheet()
         
+        // TODO: show some loading in interface
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            // do some task
-            
-            while (((self.navigationManager?.items)! == []) == nil) {
+            while ((self.navigationManager?.items)! == []) {
    				print("Waiting data to reaload view...")
+                sleep(1)
             }
             
             dispatch_async(dispatch_get_main_queue()) {

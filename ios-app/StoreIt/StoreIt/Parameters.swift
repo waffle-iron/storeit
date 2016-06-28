@@ -36,7 +36,54 @@ class JoinParameters: Mappable {
     
 }
 
-class FilesParameters: Mappable {
+class FmovParameters: Mappable {
+    
+    var src: String
+    var dest: String
+    
+    init() {
+        self.src = ""
+        self.dest = ""
+    }
+    
+    init(src: String, dest: String) {
+        self.src = src
+        self.dest = dest
+    }
+    
+    required init?(_ map: Map) {
+        self.src = ""
+        self.dest = ""
+    }
+    
+    func mapping(map: Map) {
+        src <- map["src"]
+        dest <- map["dest"]
+    }
+}
+
+class FdelParameters: Mappable {
+    
+    var files: [String]
+    
+    init() {
+        self.files = []
+    }
+    
+    init(files: [String]) {
+        self.files = files
+    }
+    
+    required init?(_ map: Map) {
+        self.files = []
+    }
+    
+    func mapping(map: Map) {
+        files <- map["files"]
+    }
+}
+
+class DefaultParameters: Mappable {
    
     var files: [File]
     

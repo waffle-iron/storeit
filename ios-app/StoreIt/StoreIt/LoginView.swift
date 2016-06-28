@@ -22,7 +22,7 @@ class LoginView: UIViewController, FBSDKLoginButtonDelegate {
     var ipfsManager: IpfsManager? = nil
     var plistManager: PListManager? = nil
 
-    let port: Int = 8001
+    let port: Int = 7641
     let host: String = "localhost"
     
     @IBOutlet weak var FBLoginButton: FBSDKLoginButton!
