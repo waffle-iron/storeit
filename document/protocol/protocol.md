@@ -55,7 +55,19 @@ This is the first request to make whenever a client wants to get online.
 }
 ```
 
-The response will contain a FILE object named "home".
+The response will contain a FILE object named "home". Example :
+
+```javascript
+{
+	"code": 0,
+	"text": "welcome",
+	"commandUid": 42,
+	"command": "JOIN",
+	"parameters": {
+		"home": FILEObject
+	}
+}
+```
 
 ##### FDEL
 
@@ -66,10 +78,9 @@ Delete a file/directory.
 {
 	"uid": 765,
 	"command": "FDEL",
-	"parameters": [
-		{"file": FILEObject}
-		...
-	]
+	"parameters": {
+		"files": ["/a.txt", "/archive/b.txt", "/dir"]
+	}
 }
 ```
 
@@ -82,10 +93,9 @@ Add a file to the user three.
 {
 	"uid": 766,
 	"command": "FADD",
-	"parameters": [
-		{"file": FILEObject}
-		...
-	]
+	"parameters": {
+		"files": [FILEObject, ...]
+	}
 }
 ```
 
@@ -98,12 +108,76 @@ Update a file.
 {
 	"uid": 767,
 	"command": "FUPT",
-	"parameters": [
-		{"file": FILEObject}
-		...
-	]
+	"parameters": {
+		"files": [FILEObject, ...]
+	}
 }
 ```
+
+You should do only one FUPT per file/directory and omit the files parameter of your directory. For example, if your home is :
+
+```ascii
+| foo
+L___ bar.txt
+L___ pictures
+```
+
+And you want to update foo's timestamp, just send :
+
+```javascript
+{
+	"uid": 767,
+	"command": "FUPT",
+	"parameters": {
+		"files": {
+			"path": "/foo",
+			"metadata": "updated metadata",
+			"IPFSHash": null,
+			"isDir": true,
+			"files": null
+		}
+	}
+}
+```
+
+###### FMOV
+
+From a client or a server.
+move or rename a file.
+
+```javascript
+{
+	"uid": 768,
+	"command": "FMOV",
+	"parameters": {
+		"src": "/foo/bar.txt"
+		"dest": "/foo/toto.txt"
+	}
+}
+```
+
+If you are moving a file, please don't omit the file name in the destination. For example :
+
+DON'T DO:
+
+```javascript
+{
+	"src": "/foo/bar"
+	"dest": "/target/"
+}
+```
+
+expecting to move /foo/bar into /target/bar
+
+DO:
+
+```javascript
+{
+	"src": "/foo/bar"
+	"dest": "/target/bar"
+}
+```
+
 
 ##### 2.4 FILE object
 
@@ -115,8 +189,8 @@ This object describe a file or a directory.
 	"metadata": metadata,
 	"IPFSHash": "IPFS hash of all the data in the file",
 	"isDir": true,
-	"files": [
-		{"foo.txt": FILEObject},
-		{"someDirectory": FILEObject},
-	]
+	"files": {
+		"foo.txt": FILEObject,
+		"someDirectory": FILEObject,
+	}
 }```

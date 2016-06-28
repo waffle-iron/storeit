@@ -17,19 +17,32 @@ export let co = (accessToken) => {
   ws = new WebSocket(serverCoo)
 
   ws.on('error', () => {
-    logger.error('server is not reachable. attempting to reconnect in ' + recoTime + ' seconds')
-    setTimeout(co, recoTime++ * 1000)
+    logger.error('server socket error')
   })
 
   ws.on('open', function open() {
 
-    sendCmd(new Command('JOIN', [
-      {authType: 'fb'},
-      {accessToken: 'blahblah'},
-    ]))
+    sendCmd(new Command('JOIN', {
+      authType: 'fb',
+      accessToken: 'blahblah',
+    }))
+
+    sendCmd(new Command('FADD', {
+      'files': [{'name': 'Iam a happy file object'}]
+    }))
   })
 
   ws.on('message', (data) => {
     logger.info('received ' + data)
+  })
+
+  ws.on('close', (a, b) => {
+    logger.error('attempting to reconnect in ' + recoTime + ' seconds')
+    setTimeout(co, recoTime * 1000)
+
+    const MAX = 4
+    if (recoTime < MAX) {
+      recoTime++
+    }
   })
 }
