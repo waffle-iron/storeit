@@ -57,6 +57,7 @@ const expectErrorResponse = (data) => {
   const obj = JSON.parse(data)
 
   expect(obj.code).to.not.equal(0)
+  expect(obj.command).to.equal('RESP')
 }
 
 let fakeA = undefined
