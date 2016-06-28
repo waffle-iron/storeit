@@ -38,7 +38,7 @@ export const verifyUserToken = (authService, accessToken, handlerFn) => {
       })
     }
     else {
-      handlerFn(true, null)
+      handlerFn(true, undefined)
     }
   }
 }
