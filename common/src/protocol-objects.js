@@ -15,6 +15,7 @@ export class Response {
     this.text = text,
     this.commandUid = uid,
     this.parameters = parameters
+    this.command = "RESP"
   }
 }
 
