@@ -3,8 +3,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import * as userfile from './user-file'
-import * as loginGui from './login-gui'
-import * as settingsGui from './settings-gui'
+import * as loginGui from './gui/login-gui'
+import * as settingsGui from './gui/settings-gui'
 
 commander
     .version('0.0.1')
